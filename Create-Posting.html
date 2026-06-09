@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Create a Posting · Broadbean</title>
+<link rel="icon" href="b-design-system/assets/broadbean-mark.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Geist','Mundial','ui-sans-serif','system-ui','sans-serif'] },
+        colors: {
+          brand: { 50:'#ecfbeb',100:'#d4f5d1',300:'#7cdb74',400:'#4ecc44',500:'#28bb21',600:'#1f9619',700:'#166e12',800:'#0f4d0d' },
+          ink:   { 50:'#f6f7f8',100:'#eceef0',200:'#d6dade',300:'#b3bac1',400:'#858d96',500:'#5a6068',600:'#3f444a',700:'#2d3035',800:'#212121',900:'#0e0e0e' },
+          azure: { 50:'#eaf3fa',500:'#3568f5',600:'#1B75BB',700:'#155F95' },
+          danger:{ 50:'#fdecec',100:'#fbd5d5',500:'#dc2626',600:'#b91c1c' },
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f5f6; }
+  .topnav a { color:#1f9619; }
+  .topnav a:hover { color:#166e12; }
+  .topnav .sep { color:#d6dade; }
+  .subnav a { color:#1f9619; font-weight:500; }
+  .subnav a.active { color:#1B75BB; }
+  .subnav .sep { color:#d6dade; }
+  .req { color:#b91c1c; font-weight:700; }
+  .section-title { color:#1B75BB; font-size:20px; font-weight:700; }
+  label.field-label { font-weight:600; color:#3f444a; font-size:14px; line-height:1.35; }
+  input.fld, select.fld, textarea.fld { width:100%; padding:8px 12px; border:1px solid #c6cbd1; border-radius:4px; font-size:14px; background:#fff; transition: all .15s ease; font-style:italic; color:#5a6068; }
+  input.fld:focus, select.fld:focus, textarea.fld:focus { outline:none; border-color:#3568f5; box-shadow:0 0 0 3px rgba(53,104,245,.18); font-style:normal; color:#0e0e0e; }
+  input.fld:not(:placeholder-shown){ font-style:normal; color:#0e0e0e; }
+  select.fld { font-style:italic; color:#5a6068; }
+  select.fld.has-value { font-style:normal; color:#0e0e0e; }
+  .help { font-size:12px; color:#1f9619; margin-top:4px; }
+  .step { position:relative; height:60px; display:flex; align-items:center; gap:14px; padding:0 28px; color:#fff; font-weight:600; font-size:18px; }
+  .step .num { width:30px; height:30px; border-radius:999px; background:rgba(255,255,255,.95); color:#28bb21; display:inline-flex; align-items:center; justify-content:center; font-weight:700; }
+  .step.active { background:#28bb21; }
+  .step.upcoming { background:#7cdb74; }
+  .step.done { background:#4ecc44; }
+  .step .chev { position:absolute; right:-18px; top:0; width:36px; height:60px; z-index:2; }
+  .step .chev svg { display:block; height:100%; width:100%; }
+  .pill { font-size:11px; font-weight:700; letter-spacing:.04em; padding:3px 8px; border-radius:999px; text-transform:uppercase; }
+  .knockout { color:#b91c1c; background:#fdecec; }
+  .type-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600; color:#1B75BB; background:#eaf3fa; }
+  .qbubble { width:32px;height:32px;border-radius:999px;background:#858d96;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+  .qcount { background:#eceef0; color:#5a6068; font-size:12px; font-weight:500; padding:2px 10px; border-radius:999px; }
+  .btn-primary { background:#1B75BB; color:#fff; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-primary:hover { background:#155F95; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-primary:disabled:hover { background:#1B75BB; }
+  .btn-secondary { background:#fff; color:#3f444a; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; border:1px solid #d6dade; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-secondary:hover { border-color:#b3bac1; background:#f6f7f8; }
+  .btn-ghost { background:transparent; color:#3f444a; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; transition:all .15s ease; }
+  .btn-ghost:hover { background:#f6f7f8; }
+  .icon-btn { width:32px;height:32px;border:1px solid #d6dade;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#5a6068;}
+  .icon-btn:hover { background:#f6f7f8;color:#212121; }
+  .icon-btn.danger:hover { color:#b91c1c; border-color:#fbd5d5; background:#fdecec; }
+  @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+  .fade-in { animation: fade-in .18s ease; }
+  @keyframes modal-in { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .modal-in { animation: modal-in .2s cubic-bezier(0.2,0,0,1); }
+</style>
+</head>
+<body class="text-ink-800">
+
+<!-- Top primary nav -->
+<header class="bg-white border-b-2 border-brand-500">
+  <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
+    <a href="#" class="px-3">Home</a><span class="sep">|</span>
+    <a href="#" class="px-3 text-azure-600">Create a Posting</a><span class="sep">|</span>
+    <a href="#" class="px-3">Manage Postings</a><span class="sep">|</span>
+    <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
+    <a href="#" class="px-3">Search</a><span class="sep">|</span>
+    <a href="#" class="px-3">Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Legacy Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
+    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
+    <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
+  </nav>
+</header>
+
+<main class="py-8" style="padding-left:10%;padding-right:10%">
+
+  <!-- Step indicator -->
+  <div class="grid grid-cols-3 mb-6 rounded overflow-hidden">
+    <div class="step done">
+      <span class="num">1</span><span>Choose Job Boards</span>
+      <div class="chev"><svg viewBox="0 0 36 60" preserveAspectRatio="none"><polygon points="0,0 36,30 0,60" fill="#4ecc44"/></svg></div>
+    </div>
+    <div class="step active">
+      <span class="num">2</span><span>Posting Details</span>
+      <div class="chev"><svg viewBox="0 0 36 60" preserveAspectRatio="none"><polygon points="0,0 36,30 0,60" fill="#28bb21"/></svg></div>
+    </div>
+    <div class="step upcoming pl-12">
+      <span class="num">3</span><span>Preview + Send</span>
+    </div>
+  </div>
+
+  <div class="bg-white border border-ink-100 rounded shadow-sm">
+
+    <div class="text-center py-6 px-8 border-b border-ink-100">
+      <div class="text-ink-500 italic">Please enter the details for this posting</div>
+      <div class="mt-2 font-bold italic text-ink-500">
+        (Please provide values for the mandatory fields marked with a red asterisk <span class="req text-[18px]">*</span> )
+      </div>
+    </div>
+
+    <div class="p-8 space-y-10">
+
+      <!-- Broadcast As -->
+      <div class="grid grid-cols-[200px_1fr] items-center gap-x-6 gap-y-4 max-w-[820px]">
+        <label class="field-label">Broadcast As: <span class="req">*</span></label>
+        <select class="fld has-value" style="font-style:italic">
+          <option>Broadbean Demo</option>
+          <option>Acme Recruitment</option>
+        </select>
+      </div>
+
+      <!-- Main Posting Information -->
+      <section>
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Main Posting Information</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
+          <label class="field-label pt-2">Reference No. <span class="req">*</span></label>
+          <input class="fld" placeholder="" />
+
+          <label class="field-label pt-2">Job Title <span class="req">*</span></label>
+          <input class="fld" placeholder="" />
+
+          <label class="field-label pt-2">eFinancialCareers Display Company<br/>Name and Brand</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:90px"><option>Yes</option><option>No</option></select>
+
+          <label class="field-label pt-2">eFinancialCareers Anonymous<br/>Posting</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:90px"><option>No</option><option>Yes</option></select>
+
+          <label class="field-label pt-2">Logo URL</label>
+          <input class="fld" placeholder="Type image url here..." />
+
+          <label class="field-label pt-2">Linkedin Social Image URL</label>
+          <div>
+            <input class="fld" />
+            <div class="help">Enter an image URL to use a different picture than whats stored in your subscription settings</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Job Type and Specifics -->
+      <section>
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Job Type and Specifics</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
+          <label class="field-label pt-2">Job Type</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Employee</option><option>Contractor</option></select>
+
+          <label class="field-label pt-2">CareerBuilder Employee Type</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Full-Time</option><option>Part-Time</option></select>
+
+          <label class="field-label pt-2">Dice Tax Term <span class="req">*</span></label>
+          <select class="fld has-value" size="5" style="font-style:normal;color:#0e0e0e;width:320px">
+            <option>Full-time</option>
+            <option>Contract - W2</option>
+            <option>Contract to Hire - W2</option>
+            <option>Contract - Corp-to-Corp</option>
+            <option>Contract to Hire - Independent</option>
+            <option>Contract to Hire - Corp-to-Corp</option>
+          </select>
+
+          <label class="field-label pt-2">Full/Part Time</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Full-Time</option><option>Part-Time</option></select>
+
+          <label class="field-label pt-2">Location</label>
+          <input class="fld" placeholder="City, State / Country" />
+
+          <label class="field-label pt-2">Salary</label>
+          <input class="fld" placeholder="e.g. £45,000 - £55,000" />
+        </div>
+      </section>
+
+      <!-- Pre-screening questions -->
+      <section>
+        <div class="flex items-center justify-between border-b border-ink-100 pb-2 mb-5">
+          <h2 class="section-title">Pre-screening questions</h2>
+          <button id="addPsqBtn" class="btn-secondary" onclick="openPsqPicker()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Add pre-screening questionnaire
+          </button>
+        </div>
+
+        <div id="psqEmpty" class="text-ink-500 text-[14px] italic py-4">No questionnaire attached. Click <span class="not-italic font-semibold">Add pre-screening questionnaire</span> to choose one from your saved questionnaires.</div>
+
+        <div id="psqAttached" class="hidden"></div>
+      </section>
+
+      <!-- Footer actions -->
+      <div class="flex items-center justify-between pt-6 border-t border-ink-100">
+        <button class="btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back
+        </button>
+        <div class="flex gap-3">
+          <button class="btn-ghost">Save as draft</button>
+          <button class="btn-primary">
+            Continue to Preview
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ====================== PSQ PICKER MODAL ====================== -->
+<div id="psqPicker" class="hidden fixed inset-0 z-50 items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/45 fade-in" onclick="closePsqPicker()"></div>
+  <div class="modal-in relative bg-white w-[1080px] max-w-[95vw] h-[720px] max-h-[90vh] rounded-2xl shadow-2xl flex flex-col">
+    <div class="p-6 pb-4 border-b border-ink-100 flex items-start justify-between gap-4">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-1">
+          <h3 id="pickerTitle" class="text-[22px] font-bold text-ink-900">Add a pre-screening questionnaire</h3>
+          <button id="conceptToggle" class="text-[12px] font-semibold px-2.5 py-1 rounded-full border border-ink-200 text-ink-600 hover:bg-ink-50 transition" onclick="toggleConcept()">Try Concept 2</button>
+        </div>
+        <div id="pickerSub" class="text-[14px] text-ink-500">Pick one of the saved questionnaires. Questions can be managed by Admin from <span class="font-medium">Account Setup → PSQ</span>.</div>
+      </div>
+      <button class="icon-btn" style="width:36px;height:36px;border-radius:8px" onclick="closePsqPicker()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <!-- Concept 1: pick a whole questionnaire -->
+    <div id="conceptOne" class="grid grid-cols-[300px_1fr] flex-1 min-h-0 overflow-hidden">
+      <aside class="border-r border-ink-100 overflow-y-auto p-4 bg-ink-50/40" id="psqList"></aside>
+      <div class="overflow-y-auto p-5" id="psqPreview">
+        <div class="text-ink-400 text-center pt-20">Select a questionnaire to preview its questions.</div>
+      </div>
+    </div>
+
+    <!-- Concept 2: questionnaire preview OR customize questionnaire (right pane switches) -->
+    <div id="conceptTwo" class="hidden grid-cols-[260px_1fr] flex-1 min-h-0 overflow-hidden" style="display:none">
+      <aside class="border-r border-ink-100 bg-ink-50/40 flex flex-col min-h-0" id="c2Sources"></aside>
+      <div class="flex flex-col min-h-0" id="c2Right"></div>
+    </div>
+
+
+    <div class="p-5 border-t border-ink-100 flex items-center justify-end gap-3 bg-white rounded-b-2xl">
+      <button class="btn-ghost" onclick="closePsqPicker()">Cancel</button>
+      <button id="attachPsqBtn" class="btn-primary" onclick="attachPsq()" disabled>Attach questionnaire</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Same data shape as PSQ-Creation.html (read-only here) */
+const QUESTIONNAIRES = [
+  { id:'accounts', name:'Accounts', items:[
+    { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"Are you based in, or willing to relocate to, the United Kingdom?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"What is your current notice period?", type:"Multiple Choice", options:["Immediate","1 week","2 weeks","1 month","3 months","More than 3 months"] },
+    { q:"What is your current employment status?", type:"Multiple Choice", options:["Employed full-time","Employed part-time","Freelance / Contract","Unemployed","Other"] },
+    { q:"What is your earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
+  ]},
+  { id:'driver', name:'Driver', items:[
+    { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"How many years of driving experience do you have?", type:"Number", expected:"≥ 2" },
+    { q:"Do you have any current driving offences or points on your licence?", type:"Yes / No", expected:"No" },
+    { q:"Which licence categories do you hold?", type:"Multiple Choice", options:["B","C1","C","D1","D"] },
+    { q:"Are you willing to work shift patterns including weekends?", type:"Yes / No", expected:"Yes" },
+  ]},
+  { id:'warehouse', name:'Warehouse', items:[
+    { q:"Are you comfortable lifting up to 25kg repeatedly during a shift?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"Do you have a current forklift licence?", type:"Yes / No", expected:"Yes" },
+    { q:"Which shift patterns are you available for?", type:"Multiple Choice", options:["Days","Nights","Earlies","Lates","Weekends"] },
+    { q:"How many years of warehouse experience do you have?", type:"Number", expected:"≥ 1" },
+  ]},
+  { id:'customer', name:'Customer Service', items:[
+    { q:"Are you eligible to work in the UK?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"How many years of customer service experience do you have?", type:"Number", expected:"≥ 1" },
+    { q:"Which channels have you supported customers on?", type:"Multiple Choice", options:["Phone","Email","Live chat","Social media"] },
+    { q:"Briefly describe a difficult customer interaction you resolved.", type:"Open Text" },
+    { q:"What is your typing speed (words per minute)?", type:"Number" },
+  ]},
+];
+
+let selectedPsqId = null;
+let attachedPsqId = null;       // questionnaire id, or 'custom' when Concept 2 was used
+let attachedCustom = null;      // { items: [...] } for Concept 2 attachments
+let psqSearch = '';
+let pickerConcept = 1;          // 1 or 2
+/* Concept 2 — unified left rail; right pane switches based on source */
+let c2SourceId = null;     // questionnaire id or 'bank'
+let c2Selected = new Map();
+let c2TypeFilter = 'All';
+let c2QSearch = '';
+let c2SearchOpen = false;
+
+function knockoutCount(items){ return items.filter(i=>i.knockout).length; }
+
+function openPsqPicker(){
+  pickerConcept = 1;
+  selectedPsqId = (attachedPsqId && attachedPsqId !== 'custom') ? attachedPsqId : null;
+  psqSearch = '';
+  // Concept 2 (unified picker) — seed from existing attachment if any
+  c2Selected = new Map();
+  if(attachedPsqId === 'custom' && attachedCustom){
+    attachedCustom.items.forEach(it => c2Selected.set(it.q, {...it}));
+    c2SourceId = 'bank';
+  } else if(attachedPsqId){
+    c2SourceId = attachedPsqId;
+  } else {
+    c2SourceId = QUESTIONNAIRES[0]?.id || 'bank';
+  }
+  c2TypeFilter = 'All';
+  c2QSearch = '';
+  c2SearchOpen = false;
+  document.getElementById('psqPicker').style.display = 'flex';
+  document.getElementById('psqPicker').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  applyConceptView();
+}
+function closePsqPicker(){
+  document.getElementById('psqPicker').style.display = 'none';
+  document.getElementById('psqPicker').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function toggleConcept(){
+  pickerConcept = pickerConcept === 1 ? 2 : 1;
+  applyConceptView();
+}
+
+function applyConceptView(){
+  const c1 = document.getElementById('conceptOne');
+  const c2 = document.getElementById('conceptTwo');
+  const toggleBtn = document.getElementById('conceptToggle');
+  const title = document.getElementById('pickerTitle');
+  const sub = document.getElementById('pickerSub');
+  const attachBtn = document.getElementById('attachPsqBtn');
+  c1.style.display = pickerConcept===1 ? 'grid' : 'none';
+  c2.style.display = pickerConcept===2 ? 'grid' : 'none';
+
+  if(pickerConcept === 1){
+    toggleBtn.textContent = 'Try Concept 2';
+    title.textContent = 'Add a pre-screening questionnaire';
+    sub.innerHTML = 'Pick one of the saved questionnaires. Questions can be managed by Admin from <span class="font-medium">Account Setup → PSQ</span>.';
+    attachBtn.textContent = 'Attach questionnaire';
+    attachBtn.disabled = !selectedPsqId;
+    renderPsqList();
+    renderPsqPreview();
+  } else {
+    toggleBtn.textContent = 'Back to Concept 1';
+    title.textContent = 'Pick a questionnaire or customize your own';
+    sub.innerHTML = 'Choose a saved questionnaire to preview it, or open <span class="font-medium">Customize Questionnaire</span> to build a custom set.';
+    if(!c2SourceId) c2SourceId = QUESTIONNAIRES[0]?.id || 'bank';
+    renderC2Sources();
+    renderC2Right();
+    updateC2Count();
+  }
+}
+
+function getBankQuestions(){
+  // unique pool: every question across all questionnaires, deduped by text
+  const map = new Map();
+  QUESTIONNAIRES.forEach(q => q.items.forEach(it => map.set(it.q, it)));
+  return [...map.values()];
+}
+
+function renderPsqList(){
+  const wrap = document.getElementById('psqList');
+  const term = (psqSearch || '').toLowerCase();
+  const filtered = term ? QUESTIONNAIRES.filter(q => q.name.toLowerCase().includes(term)) : QUESTIONNAIRES;
+  wrap.innerHTML = `
+    <div class="text-[20px] font-bold text-ink-900 mb-3">Questionnaires</div>
+    <div class="relative mb-3">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="psqSearchInput" class="fld" style="padding:7px 10px 7px 32px;font-size:13px" placeholder="Search questionnaires..." value="${(psqSearch||'').replace(/"/g,'&quot;')}" oninput="onPsqSearch(this.value)" />
+    </div>
+    <div class="flex flex-col gap-2">
+      ${filtered.length ? filtered.map(q => {
+        const ko = knockoutCount(q.items);
+        const active = q.id === selectedPsqId;
+        return `
+          <button class="text-left w-full border ${active?'border-azure-500 bg-azure-50':'border-ink-100 bg-white'} rounded-lg px-3 py-2 transition" onclick="selectPsq('${q.id}')">
+            <div class="font-semibold text-[14px] text-ink-900">${q.name}</div>
+            <div class="mt-0.5 text-[12px] text-ink-500">
+              ${q.items.length} questions${ko?` · <span class="text-danger-600 font-medium">${ko} knock-out</span>`:''}
+            </div>
+          </button>`;
+      }).join('') : '<div class="text-[13px] text-ink-400 italic text-center py-4">No questionnaires match.</div>'}
+    </div>`;
+}
+function onPsqSearch(v){
+  psqSearch = v;
+  renderPsqList();
+  // re-focus input after re-render
+  const el = document.getElementById('psqSearchInput');
+  if(el){ el.focus(); el.setSelectionRange(v.length, v.length); }
+}
+
+function selectPsq(id){
+  selectedPsqId = id;
+  document.getElementById('attachPsqBtn').disabled = false;
+  renderPsqList();
+  renderPsqPreview();
+}
+
+function renderPsqPreview(){
+  const wrap = document.getElementById('psqPreview');
+  if(!selectedPsqId){
+    wrap.innerHTML = '<div class="text-ink-400 text-center pt-20">Select a questionnaire to preview its questions.</div>';
+    return;
+  }
+  const q = QUESTIONNAIRES.find(x=>x.id===selectedPsqId);
+  wrap.innerHTML = `
+    <div class="flex items-center gap-3 mb-5">
+      <h3 class="text-[22px] font-bold text-ink-900">${q.name}</h3>
+      <span class="qcount">${q.items.length} questions</span>
+    </div>
+    <div>${q.items.map((it,i) => questionRow(it,i)).join('')}</div>`;
+}
+
+function questionRow(item, idx){
+  const expected = item.expected ? `<span class="text-[13px] text-ink-500">Expected: <span class="font-medium text-ink-700">${item.expected}</span></span>` : '';
+  const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
+  return `
+    <div class="flex items-start gap-3 px-4 py-3 border-b border-ink-100 last:border-0">
+      <div class="qbubble" style="width:26px;height:26px;font-size:12px">${idx+1}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start gap-2 flex-wrap">
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
+          ${item.knockout ? '<span class="pill knockout" title="Knock-out">KO</span>' : ''}
+        </div>
+        <div class="mt-1 flex items-center gap-3 flex-wrap">
+          <span class="type-tag">${item.type}</span>
+          ${expected}${opts}
+        </div>
+      </div>
+    </div>`;
+}
+
+function attachPsq(){
+  if(pickerConcept === 1){
+    if(!selectedPsqId) return;
+    attachedPsqId = selectedPsqId;
+    attachedCustom = null;
+  } else { // Concept 2 (unified picker)
+    if(c2SourceId === 'bank'){
+      if(!c2Selected.size) return;
+      attachedPsqId = 'custom';
+      attachedCustom = { items: [...c2Selected.values()] };
+    } else {
+      if(!c2SourceId) return;
+      attachedPsqId = c2SourceId;
+      attachedCustom = null;
+    }
+  }
+  closePsqPicker();
+  renderAttached();
+}
+
+function renderAttached(){
+  const empty = document.getElementById('psqEmpty');
+  const wrap = document.getElementById('psqAttached');
+  const btn = document.getElementById('addPsqBtn');
+  if(!attachedPsqId){
+    empty.classList.remove('hidden'); wrap.classList.add('hidden');
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add pre-screening questionnaire`;
+    return;
+  }
+  const isCustom = attachedPsqId === 'custom';
+  const q = isCustom
+    ? { name: 'Custom selection', items: attachedCustom?.items || [] }
+    : QUESTIONNAIRES.find(x=>x.id===attachedPsqId);
+  empty.classList.add('hidden'); wrap.classList.remove('hidden');
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> Change questionnaire`;
+  const sublabel = isCustom
+    ? `${q.items.length} questions${knockoutCount(q.items)?` · <span class="text-danger-600 font-medium">${knockoutCount(q.items)} knock-out</span>`:''} · Hand-picked from your saved questionnaires`
+    : `${q.items.length} questions${knockoutCount(q.items)?` · <span class="text-danger-600 font-medium">${knockoutCount(q.items)} knock-out</span>`:''} · Manage in Account Setup → PSQ`;
+  wrap.innerHTML = `
+    <div class="border border-ink-100 rounded-lg">
+      <div class="flex items-center justify-between p-4 border-b border-ink-100 bg-ink-50/60 rounded-t-lg">
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-[18px] font-bold text-ink-900">${q.name}</h3>
+            ${isCustom ? '<span class="pill" style="background:#eaf3fa;color:#1B75BB">Custom</span>' : ''}
+          </div>
+          <div class="text-[13px] text-ink-500 mt-0.5">${sublabel}</div>
+        </div>
+        <button class="icon-btn danger" title="Remove" onclick="detachPsq()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>
+      <div class="divide-y divide-ink-100">
+        ${q.items.map((it,i)=>questionRow(it,i)).join('')}
+      </div>
+    </div>`;
+}
+
+function detachPsq(){ attachedPsqId = null; attachedCustom = null; renderAttached(); }
+
+/* =====================================================================
+   Concept 2 — Questionnaire preview OR Customize Questionnaire
+   Left rail: questionnaires + "Customize Questionnaire" tile.
+   Right pane swaps mode based on which source is active.
+   ===================================================================== */
+const C2_TYPES = ['All','Yes / No','Multiple Choice','Date','Number','Open Text','KO'];
+
+function c2SourceItems(){
+  if(c2SourceId === 'bank') return getBankQuestions();
+  return (QUESTIONNAIRES.find(x => x.id === c2SourceId)?.items || []);
+}
+function c2FilteredItems(){
+  let items = c2SourceItems();
+  const search = (document.getElementById('c2TextSearch')?.value || '').toLowerCase();
+  if(search) items = items.filter(it => it.q.toLowerCase().includes(search));
+  if(c2TypeFilter === 'KO') items = items.filter(it => it.knockout);
+  else if(c2TypeFilter !== 'All') items = items.filter(it => it.type === c2TypeFilter);
+  return items;
+}
+function c2SourcesOf(text){
+  return QUESTIONNAIRES.filter(q => q.items.some(x => x.q === text)).map(q => q.name);
+}
+
+function renderC2Sources(){
+  const wrap = document.getElementById('c2Sources');
+  const term = c2QSearch.toLowerCase();
+  const list = term ? QUESTIONNAIRES.filter(q => q.name.toLowerCase().includes(term)) : QUESTIONNAIRES;
+  const topHeader = `
+    <div class="shrink-0 px-3 pt-3 pb-2">
+      <div class="flex items-center justify-between gap-2">
+        <h5 class="text-[13px] font-bold text-ink-900">Questionnaire</h5>
+        <button class="w-7 h-7 inline-flex items-center justify-center rounded-md ${c2SearchOpen?'bg-azure-50 text-azure-600':'text-ink-500 hover:bg-ink-100 hover:text-ink-800'} transition" onclick="c2ToggleSearch()" aria-label="Search questionnaires" title="Search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </div>
+      ${c2SearchOpen ? `
+        <div class="relative mt-2">
+          <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-400" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="c2SearchInput" class="fld" style="padding:5px 26px 5px 28px;font-size:12px;font-style:normal;color:#0e0e0e;border-radius:6px" placeholder="Search questionnaires..." value="${c2QSearch.replace(/"/g,'&quot;')}" oninput="onC2QSearch(this.value)" />
+          <button class="absolute right-1.5 top-1/2 -translate-y-1/2 w-5 h-5 inline-flex items-center justify-center rounded text-ink-400 hover:text-ink-700" onclick="c2CloseSearch()" aria-label="Close search">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>` : ''}
+    </div>`;
+  const tiles = list.length
+    ? list.map(q => {
+        const active = q.id === c2SourceId;
+        return `
+          <button class="text-left px-3 py-2 rounded-lg ${active?'bg-azure-50 border-azure-500':'border-ink-100 hover:bg-ink-50 bg-white'} border transition" onclick="c2SetSource('${q.id}')">
+            <div class="font-semibold text-[13px] text-ink-900">${q.name}</div>
+            <div class="text-[11px] text-ink-500 mt-0.5">${q.items.length} question${q.items.length===1?'':'s'}</div>
+          </button>`;
+      }).join('')
+    : '<div class="text-[12px] text-ink-400 italic text-center py-3">No questionnaires match.</div>';
+
+  const bankActive = c2SourceId === 'bank';
+  const bankSelected = c2Selected.size;
+  const bankTotal = getBankQuestions().length;
+  const bottomSection = `
+    <div class="shrink-0 px-3 pb-3 pt-2 border-t border-ink-200">
+      <h5 class="text-[13px] font-bold text-ink-900 mb-2">Customize Questionnaire</h5>
+      <button class="text-left w-full px-3 py-2 rounded-lg ${bankActive?'bg-azure-50 border-azure-500':'border-ink-100 hover:bg-ink-50 bg-white'} border-2 ${bankActive?'':'border-dashed'} transition" onclick="c2SetSource('bank')">
+        <div class="flex items-center justify-between gap-2">
+          <div class="font-semibold text-[13px] text-ink-900 flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            Question Bank
+          </div>
+          ${bankSelected ? `<span class="text-[11px] font-bold text-azure-600 bg-white border border-azure-100 rounded-full px-2 py-0.5">${bankSelected}</span>` : ''}
+        </div>
+        <div class="text-[11px] text-ink-500 mt-0.5">${bankTotal} unique across all questionnaires</div>
+      </button>
+    </div>`;
+
+  wrap.innerHTML = `
+    ${topHeader}
+    <div class="flex-1 overflow-y-auto px-3 pb-3">
+      <div class="flex flex-col gap-2">${tiles}</div>
+    </div>
+    ${bottomSection}`;
+}
+
+function onC2QSearch(v){
+  c2QSearch = v;
+  renderC2Sources();
+  const el = document.getElementById('c2SearchInput');
+  if(el){ el.focus(); el.setSelectionRange(v.length, v.length); }
+}
+
+function c2ToggleSearch(){
+  c2SearchOpen = !c2SearchOpen;
+  if(!c2SearchOpen) c2QSearch = '';
+  renderC2Sources();
+  if(c2SearchOpen){
+    setTimeout(() => document.getElementById('c2SearchInput')?.focus(), 0);
+  }
+}
+function c2CloseSearch(){
+  c2SearchOpen = false;
+  c2QSearch = '';
+  renderC2Sources();
+}
+
+function c2SetSource(id){
+  c2SourceId = id;
+  c2TypeFilter = 'All';
+  renderC2Sources();
+  renderC2Right();
+  updateC2Count();
+}
+
+function renderC2Right(){
+  const wrap = document.getElementById('c2Right');
+  if(c2SourceId === 'bank'){
+    // Full customize view: search, type chips, KO chip, select all, checkboxes
+    const src = { name: 'Customize Questionnaire' };
+    wrap.innerHTML = `
+      <div class="px-5 pt-4 pb-3 border-b border-ink-100 space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <h4 id="c2SourceTitle" class="text-[16px] font-bold text-ink-900">${src.name}</h4>
+          <div class="flex items-center gap-3">
+            <span id="c2SelectStatus" class="text-[12px] text-ink-500">0 / 0 selected</span>
+            <button id="c2SelectAllBtn" class="text-[12px] font-semibold px-3 py-1.5 rounded-md border border-ink-200 text-ink-700 hover:bg-ink-50 transition" onclick="c2HandleSelectAll()">Select all</button>
+          </div>
+        </div>
+        <div class="relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="c2TextSearch" oninput="renderC2QuestionsList()" class="fld !pl-8" style="padding:7px 10px 7px 32px;font-size:13px;font-style:normal;color:#0e0e0e" placeholder="Search this list..." />
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap" id="c2TypeChips"></div>
+      </div>
+      <div class="flex-1 overflow-y-auto px-5 py-3" id="c2Questions"></div>`;
+    renderC2TypeChips();
+    renderC2QuestionsList();
+  } else {
+    // Read-only questionnaire preview (numbered, no controls)
+    const q = QUESTIONNAIRES.find(x => x.id === c2SourceId);
+    if(!q){ wrap.innerHTML = ''; return; }
+    wrap.innerHTML = `
+      <div class="px-5 pt-4 pb-3 border-b border-ink-100">
+        <div class="flex items-center gap-3">
+          <h4 class="text-[16px] font-bold text-ink-900">${q.name}</h4>
+          <span class="qcount">${q.items.length} questions</span>
+        </div>
+      </div>
+      <div class="flex-1 overflow-y-auto px-5 py-3">
+        ${q.items.map((it,i) => c2PreviewRow(it,i)).join('')}
+      </div>`;
+  }
+}
+
+function c2PreviewRow(item, idx){
+  const expected = item.expected ? `<span class="text-[13px] text-ink-500">Expected: <span class="font-medium text-ink-700">${item.expected}</span></span>` : '';
+  const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
+  return `
+    <div class="flex items-start gap-3 py-3 border-b border-ink-100 last:border-0">
+      <div class="qbubble" style="width:26px;height:26px;font-size:12px">${idx+1}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start gap-2 flex-wrap">
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
+          ${item.knockout ? '<span class="pill knockout" title="Knock-out">KO</span>' : ''}
+        </div>
+        <div class="mt-1 flex items-center gap-3 flex-wrap">
+          <span class="type-tag">${item.type}</span>
+          ${expected}${opts}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderC2TypeChips(){
+  const wrap = document.getElementById('c2TypeChips');
+  if(!wrap) return;
+  wrap.innerHTML = C2_TYPES.map(t => {
+    const isKO = t === 'KO';
+    const active = c2TypeFilter === t;
+    const activeStyle = isKO ? 'bg-danger-600 border-danger-600 text-white' : 'bg-azure-600 border-azure-600 text-white';
+    const idleStyle = isKO ? 'bg-white border-danger-100 text-danger-600 hover:border-danger-500' : 'bg-white border-ink-200 text-ink-600 hover:border-ink-300';
+    return `<button class="text-[11px] font-semibold px-2.5 py-1 rounded-full border transition ${active?activeStyle:idleStyle}" onclick="c2SetType('${t}')">${t}</button>`;
+  }).join('');
+}
+function c2SetType(t){ c2TypeFilter = t; renderC2TypeChips(); renderC2QuestionsList(); }
+
+function renderC2QuestionsList(){
+  const wrap = document.getElementById('c2Questions');
+  if(!wrap) return;
+  const status = document.getElementById('c2SelectStatus');
+  const saBtn = document.getElementById('c2SelectAllBtn');
+  const items = c2FilteredItems();
+  const selHere = items.filter(it => c2Selected.has(it.q)).length;
+  status.textContent = `${selHere} / ${items.length} selected`;
+  const allSelected = items.length > 0 && selHere === items.length;
+  saBtn.disabled = items.length === 0;
+  saBtn.textContent = allSelected ? 'Deselect all' : 'Select all';
+  if(!items.length){
+    wrap.innerHTML = '<div class="text-[13px] text-ink-400 italic text-center py-10">No questions match.</div>';
+    return;
+  }
+  wrap.innerHTML = items.map(it => {
+    const sel = c2Selected.has(it.q);
+    const sources = c2SourcesOf(it.q);
+    return `
+      <label class="flex items-start gap-3 py-3 px-1 border-b border-ink-100 last:border-0 cursor-pointer">
+        <input type="checkbox" class="bb-check mt-0.5" ${sel?'checked':''} onchange="c2Toggle('${encodeURIComponent(it.q)}', this.checked)" />
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start gap-2 flex-wrap">
+            <div class="text-[14px] font-semibold text-ink-900 leading-snug">${it.q}</div>
+            ${it.knockout ? '<span class="pill knockout" title="Knock-out">KO</span>' : ''}
+          </div>
+          <div class="mt-1 flex items-center gap-2 flex-wrap">
+            <span class="type-tag">${it.type}</span>
+            ${sources.length ? sources.map(s => `<span class="text-[10px] px-2 py-0.5 rounded-full bg-ink-100 text-ink-600 font-semibold">${s}</span>`).join('') : ''}
+            ${it.expected ? `<span class="text-[12px] text-ink-500">Expected: <span class="font-medium text-ink-700">${it.expected}</span></span>` : ''}
+            ${it.options ? `<span class="text-[12px] text-ink-500">Options: ${it.options.join(', ')}</span>` : ''}
+          </div>
+        </div>
+      </label>`;
+  }).join('');
+}
+
+function c2Toggle(encKey, checked){
+  const key = decodeURIComponent(encKey);
+  if(checked){
+    const item = c2SourceItems().find(x => x.q === key) || getBankQuestions().find(x => x.q === key);
+    if(item) c2Selected.set(key, {...item});
+  } else {
+    c2Selected.delete(key);
+  }
+  renderC2Sources(); renderC2QuestionsList(); updateC2Count();
+}
+
+function c2HandleSelectAll(){
+  const items = c2FilteredItems();
+  const selHere = items.filter(it => c2Selected.has(it.q)).length;
+  const allSelected = items.length > 0 && selHere === items.length;
+  if(allSelected){
+    items.forEach(it => c2Selected.delete(it.q));
+  } else {
+    items.forEach(it => c2Selected.set(it.q, {...it}));
+  }
+  renderC2Sources(); renderC2QuestionsList(); updateC2Count();
+}
+
+function updateC2Count(){
+  const btn = document.getElementById('attachPsqBtn');
+  if(c2SourceId === 'bank'){
+    const n = c2Selected.size;
+    btn.disabled = n === 0;
+    btn.textContent = n ? `Attach ${n} Selected` : 'Attach Selected';
+  } else {
+    btn.disabled = !c2SourceId;
+    btn.textContent = 'Attach questionnaire';
+  }
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closePsqPicker(); });
+renderAttached();
+</script>
+</body>
+</html>

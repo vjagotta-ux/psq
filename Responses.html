@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Responses · Broadbean</title>
+<link rel="icon" href="b-design-system/assets/broadbean-mark.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Geist','Mundial','ui-sans-serif','system-ui','sans-serif'] },
+        colors: {
+          brand: { 50:'#ecfbeb',100:'#d4f5d1',300:'#7cdb74',400:'#4ecc44',500:'#28bb21',600:'#1f9619',700:'#166e12' },
+          ink:   { 50:'#f6f7f8',100:'#eceef0',200:'#d6dade',300:'#b3bac1',400:'#858d96',500:'#5a6068',600:'#3f444a',700:'#2d3035',800:'#212121',900:'#0e0e0e' },
+          azure: { 50:'#eaf3fa',100:'#dbe6ff',500:'#3568f5',600:'#1B75BB',700:'#155F95' },
+          warn:  { 500:'#f08a1c',600:'#d97206' },
+          danger:{ 500:'#dc2626',600:'#b91c1c' },
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f5f6; }
+  .topnav a { color:#1f9619; }
+  .topnav a:hover { color:#166e12; }
+  .topnav .sep { color:#d6dade; }
+  input.fld, select.fld { width:100%; padding:8px 12px; border:1px solid #c6cbd1; border-radius:6px; font-size:14px; background:#fff; transition: all .15s ease; color:#0e0e0e; }
+  input.fld::placeholder, select.fld::placeholder { color:#858d96; font-style:italic; }
+  input.fld:focus, select.fld:focus { outline:none; border-color:#1B75BB; box-shadow:0 0 0 3px rgba(27,117,187,.18); }
+  .pill-count { color:#5a6068; font-weight:500; font-size:13px; }
+  .sidebar-header { display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:700; color:#212121; padding:12px 14px; border-bottom:1px solid #eceef0; text-transform:none; }
+  .sidebar-header .chev { color:#5a6068; }
+  .green-btn { background:#28bb21; color:#fff; padding:9px 18px; border-radius:6px; font-weight:600; font-size:14px; border:none; cursor:pointer; transition:all .15s ease; width:100%; }
+  .green-btn:hover { background:#1f9619; }
+  .live-bar { background:#1B75BB; color:#fff; padding:8px 12px; display:flex; align-items:center; justify-content:space-between; font-weight:600; font-size:13px; cursor:pointer; border-radius:6px; }
+  .live-bar:hover { background:#155F95; }
+  .archived-bar { background:#f08a1c; color:#fff; padding:8px 12px; display:flex; align-items:center; justify-content:space-between; font-weight:600; font-size:13px; cursor:pointer; }
+  .archived-bar:hover { background:#d97206; }
+  .responses-bar { background:#1B75BB; color:#fff; padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-radius:6px 6px 0 0; }
+  .responses-bar .title { font-size:16px; font-weight:700; }
+  .action-btn { background:rgba(255,255,255,.18); color:#fff; width:34px; height:34px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; transition:all .15s ease; }
+  .action-btn:hover { background:rgba(255,255,255,.28); }
+  .candidate-card { background:#fff; border-bottom:1px solid #eceef0; }
+  .candidate-name-row { background:#f6f7f8; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .candidate-name { font-size:16px; font-weight:700; color:#0e0e0e; }
+  .name-action { color:#858d96; transition:color .15s ease; }
+  .name-action:hover { color:#1B75BB; }
+  .candidate-body { padding:14px 20px; display:flex; align-items:flex-start; gap:16px; }
+  .flag { width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s ease; }
+  .flag-red { background:#dc2626; }
+  .flag-orange { background:#f08a1c; }
+  .flag-green { background:#28bb21; }
+  .flag-grey { background:#b3bac1; }
+  .flag.dimmed { opacity:.25; }
+
+  /* Tooltip */
+  .tt { position:relative; cursor:default; }
+  .tt .tt-body { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#0e0e0e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; line-height:1.45; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s ease; z-index:30; box-shadow:0 6px 20px rgba(0,0,0,.18); }
+  .tt .tt-body::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#0e0e0e; }
+  .tt:hover .tt-body { opacity:1; }
+  .tt .tt-body b { color:#fff; font-weight:700; }
+  .tt .tt-body .ko { color:#fca5a5; font-weight:700; }
+  .job-link { color:#1B75BB; font-weight:600; font-size:14px; }
+  .job-link:hover { color:#155F95; text-decoration:underline; }
+  .more-dots { color:#b3bac1; font-size:18px; letter-spacing:3px; cursor:pointer; user-select:none; padding:6px 14px; display:inline-block; }
+  .more-dots:hover { color:#5a6068; }
+  .icon-action { width:34px; height:32px; border:1px solid #d6dade; border-radius:6px; background:#fff; display:inline-flex; align-items:center; justify-content:center; color:#1B75BB; transition:all .15s ease; }
+  .icon-action:hover { background:#f6f7f8; border-color:#b3bac1; }
+  .page-btn { min-width:32px; height:32px; border:1px solid #d6dade; border-radius:6px; background:#fff; color:#3f444a; font-weight:600; font-size:13px; display:inline-flex; align-items:center; justify-content:center; padding:0 10px; }
+  .page-btn:hover { background:#f6f7f8; }
+  .page-btn.active { background:#1B75BB; color:#fff; border-color:#1B75BB; }
+  .flag-count-card { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #eceef0; border-radius:6px; background:#fff; font-weight:600; font-size:13px; }
+  .top-link { color:#1B75BB; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px; }
+  .top-link:hover { color:#155F95; }
+  .help-circle { width:22px; height:22px; border-radius:50%; background:#1B75BB; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+  .btn-primary { background:#1B75BB; color:#fff; padding:9px 14px; border-radius:6px; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-primary:hover { background:#155F95; }
+  details summary::-webkit-details-marker { display:none; }
+  details[open] .chev { transform:rotate(180deg); }
+  .chev { transition:transform .2s ease; display:inline-block; }
+
+  /* Candidate detail modal */
+  .cand-backdrop { position:fixed; inset:0; z-index:55; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .25s ease; }
+  .cand-backdrop.open { opacity:1; pointer-events:auto; }
+  .cand-modal { position:fixed; left:0; right:0; bottom:0; top:32px; z-index:60; background:#fff; display:flex; flex-direction:column; border-radius:16px 16px 0 0; box-shadow:0 -10px 40px rgba(0,0,0,.25); transform:translateY(100%); transition:transform .32s cubic-bezier(0.2,0,0,1); }
+  .cand-modal.open { transform:translateY(0); }
+  .cand-modal > div:first-child { border-radius:16px 16px 0 0; }
+  .cand-modal > .flex-1 > aside:first-child { border-top-left-radius:0; }
+  .cand-tab { padding:14px 22px; font-size:14px; font-weight:600; color:#5a6068; cursor:pointer; border-bottom:3px solid transparent; transition:all .15s ease; }
+  .cand-tab:hover { color:#0e0e0e; }
+  .cand-tab.active { color:#1B75BB; border-bottom-color:#1B75BB; }
+  .round-action { width:38px; height:38px; border-radius:999px; background:#1B75BB; color:#fff; display:inline-flex; align-items:center; justify-content:center; transition:all .15s ease; }
+  .round-action:hover { background:#155F95; }
+  .right-section-title { background:#eceef0; color:#3f444a; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:8px 14px; }
+  .right-section-body { padding:12px 14px; font-size:13px; color:#3f444a; border-bottom:1px solid #eceef0; }
+  .field-label-sm { font-size:12px; font-weight:600; color:#5a6068; margin-bottom:4px; }
+  .field-value { padding:8px 12px; border:1px solid #d6dade; border-radius:6px; font-size:13px; color:#1B75BB; background:#fff; }
+  .activity-month { font-size:11px; font-weight:700; letter-spacing:.08em; color:#5a6068; }
+  .activity-icon { width:36px; height:36px; border-radius:999px; background:#fff3e1; color:#f08a1c; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .answer-row { padding:14px 18px; border-bottom:1px solid #eceef0; }
+  .answer-row:last-child { border-bottom:0; }
+  .answer-pill { display:inline-block; padding:4px 10px; border-radius:6px; font-size:13px; font-weight:600; }
+  .answer-right { background:#ecfbeb; color:#166e12; border:1px solid #d4f5d1; }
+  .answer-wrong { background:#fdecec; color:#b91c1c; border:1px solid #fbd5d5; }
+  .answer-neutral { background:#fff; color:#3f444a; border:1px solid #d6dade; }
+  .cv-frame { background:#eceef0; padding:24px; border-radius:8px; }
+  .cv-doc { background:#fff; max-width:680px; margin:0 auto; padding:40px 48px; box-shadow:0 4px 24px rgba(0,0,0,.08); font-family:'Times New Roman', serif; color:#0e0e0e; }
+</style>
+</head>
+<body class="text-ink-800">
+
+<!-- Top primary nav -->
+<header class="bg-white border-b-2 border-brand-500">
+  <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
+    <a href="#" class="px-3">Home</a><span class="sep">|</span>
+    <a href="Create-Posting.html" class="px-3">Create a Posting</a><span class="sep">|</span>
+    <a href="#" class="px-3">Manage Postings</a><span class="sep">|</span>
+    <a href="Responses.html" class="px-3 text-azure-600">Responses</a><span class="sep">|</span>
+    <a href="#" class="px-3">Search</a><span class="sep">|</span>
+    <a href="#" class="px-3">Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Legacy Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
+    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
+    <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
+  </nav>
+</header>
+
+<main class="py-6" style="padding-left:2%;padding-right:2%">
+
+  <!-- Title row -->
+  <div class="flex items-center justify-between mb-6 px-2">
+    <div class="flex items-end gap-6">
+      <h1 class="text-[28px] font-bold leading-none text-ink-900">Responses</h1>
+      <a href="#" class="top-link pb-1">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        Go to Search
+      </a>
+      <a href="#" class="top-link pb-1">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        Revert to original user
+      </a>
+    </div>
+    <div class="flex items-end gap-6 pb-1">
+      <a href="#" class="top-link flex items-center gap-2">
+        Watchdogs (2/10) <span class="bg-brand-500 text-white text-[11px] font-bold px-2 py-0.5 rounded">114</span>
+      </a>
+      <a href="#" class="top-link">Saved Searches (1)</a>
+      <a href="#" class="top-link">Email History</a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-[280px_1fr] gap-6">
+
+    <!-- Left sidebar -->
+    <aside class="space-y-4">
+
+      <!-- Adverts -->
+      <details open class="bg-white rounded-md border border-ink-100 overflow-hidden">
+        <summary class="sidebar-header cursor-pointer list-none">
+          <span>Adverts</span>
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </summary>
+        <div class="p-3">
+          <div class="relative mb-3">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input class="fld pl-9" style="padding-top:8px;padding-bottom:8px" placeholder="Type here" />
+          </div>
+          <button class="live-bar w-full mb-3">
+            <span>Live</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <div class="flex items-center gap-4 text-[13px] mb-3 pl-1">
+            <a href="#" class="flex items-center gap-1.5 text-ink-700 font-semibold hover:text-ink-900">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg>
+              Select All
+            </a>
+            <a href="#" class="flex items-center gap-1.5 text-ink-700 font-semibold hover:text-ink-900">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              Clear All
+            </a>
+          </div>
+          <ul class="text-[13px] space-y-1.5 pl-1">
+            <li class="flex gap-2"><span class="text-ink-500 w-9">(58)</span><a href="#" class="text-azure-600 font-medium hover:underline">bb-0232353453 - Product Designer</a></li>
+            <li class="flex gap-2"><span class="text-ink-500 w-9">(30)</span><a href="#" class="text-azure-600 font-medium hover:underline">bb-0232353457 - Senior Technical ...</a></li>
+            <li class="flex gap-2"><span class="text-ink-500 w-9">(22)</span><a href="#" class="text-azure-600 font-medium hover:underline">bb-0232353461 - Marketing Lead</a></li>
+            <li class="flex gap-2"><span class="text-ink-500 w-9">(18)</span><a href="#" class="text-azure-600 font-medium hover:underline">bb-0232353464 - Customer Success</a></li>
+          </ul>
+          <div class="mt-4 mb-1">
+            <a href="#" class="text-azure-600 font-semibold text-[13px] hover:underline">more</a>
+          </div>
+        </div>
+        <button class="archived-bar w-full">
+          <span>Archived</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <div class="py-3 px-4 text-center border-t border-ink-100">
+          <a href="#" class="text-azure-600 font-semibold text-[13px] hover:underline">Search all Adverts</a>
+        </div>
+      </details>
+
+      <!-- Flags -->
+      <details open class="bg-white rounded-md border border-ink-100 overflow-hidden">
+        <summary class="sidebar-header cursor-pointer list-none">
+          <span>Flags</span>
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </summary>
+        <div class="p-3 flex flex-wrap gap-2">
+          <div class="flag-count-card"><span class="flag flag-grey" style="width:22px;height:22px"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span><span class="pill-count">2521</span></div>
+          <div class="flag-count-card"><span class="flag flag-red" style="width:22px;height:22px"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span><span class="pill-count">2127</span></div>
+          <div class="flag-count-card"><span class="flag flag-orange" style="width:22px;height:22px"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span><span class="pill-count">384</span></div>
+          <div class="flag-count-card"><span class="flag flag-green" style="width:22px;height:22px"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span><span class="pill-count">312</span></div>
+        </div>
+      </details>
+
+    </aside>
+
+    <!-- Right content -->
+    <section class="space-y-5">
+
+      <!-- Search panel -->
+      <div class="bg-white border border-ink-100 rounded-md p-5">
+        <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-center mb-4">
+          <input class="fld" placeholder="Advert?" />
+          <div></div>
+          <div class="flex items-center gap-3">
+            <input class="fld flex-1" placeholder="Keywords?" />
+            <span class="help-circle" title="Help">?</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-4 items-center mb-4">
+          <input class="fld" type="number" value="30" />
+          <span class="text-ink-500 italic">miles of</span>
+          <select class="fld"><option>Location?</option><option>London</option><option>Manchester</option></select>
+          <div></div>
+          <button class="green-btn">Search</button>
+        </div>
+        <div class="flex items-center justify-between">
+          <a href="#" class="flex items-center gap-2 text-ink-500 hover:text-ink-800 text-[14px] font-semibold">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            Clear criteria
+          </a>
+          <div class="flex items-center gap-6">
+            <label class="flex items-center gap-2 text-[14px] text-ink-600 cursor-pointer">
+              <input type="checkbox" class="w-4 h-4" /> Hide viewed candidates
+            </label>
+            <label class="flex items-center gap-2 text-[14px] text-ink-600 cursor-pointer">
+              <input type="checkbox" class="w-4 h-4" /> Show snippet
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination + sort -->
+      <div class="flex items-center justify-center gap-3">
+        <select class="fld" style="width:auto;padding:8px 30px 8px 14px"><option>25 per page</option><option>50 per page</option><option>100 per page</option></select>
+        <select class="fld" style="width:auto;padding:8px 30px 8px 14px"><option>Application Date</option><option>Name</option><option>Recent</option></select>
+        <button class="page-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
+        <button class="page-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">...</button>
+        <button class="page-btn">215</button>
+      </div>
+
+      <!-- Responses list -->
+      <div class="bg-white border border-ink-100 rounded-md overflow-hidden shadow-sm">
+        <div class="responses-bar">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" class="w-4 h-4" />
+            <div class="title">5,352 Responses</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="action-btn" title="Tag">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.41 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+            </button>
+            <button class="action-btn" title="Add to list">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M3 12h9M3 18h9M18 9v6M21 12h-6"/></svg>
+            </button>
+            <button class="action-btn" title="Forward">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="candidatesWrap"></div>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<!-- ====================== CANDIDATE DETAIL MODAL ====================== -->
+<div id="candBackdrop" class="cand-backdrop" onclick="closeCandidate()"></div>
+<div id="candModal" class="cand-modal">
+  <!-- Header bar -->
+  <div class="border-b border-ink-100 px-6 grid grid-cols-[280px_1fr_auto] items-center" style="height:64px">
+    <div class="text-[18px] font-bold text-ink-900" id="candHeaderName">Candidate</div>
+    <div class="flex items-center justify-center gap-2">
+      <button class="cand-tab active" data-tab="profile" onclick="switchCandTab('profile')">Profile</button>
+      <button class="cand-tab" data-tab="activity" onclick="switchCandTab('activity')">Activity Feed</button>
+      <button class="cand-tab" data-tab="messages" onclick="switchCandTab('messages')">Messaging History</button>
+      <button class="cand-tab" data-tab="psq" onclick="switchCandTab('psq')">PSQ</button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="icon-action" title="Previous" onclick="candNav(-1)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <span class="text-[14px] font-semibold text-ink-700"><span id="candNum">1</span> of <span id="candTotal">40</span></span>
+      <button class="icon-action" title="Next" onclick="candNav(1)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <button class="ml-2 text-ink-400 hover:text-danger-600" onclick="closeCandidate()" aria-label="Close">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Body: 3 columns -->
+  <div class="flex-1 grid grid-cols-[280px_1fr_320px] overflow-hidden">
+
+    <!-- Left: name + activity -->
+    <aside class="border-r border-ink-100 overflow-y-auto" style="background:#f6f7f8">
+      <div class="p-5">
+        <h2 class="text-[18px] font-bold text-ink-900" id="candLeftName">Candidate</h2>
+        <div class="mt-2 flex items-center gap-2 text-[13px] text-azure-600">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg>
+          <span id="candLeftEmail">candidate@example.com</span>
+        </div>
+        <div class="mt-2 flex items-end gap-0.5 h-5">
+          <span class="w-1.5 bg-danger-500" style="height:30%"></span>
+          <span class="w-1.5 bg-ink-200" style="height:50%"></span>
+          <span class="w-1.5 bg-ink-200" style="height:70%"></span>
+          <span class="w-1.5 bg-ink-200" style="height:100%"></span>
+        </div>
+      </div>
+      <div class="px-5 pb-5">
+        <h3 class="text-[14px] font-bold text-azure-600 text-center mb-4 mt-2">Recent Activity</h3>
+        <div id="candActivity" class="space-y-4"></div>
+      </div>
+    </aside>
+
+    <!-- Center: tab content -->
+    <div class="overflow-y-auto" id="candCenter"></div>
+
+    <!-- Right: details panel -->
+    <aside class="border-l border-ink-100 overflow-y-auto bg-white">
+      <div class="p-4 flex items-center justify-end gap-2 border-b border-ink-100">
+        <button class="round-action" title="Download"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+        <button class="round-action" title="Forward"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="round-action" title="Add to list"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h12M3 12h9M3 18h9M18 9v6M21 12h-6"/></svg></button>
+        <button class="round-action" title="Add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="round-action" title="Email"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg></button>
+      </div>
+
+      <div class="right-section-title text-center">Current Application</div>
+      <div class="right-section-body flex items-center justify-between">
+        <div>
+          <div class="text-azure-600 font-semibold" id="candCurApp">VR0001221 - Facilities Manager</div>
+          <div class="text-ink-500 text-[12px] mt-0.5">14 Jan 2026 12:54 GMT</div>
+        </div>
+        <span class="flag flag-grey" style="width:22px;height:22px"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+      </div>
+
+      <div class="right-section-title text-center">Current Application Flag</div>
+      <div class="right-section-body flex items-center justify-center gap-2 flex-wrap">
+        <span class="flag flag-red" style="width:24px;height:24px"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+        <span class="flag flag-orange" style="width:24px;height:24px"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+        <span class="flag flag-green" style="width:24px;height:24px"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+        <span class="flag" style="width:24px;height:24px;background:#5a6068"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+        <span class="flag" style="width:24px;height:24px;background:#9333ea"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+        <span class="flag" style="width:24px;height:24px;background:#1B75BB"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+        <span class="flag" style="width:24px;height:24px;background:#0e0e0e"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg></span>
+      </div>
+
+      <div class="right-section-title text-center">My Folders</div>
+      <div class="right-section-body">
+        <input class="fld" style="font-size:13px" placeholder="My Folders" />
+      </div>
+
+      <div class="right-section-title text-center">Other Applications</div>
+      <div class="right-section-body text-center italic text-ink-400 py-3">No Other Applications</div>
+
+      <div class="right-section-title text-center">Details</div>
+      <div class="right-section-body space-y-3">
+        <div>
+          <div class="field-label-sm">Name</div>
+          <div class="field-value" id="candDName">Jimena Hicks</div>
+        </div>
+        <div>
+          <div class="field-label-sm">Email</div>
+          <div class="field-value" id="candDEmail">candidate@example.com</div>
+        </div>
+        <div>
+          <div class="field-label-sm">Home Telephone</div>
+          <div class="field-value" id="candDPhone">+24 198 945 4643</div>
+        </div>
+      </div>
+
+      <div class="right-section-title text-center">Tags/Hotlists</div>
+      <div class="right-section-body">
+        <button class="btn-primary w-full justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.41 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+          Add Tags/Hotlists
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const CANDIDATES = [
+  { name:'Kris Dobson', email:'Kris.Dobson@fakedbeanz.net', phone:'+44 7912 345 678', ref:'JN -032026-470427', role:'Production Operative', date:'30 May 2026 22:43', source:'CV Library', flags:['red','orange','green','grey'],
+    psq:[
+      { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", answer:"Yes", correct:true, knockout:true },
+      { q:"Are you based in, or willing to relocate to, the United Kingdom?", answer:"Yes", correct:true, knockout:true },
+      { q:"What is your current notice period?", answer:"1 month" },
+      { q:"What is your current employment status?", answer:"Employed full-time" },
+      { q:"What is your earliest available start date?", answer:"15 Jul 2026", correct:true },
+    ]
+  },
+  { name:'Cody March', email:'Cody.March@fakedbeanz.net', phone:'+44 7733 991 220', ref:'JN -052026-477666', role:'Marine Assistant', date:'30 May 2026 21:50', source:'CV Library', flags:['red','orange','green','grey'],
+    psq:[
+      { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", answer:"No", correct:false, knockout:true },
+      { q:"Are you based in, or willing to relocate to, the United Kingdom?", answer:"Yes", correct:true, knockout:true },
+      { q:"What is your current notice period?", answer:"Immediate" },
+      { q:"What is your current employment status?", answer:"Freelance / Contract" },
+      { q:"What is your earliest available start date?", answer:"1 Sep 2026", correct:false },
+    ]
+  },
+  { name:'Priya Shah', email:'Priya.Shah@fakedbeanz.net', phone:'+44 7456 110 988', ref:'JN -052026-478211', role:'Warehouse Operative', date:'30 May 2026 19:12', source:'Indeed', flags:['red','orange','green','grey'],
+    psq:[
+      { q:"Are you comfortable lifting up to 25kg repeatedly during a shift?", answer:"Yes", correct:true, knockout:true },
+      { q:"Do you have a current forklift licence?", answer:"No", correct:false },
+      { q:"Which shift patterns are you available for?", answer:"Days, Earlies, Lates" },
+      { q:"How many years of warehouse experience do you have?", answer:"3", correct:true },
+    ]
+  },
+  { name:'James Whittaker', email:'James.Whittaker@fakedbeanz.net', phone:'+44 7800 432 109', ref:'JN -052026-478090', role:'Customer Support Lead', date:'30 May 2026 17:48', source:'Reed', flags:['red','orange','green','grey'],
+    psq:[
+      { q:"Are you eligible to work in the UK?", answer:"Yes", correct:true, knockout:true },
+      { q:"How many years of customer service experience do you have?", answer:"6", correct:true },
+      { q:"Which channels have you supported customers on?", answer:"Phone, Email, Live chat" },
+      { q:"Briefly describe a difficult customer interaction you resolved.", answer:"De-escalated a billing dispute by clarifying invoice details and arranging a goodwill credit." },
+      { q:"What is your typing speed (words per minute)?", answer:"72" },
+    ]
+  },
+  { name:'Aisha Khan', email:'Aisha.Khan@fakedbeanz.net', phone:'+44 7900 765 432', ref:'JN -052026-477901', role:'Marketing Coordinator', date:'30 May 2026 16:05', source:'CV Library', flags:['red','orange','green','grey'],
+    psq:[
+      { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", answer:"Yes", correct:true, knockout:true },
+      { q:"What is your current notice period?", answer:"2 weeks" },
+      { q:"What is your current employment status?", answer:"Employed part-time" },
+    ]
+  },
+];
+
+const flagSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M4 21V4h13l-2 5 2 5H6v7z"/></svg>`;
+
+function psqStats(c){
+  const items = c.psq || [];
+  const correct = items.filter(it => it.correct === true).length;
+  const wrong = items.filter(it => it.correct === false).length;
+  const totalKO = items.filter(it => it.knockout).length;
+  const failedKO = items.filter(it => it.knockout && it.correct === false).length;
+  return { items, correct, wrong, total: correct + wrong, totalKO, failedKO };
+}
+
+function psqSummary(c){
+  const s = psqStats(c);
+  if(!s.total && !s.failedKO) return '';
+  const greenPct = s.total ? (s.correct/s.total)*100 : 0;
+  const redPct = s.total ? (s.wrong/s.total)*100 : 0;
+  const tipLines = [
+    `<b>${s.correct}</b> correct &nbsp;·&nbsp; <b>${s.wrong}</b> incorrect &nbsp;·&nbsp; <b>${s.items.length}</b> total`,
+    s.totalKO ? (s.failedKO
+      ? `<span class="ko">⚠ ${s.failedKO} of ${s.totalKO} knock-out question${s.totalKO>1?'s':''} answered incorrectly</span>`
+      : `All ${s.totalKO} knock-out question${s.totalKO>1?'s':''} passed`)
+      : ''
+  ].filter(Boolean).join('<br/>');
+  return `
+    <div class="tt flex items-center gap-2">
+      <div class="h-1.5 rounded-full overflow-hidden flex" style="width:80px;background:#eceef0">
+        <div style="width:${greenPct}%;background:#28bb21"></div>
+        <div style="width:${redPct}%;background:#dc2626"></div>
+      </div>
+      <span class="text-[11px] font-semibold text-ink-600">${s.correct}/${s.total}</span>
+      ${s.failedKO ? `
+        <div class="flex items-center gap-1 px-1.5 py-0.5 rounded" style="background:#fdecec;color:#b91c1c;border:1px solid #fbd5d5">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 5l8.5 14h-17L12 7zm-1 5v4h2v-4h-2zm0 5v2h2v-2h-2z"/></svg>
+          <span class="text-[11px] font-bold leading-none">${s.failedKO}</span>
+        </div>` : ''}
+      <div class="tt-body">${tipLines}</div>
+    </div>`;
+}
+
+function candidateCard(c, i){
+  return `
+    <div class="candidate-card">
+      <div class="candidate-name-row">
+        <div class="flex items-center gap-3">
+          <input type="checkbox" class="w-4 h-4" onclick="event.stopPropagation()" />
+          <button class="candidate-name hover:text-azure-600 transition" onclick="openCandidate(${i})">${c.name}</button>
+        </div>
+        <div class="flex items-center gap-4">
+          ${psqSummary(c)}
+          <a href="#" class="name-action" title="View">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </a>
+          <a href="#" class="name-action" title="Info" style="color:#1B75BB">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M11 10h2v7h-2zM11 7h2v2h-2z" fill="#fff"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="candidate-body">
+        <div class="flex items-center gap-2 flex-shrink-0">
+          ${c.flags.map(f => `<span class="flag flag-${f}${psqStats(c).failedKO && f !== 'red' ? ' dimmed' : ''}">${flagSvg}</span>`).join('')}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <a href="#" class="job-link">${c.ref} - ${c.role}</a>
+            <span class="text-ink-700 text-[14px] font-medium">${c.date}</span>
+          </div>
+          <div class="text-ink-500 text-[14px] mt-1">${c.source}</div>
+          <div class="text-center mt-3">
+            <span class="more-dots" title="More">●●●</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2 flex-shrink-0">
+          <button class="icon-action" title="Tag">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.41 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button class="icon-action" title="Open file">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+document.getElementById('candidatesWrap').innerHTML = CANDIDATES.map((c,i) => candidateCard(c,i)).join('');
+
+/* ============ CANDIDATE MODAL ============ */
+let candIdx = 0;
+let candTab = 'profile';
+
+function openCandidate(i){
+  candIdx = i; candTab = 'profile';
+  document.getElementById('candBackdrop').classList.add('open');
+  document.getElementById('candModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderCandidate();
+}
+function closeCandidate(){
+  document.getElementById('candBackdrop').classList.remove('open');
+  document.getElementById('candModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function candNav(d){
+  candIdx = (candIdx + d + CANDIDATES.length) % CANDIDATES.length;
+  renderCandidate();
+}
+function switchCandTab(t){
+  candTab = t;
+  document.querySelectorAll('.cand-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  renderCandCenter();
+}
+
+function renderCandidate(){
+  const c = CANDIDATES[candIdx];
+  document.getElementById('candHeaderName').textContent = c.name;
+  document.getElementById('candLeftName').textContent = c.name;
+  document.getElementById('candLeftEmail').textContent = c.email;
+  document.getElementById('candNum').textContent = candIdx + 1;
+  document.getElementById('candTotal').textContent = CANDIDATES.length;
+  document.getElementById('candCurApp').textContent = `${c.ref} - ${c.role}`;
+  document.getElementById('candDName').textContent = c.name;
+  document.getElementById('candDEmail').textContent = c.email;
+  document.getElementById('candDPhone').textContent = c.phone;
+  document.getElementById('candActivity').innerHTML = activityHtml();
+  document.querySelectorAll('.cand-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === candTab));
+  renderCandCenter();
+}
+
+function activityHtml(){
+  const months = [
+    { label:'MAY 2026', items:[{ title:'CV Downloaded', by:'By You!', ago:'16 days ago' }] },
+    { label:'MARCH 2026', items:[{ title:'CV Downloaded', by:'By You!', ago:'3 months ago' }] },
+    { label:'FEBRUARY 2026', items:[{ title:'CV Downloaded', by:'By You!', ago:'3 months ago' }] },
+  ];
+  return months.map(m => `
+    <div>
+      <div class="flex items-center gap-2 my-3">
+        <div class="flex-1 h-px bg-ink-200"></div>
+        <div class="activity-month">${m.label}</div>
+        <div class="flex-1 h-px bg-ink-200"></div>
+      </div>
+      ${m.items.map(it => `
+        <div class="flex items-start gap-3 mb-3">
+          <div class="activity-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          </div>
+          <div>
+            <div class="text-[13px] font-semibold" style="color:#f08a1c">${it.title}</div>
+            <div class="text-[12px] text-ink-600">${it.by}</div>
+            <div class="text-[12px] text-ink-500">${it.ago}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function renderCandCenter(){
+  const c = CANDIDATES[candIdx];
+  const wrap = document.getElementById('candCenter');
+  if(candTab === 'profile'){
+    wrap.innerHTML = `
+      <div class="bg-ink-50 px-6 py-3 flex items-center gap-2 border-b border-ink-100">
+        <h2 class="text-[20px] font-bold text-azure-600">Application Message</h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1B75BB"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <div class="bg-ink-50 px-6 py-3 border-b border-ink-100">
+        <h2 class="text-[22px] font-bold text-azure-600">CV</h2>
+      </div>
+      <div class="p-6">
+        <div class="cv-frame">
+          <div class="cv-doc">
+            <div class="text-[22px] font-bold mb-3">${c.name}</div>
+            <div class="text-[13px] mb-1"><a href="mailto:${c.email}" class="text-azure-600 underline">${c.email}</a></div>
+            <div class="text-[13px] mb-4">${c.phone}</div>
+            <div class="text-[13px] mb-4">2321 Day Ct.<br/>Partenit 11<br/>UA</div>
+            <div class="text-[13px] mb-4"><b>Skills:</b> contents out-of-the-box mindshares scalable</div>
+            <h3 class="text-[16px] font-bold mt-5 mb-2">Experience</h3>
+            <div class="text-[13px] font-bold">Stuart, Whitaker and Lewis <i>Program Manager</i></div>
+            <div class="text-[12px] italic mb-2">Aug 2021 – Jan 2025</div>
+            <div class="text-[13px] mb-4">Since we observed my content, your web-enabled niche improved its wireless user. They must optimize your infrastructure as we incubate my portal, still my interface is processed. Moreover, once they maximize your 24/7 web-readiness, they can target its distributed partnership, notwithstanding that its deliverable is suggested.</div>
+            <h3 class="text-[16px] font-bold mt-5 mb-2">Education</h3>
+            <div class="text-[13px] font-bold">Inventore atque Bootcamp Apr 2021 Associates architectures – scalable</div>
+          </div>
+        </div>
+      </div>`;
+  } else if(candTab === 'activity'){
+    wrap.innerHTML = `
+      <div class="p-6">
+        <h2 class="text-[18px] font-bold text-ink-900 mb-4">Activity Feed</h2>
+        <div class="text-[14px] text-ink-500">Application history and recruiter actions appear here.</div>
+      </div>`;
+  } else if(candTab === 'messages'){
+    wrap.innerHTML = `
+      <div class="p-6">
+        <h2 class="text-[18px] font-bold text-ink-900 mb-4">Messaging History</h2>
+        <div class="text-[14px] text-ink-500">No messages exchanged yet.</div>
+      </div>`;
+  } else if(candTab === 'psq'){
+    const items = c.psq || [];
+    const scored = items.filter(it => it.correct === true || it.correct === false);
+    const correctCount = items.filter(it => it.correct === true).length;
+    const wrongCount = items.filter(it => it.correct === false).length;
+    const failedKnockouts = items.filter(it => it.knockout && it.correct === false).length;
+    const total = scored.length;
+    const greenPct = total ? (correctCount / total) * 100 : 0;
+    const redPct = total ? (wrongCount / total) * 100 : 0;
+    const summaryBar = total ? `
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2" title="${correctCount} correct, ${wrongCount} wrong">
+          <div class="h-2.5 rounded-full overflow-hidden flex" style="width:160px;background:#eceef0">
+            <div style="width:${greenPct}%;background:#28bb21"></div>
+            <div style="width:${redPct}%;background:#dc2626"></div>
+          </div>
+          <span class="text-[12px] font-semibold text-ink-600">${correctCount}/${total}</span>
+        </div>
+        ${failedKnockouts ? `
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md" style="background:#fdecec;color:#b91c1c;border:1px solid #fbd5d5" title="${failedKnockouts} knock-out question${failedKnockouts>1?'s':''} answered incorrectly">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 5l8.5 14h-17L12 7zm-1 5v4h2v-4h-2zm0 5v2h2v-2h-2z"/></svg>
+            <span class="text-[12px] font-bold">${failedKnockouts}</span>
+          </div>` : ''}
+      </div>` : '';
+    wrap.innerHTML = `
+      <div class="p-6">
+        <div class="flex items-center justify-between gap-3 mb-5 flex-wrap">
+          <div class="flex items-center gap-3">
+            <h2 class="text-[18px] font-bold text-ink-900">Pre-screening answers</h2>
+            <span style="background:#eceef0;color:#5a6068;font-size:12px;font-weight:500;padding:2px 10px;border-radius:999px">${items.length} questions</span>
+          </div>
+          ${summaryBar}
+        </div>
+        <div class="border border-ink-100 rounded-lg bg-white">
+          ${items.map((it,i) => psqAnswerRow(it,i)).join('') || '<div class="p-6 text-ink-400 text-center text-[14px]">No PSQ answers submitted.</div>'}
+        </div>
+      </div>`;
+  }
+}
+
+function psqAnswerRow(it, idx){
+  let pillClass = 'answer-neutral';
+  let verdict = '';
+  if(it.correct === true){ pillClass = 'answer-right'; verdict = '<span style="font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#166e12">Correct</span>'; }
+  else if(it.correct === false){ pillClass = 'answer-wrong'; verdict = '<span style="font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#b91c1c">Incorrect</span>'; }
+  return `
+    <div class="answer-row">
+      <div class="flex items-start gap-3">
+        <div style="width:26px;height:26px;border-radius:999px;background:#858d96;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;flex-shrink:0">${idx+1}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start gap-2 flex-wrap">
+            <div class="text-[14px] font-semibold text-ink-900 leading-snug">${it.q}</div>
+            ${it.knockout ? '<span style="font-size:10px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:999px;text-transform:uppercase;color:#b91c1c;background:#fdecec">Knock-out</span>' : ''}
+          </div>
+          <div class="mt-3 flex items-center gap-3 flex-wrap">
+            <span class="answer-pill ${pillClass}">${it.answer || '—'}</span>
+            ${verdict}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('candModal').classList.contains('open')) return;
+  if(e.key === 'Escape') closeCandidate();
+  else if(e.key === 'ArrowLeft') candNav(-1);
+  else if(e.key === 'ArrowRight') candNav(1);
+});
+</script>
+</body>
+</html>

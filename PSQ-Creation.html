@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PSQ Creation · Broadbean</title>
+<link rel="icon" href="b-design-system/assets/broadbean-mark.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Geist','Mundial','ui-sans-serif','system-ui','sans-serif'],
+        },
+        colors: {
+          brand: { 50:'#ecfbeb',100:'#d4f5d1',500:'#28bb21',600:'#1f9619',700:'#166e12' },
+          ink:   { 50:'#f6f7f8',100:'#eceef0',200:'#d6dade',300:'#b3bac1',400:'#858d96',500:'#5a6068',600:'#3f444a',700:'#2d3035',800:'#212121',900:'#0e0e0e' },
+          azure: { 50:'#eaf3fa',100:'#dbe6ff',500:'#3568f5',600:'#1B75BB',700:'#155F95' },
+          danger:{ 50:'#fdecec',100:'#fbd5d5',500:'#dc2626',600:'#b91c1c',700:'#8a1414' },
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f5f6; }
+  .topnav a { color:#1f9619; }
+  .topnav a:hover { color:#166e12; }
+  .topnav .sep { color:#d6dade; }
+  .subnav a { color:#1f9619; font-weight:500; }
+  .subnav a.active { color:#1B75BB; }
+  .subnav .sep { color:#d6dade; }
+  .pill { font-size:11px; font-weight:700; letter-spacing:.04em; padding:3px 8px; border-radius:999px; text-transform:uppercase; }
+  .type-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600; color:#1B75BB; background:#eaf3fa; }
+  .knockout { color:#b91c1c; background:#fdecec; }
+  .qcount { background:#eceef0; color:#5a6068; font-size:12px; font-weight:500; padding:2px 10px; border-radius:999px; }
+  .qbubble { width:32px;height:32px;border-radius:999px;background:#858d96;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+  .icon-btn { width:36px;height:36px;border:1px solid #d6dade;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#5a6068;}
+  .icon-btn:hover { background:#f6f7f8;color:#212121; }
+  .icon-btn.danger:hover { color:#b91c1c; border-color:#fbd5d5; background:#fdecec; }
+  .remove-link { font-size:13px; font-weight:600; color:#5a6068; padding:6px 10px; border-radius:6px; transition: all .15s ease; align-self:center; }
+  .remove-link:hover { color:#b91c1c; background:#fdecec; }
+  .qcard { transition: all .15s ease; }
+  .chip { padding:6px 14px;border:1px solid #d6dade;border-radius:999px;font-size:13px;font-weight:500;color:#3f444a;background:#fff;cursor:pointer;transition:all .15s ease;}
+  .chip:hover { border-color:#b3bac1; }
+  .chip.active { background:#3568f5; border-color:#3568f5; color:#fff; }
+  .tab-pill { padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s ease; color:#5a6068; }
+  .tab-pill.active { background:#fff; color:#0e0e0e; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .btn-primary { background:#1B75BB; color:#fff; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-primary:hover { background:#155F95; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-primary:disabled:hover { background:#1B75BB; }
+  .btn-secondary { background:#fff; color:#3f444a; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; border:1px solid #d6dade; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-secondary:hover { border-color:#b3bac1; background:#f6f7f8; }
+  .btn-ghost { background:transparent; color:#3f444a; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; transition:all .15s ease; }
+  .btn-ghost:hover { background:#f6f7f8; }
+  input.fld, select.fld, textarea.fld { width:100%; padding:10px 14px; border:1px solid #d6dade; border-radius:8px; font-size:14px; background:#fff; transition: all .15s ease; }
+  input.fld:focus, select.fld:focus, textarea.fld:focus { outline:none; border-color:#1B75BB; }
+  .bb-check { appearance:none; width:20px; height:20px; border:1.5px solid #b3bac1; border-radius:5px; display:inline-grid; place-content:center; background:#fff; cursor:pointer; flex-shrink:0; transition:all .15s ease; }
+  .bb-check:checked { background:#1B75BB; border-color:#1B75BB; }
+  .bb-check:checked::after { content:""; width:11px; height:11px; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'><path d='M3 8.5l3.2 3L13 4.5' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat; }
+  .bb-check:disabled { background:#b3bac1; border-color:#b3bac1; cursor:not-allowed; }
+  .bb-check:disabled:checked { background:#858d96; border-color:#858d96; }
+  @keyframes drawer-in { from { transform:translateX(100%); } to { transform:translateX(0); } }
+  .drawer { animation: drawer-in .24s cubic-bezier(0.2,0,0,1); }
+  @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+  .fade-in { animation: fade-in .18s ease; }
+  @keyframes modal-in { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .modal-in { animation: modal-in .2s cubic-bezier(0.2,0,0,1); }
+
+  /* Type cards (row) */
+  .type-row { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+  .type-card { border:1.5px solid #d6dade; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .15s ease; background:#fff; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .type-card:hover { border-color:#1B75BB; background:#f0f7fd; }
+  .type-card.selected { border-color:#1B75BB; background:#f0f7fd; }
+  .type-card .ti { width:32px; height:32px; border-radius:8px; background:#eceef0; color:#5a6068; display:inline-flex; align-items:center; justify-content:center; }
+  .type-card.selected .ti { background:#1B75BB; color:#fff; }
+  .type-card .tt { font-size:12px; font-weight:600; color:#0e0e0e; line-height:1.2; }
+
+  /* Info tooltip */
+  .info-tip { position:relative; display:inline-flex; align-items:center; color:#858d96; cursor:help; }
+  .info-tip:hover { color:#3f444a; }
+  .info-tip .tip-body { position:absolute; bottom:calc(100% + 8px); left:0; background:#0e0e0e; color:#fff; padding:8px 12px; border-radius:6px; font-size:12px; font-weight:500; line-height:1.45; width:max-content; max-width:260px; opacity:0; pointer-events:none; transition:opacity .15s ease; z-index:60; box-shadow:0 6px 20px rgba(0,0,0,.18); white-space:normal; }
+  .info-tip .tip-body::after { content:''; position:absolute; top:100%; left:14px; border:5px solid transparent; border-top-color:#0e0e0e; }
+  .info-tip:hover .tip-body { opacity:1; }
+
+  /* Option list rows */
+  .opt-row { display:flex; align-items:center; gap:8px; }
+  .opt-row input { flex:1; }
+  .opt-add { font-size:13px; font-weight:600; color:#1B75BB; cursor:pointer; padding:6px 0; display:inline-flex; align-items:center; gap:4px; }
+  .opt-add:hover { color:#155F95; }
+  .pill-remove { width:32px;height:32px;border:1px solid #d6dade;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#5a6068; cursor:pointer; transition:all .15s ease; flex-shrink:0; }
+  .pill-remove:hover { color:#b91c1c; border-color:#fbd5d5; background:#fdecec; }
+</style>
+</head>
+<body class="text-ink-800">
+
+<!-- Top primary nav -->
+<header class="bg-white border-b-2 border-brand-500">
+  <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
+    <a href="#" class="px-3">Home</a><span class="sep">|</span>
+    <a href="Create-Posting.html" class="px-3">Create a Posting</a><span class="sep">|</span>
+    <a href="#" class="px-3">Manage Postings</a><span class="sep">|</span>
+    <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
+    <a href="#" class="px-3">Search</a><span class="sep">|</span>
+    <a href="#" class="px-3">Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Legacy Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
+    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
+    <a href="#" class="px-3 text-azure-600">Account Setup</a>
+  </nav>
+</header>
+
+<!-- Sub nav -->
+<div class="bg-[#f4f5f6] border-b border-ink-100">
+  <nav class="subnav px-10 h-12 flex items-center text-[14px]">
+    <a href="#" class="px-3">Company Information</a><span class="sep">|</span>
+    <a href="#" class="px-3">Company Permissions</a><span class="sep">|</span>
+    <a href="#" class="px-3">Job Board Subscriptions</a><span class="sep">|</span>
+    <a href="#" class="px-3">Accounts</a><span class="sep">|</span>
+    <a href="#" class="px-3">Templates</a><span class="sep">|</span>
+    <a href="#" class="px-3 active">PSQ</a>
+  </nav>
+</div>
+
+<main class="py-8" style="padding-left:10%;padding-right:10%">
+
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <h1 class="text-[28px] font-bold text-ink-900 leading-tight">Pre-screening questions</h1>
+      <p class="text-[14px] text-ink-500 mt-1">Questions candidates answer while applying for a role.</p>
+    </div>
+    <div class="flex items-center gap-1 bg-ink-200 p-1 rounded-lg">
+      <button class="tab-pill active" data-tab="questionnaire" onclick="switchTab('questionnaire')">Questionnaire</button>
+      <button class="tab-pill" data-tab="bank" onclick="switchTab('bank')">Question Bank</button>
+    </div>
+  </div>
+
+  <!-- ====================== QUESTIONNAIRE VIEW ====================== -->
+  <section id="view-questionnaire" class="grid grid-cols-[360px_1fr] gap-6">
+
+    <!-- Left: questionnaires list -->
+    <aside class="bg-white rounded-xl p-5 self-start" style="border:1px solid #e4e4e4">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-[20px] font-bold text-ink-900">Questionnaires</h2>
+        <button onclick="createQuestionnaire()" class="icon-btn" aria-label="Create new questionnaire" title="Create new questionnaire">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="flex items-stretch gap-2 mb-3">
+        <div class="relative flex-1">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="fld !pl-9" id="qListSearch" oninput="renderQList()" placeholder="Search questionnaires..." />
+        </div>
+        <div class="relative">
+          <button id="officeFilterBtn" class="h-full px-3 rounded-lg border border-ink-200 bg-white text-ink-600 hover:bg-ink-50 hover:text-ink-900 transition flex items-center gap-1.5" onclick="toggleOfficeFilter(event)" aria-label="Filter by office" title="Filter by office">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+            <span id="officeFilterCount" class="hidden text-[11px] font-bold text-azure-600 bg-azure-50 border border-azure-100 rounded-full px-1.5">0</span>
+          </button>
+        </div>
+      </div>
+      <div id="qListWrap" class="flex flex-col gap-2"></div>
+    </aside>
+
+    <!-- Office filter popover -->
+    <div id="officeFilterMenu" class="hidden fixed z-[55] bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-56">
+      <div class="flex items-center justify-between px-3 py-2 border-b border-ink-100">
+        <div class="text-[11px] font-bold tracking-[.08em] text-ink-400">FILTER BY OFFICE</div>
+        <button class="text-[11px] font-semibold text-ink-500 hover:text-danger-600" onclick="clearOfficeFilter()">Clear</button>
+      </div>
+      <div id="officeFilterList" class="max-h-64 overflow-y-auto py-1"></div>
+    </div>
+
+    <!-- Right: questions panel -->
+    <div class="bg-white rounded-xl p-6" style="border:1px solid #e4e4e4">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <h2 id="qPanelTitle" class="text-[22px] font-bold text-ink-900">Accounts</h2>
+          <span id="qPanelCount" class="qcount">5 questions</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="btn-secondary" onclick="openLibrary()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            Add from question bank
+          </button>
+          <button class="btn-primary" onclick="openNewQuestion()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            New question
+          </button>
+        </div>
+      </div>
+
+      <div id="qItemsWrap"></div>
+    </div>
+  </section>
+
+  <!-- ====================== QUESTION BANK VIEW ====================== -->
+  <section id="view-bank" class="hidden">
+    <div class="bg-white rounded-xl p-6" style="border:1px solid #e4e4e4">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="relative flex-1">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="fld !pl-11" id="bankSearch" oninput="renderBank()" placeholder="Search questions..." />
+        </div>
+        <button class="btn-primary" onclick="openNewQuestion(true)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          New question
+        </button>
+      </div>
+      <div class="flex flex-wrap gap-2 mb-6" id="bankFilters"></div>
+      <div id="bankList" class="divide-y divide-ink-100 -mx-2"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ====================== LIBRARY DRAWER ====================== -->
+<div id="libraryDrawer" class="hidden fixed inset-0 z-40">
+  <div class="absolute inset-0 bg-black/40 fade-in" onclick="closeLibrary()"></div>
+  <aside class="drawer absolute right-0 top-0 h-full w-[640px] max-w-[95vw] bg-white shadow-2xl flex flex-col">
+    <div class="p-6 border-b border-ink-100">
+      <div class="flex items-start justify-between mb-1">
+        <h3 class="text-[22px] font-bold text-ink-900">Add questions from Question Bank</h3>
+        <button class="icon-btn !w-9 !h-9" onclick="closeLibrary()" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="text-[14px] text-ink-500">into "<span id="libraryTarget">Accounts</span>"</div>
+    </div>
+    <div class="px-6 pt-5 pb-3">
+      <div class="relative mb-4">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input class="fld !pl-11" id="librarySearch" oninput="renderLibrary()" placeholder="Search Question Bank..." />
+      </div>
+      <div class="flex flex-wrap gap-2" id="libraryFilters"></div>
+    </div>
+    <div class="flex-1 overflow-y-auto px-6 pb-6" id="libraryList"></div>
+    <div class="p-5 border-t border-ink-100 flex items-center justify-end gap-3 bg-white">
+      <button class="btn-ghost" onclick="closeLibrary()">Cancel</button>
+      <button class="btn-primary" id="libraryAddBtn" onclick="addSelectedFromLibrary()" disabled>Add to questionnaire</button>
+    </div>
+  </aside>
+</div>
+
+<!-- ====================== NEW QUESTION MODAL ====================== -->
+<div id="newQModal" class="hidden fixed inset-0 z-50 items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/45 fade-in" onclick="closeNewQuestion()"></div>
+  <div class="modal-in relative bg-white w-[640px] max-w-[95vw] rounded-2xl shadow-2xl max-h-[90vh] flex flex-col">
+    <div class="p-6 pb-3 flex items-start justify-between">
+      <div>
+        <h3 id="newQTitle" class="text-[22px] font-bold text-ink-900">New question</h3>
+        <div id="newQSub" class="text-[14px] text-ink-500 mt-1">Adding to <b class="text-ink-800"><span id="newQTarget">Accounts</span></b> questionnaire and to the <b class="text-ink-800">Question bank</b>.</div>
+      </div>
+      <button class="icon-btn !w-9 !h-9" onclick="closeNewQuestion()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="px-6 py-5 space-y-5 overflow-y-auto">
+      <div>
+        <label class="block text-[14px] font-semibold text-ink-800 mb-2">Question type</label>
+        <div class="type-row" id="typeGrid"></div>
+      </div>
+
+      <div>
+        <label class="block text-[14px] font-semibold text-ink-800 mb-2">Question</label>
+        <input id="newQText" class="fld" placeholder="Write your question..." />
+      </div>
+
+      <div id="optionsBuilder" class="hidden">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-[14px] font-semibold text-ink-800">Options</label>
+          <label class="flex items-center gap-2 text-[12px] text-ink-600 cursor-pointer">
+            <input type="checkbox" id="newQMulti" class="bb-check" onchange="refreshExpected()" /> Allow multiple answers
+          </label>
+        </div>
+        <div id="optionsList" class="space-y-2"></div>
+        <button class="opt-add mt-2" onclick="addOption()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add option
+        </button>
+      </div>
+
+      <div id="expectedWrap">
+        <label class="block text-[14px] font-semibold text-ink-800 mb-2">Expected correct answer <span class="text-ink-400 font-normal">(optional)</span></label>
+        <div id="expectedField"></div>
+      </div>
+
+      <div class="space-y-3">
+        <label class="flex items-center gap-3 cursor-pointer select-none">
+          <input type="checkbox" id="newQMandatory" class="bb-check" />
+          <span class="text-[14px] font-semibold text-ink-800">Mandatory</span>
+          <span class="info-tip" tabindex="0" onclick="event.preventDefault()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
+            <span class="tip-body">Candidates must answer to submit their application.</span>
+          </span>
+        </label>
+        <label class="flex items-center gap-3 cursor-pointer select-none">
+          <input type="checkbox" id="newQKnockout" class="bb-check" onchange="onKnockoutChange()" />
+          <span class="flex items-center gap-2 text-[14px] font-semibold text-ink-800">
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="none"><path d="M2 1v14" stroke="#0e0e0e" stroke-width="1.4" stroke-linecap="round"/><path d="M2 1.6h10l-2.5 3 2.5 3H2" fill="#dc2626"/></svg>
+            Knock-out question
+          </span>
+          <span class="info-tip" tabindex="0" onclick="event.preventDefault()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
+            <span class="tip-body">Candidates who answer incorrectly are flagged. Auto-marks the question as mandatory.</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <div class="px-6 py-5 border-t border-ink-100 flex items-center justify-end gap-3">
+      <button class="btn-ghost" onclick="closeNewQuestion()">Cancel</button>
+      <button class="btn-primary" onclick="submitNewQuestion()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== QUESTIONNAIRE NAME MODAL ====================== -->
+<div id="qNameModal" class="hidden fixed inset-0 z-50 items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/45 fade-in" onclick="closeQNameModal()"></div>
+  <div class="modal-in relative bg-white w-[480px] max-w-[95vw] rounded-2xl shadow-2xl">
+    <div class="p-6 pb-3 flex items-start justify-between">
+      <div>
+        <h3 id="qNameTitle" class="text-[22px] font-bold text-ink-900">New questionnaire</h3>
+        <div id="qNameSub" class="text-[14px] text-ink-500 mt-1">Group questions for a role or department.</div>
+      </div>
+      <button class="icon-btn !w-9 !h-9" onclick="closeQNameModal()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="px-6 py-4 space-y-4">
+      <div>
+        <label class="block text-[14px] font-semibold text-ink-800 mb-2">Name</label>
+        <input id="qNameInput" class="fld" placeholder="e.g. Engineering" oninput="clearQNameError()" onkeydown="if(event.key==='Enter') submitQName()" />
+        <div id="qNameError" class="hidden text-[12px] text-danger-600 mt-1.5 font-medium"></div>
+      </div>
+      <div>
+        <label class="block text-[14px] font-semibold text-ink-800 mb-2">Office</label>
+        <select id="qOfficeInput" class="fld"></select>
+      </div>
+    </div>
+    <div class="px-6 py-5 border-t border-ink-100 flex items-center justify-end gap-3">
+      <button class="btn-ghost" onclick="closeQNameModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitQName()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <span id="qNameSubmitLabel">Create questionnaire</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== CONFIRM DELETE MODAL ====================== -->
+<div id="confirmModal" class="hidden fixed inset-0 z-50 items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/45 fade-in" onclick="closeConfirm()"></div>
+  <div class="modal-in relative bg-white w-[460px] max-w-[95vw] rounded-2xl shadow-2xl">
+    <div class="p-6">
+      <div class="flex items-start gap-4">
+        <div class="w-11 h-11 rounded-full bg-danger-50 flex items-center justify-center flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        </div>
+        <div class="flex-1">
+          <h3 id="confirmTitle" class="text-[18px] font-bold text-ink-900">Delete questionnaire?</h3>
+          <p id="confirmText" class="text-[14px] text-ink-500 mt-1">This removes the questionnaire only. The questions stay in your question bank and can be reused.</p>
+          <div id="confirmNote" class="hidden mt-3 text-[13px] text-ink-600 p-3 rounded-lg border border-ink-100 bg-ink-50 flex items-start gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6068" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
+            <span><b class="text-ink-800">Note:</b> Jobs that are already posted keep their original version.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-6 py-5 border-t border-ink-100 flex items-center justify-end gap-3">
+      <button class="btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button id="confirmDeleteBtn" class="btn-primary" style="background:#b91c1c">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== QUESTIONNAIRE MENU (3-dot) ====================== -->
+<div id="qMenu" class="hidden fixed z-[55] bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-44">
+  <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="menuEdit()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+    Edit
+  </button>
+  <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="menuDuplicate()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    Duplicate
+  </button>
+  <button class="w-full text-left px-3 py-2 text-[14px] text-danger-600 hover:bg-danger-50 flex items-center gap-3" onclick="menuDelete()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+    Delete
+  </button>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 bg-ink-900 text-white text-sm px-4 py-3 rounded-lg shadow-lg opacity-0 pointer-events-none transition-opacity z-[60] flex items-center gap-4 max-w-[480px]"></div>
+
+<script>
+/* =================== DATA =================== */
+const OFFICES = ['London','Manchester','Edinburgh (Scotland)','Dublin','Mumbai (India)','Bengaluru (India)','New York','Sydney','Remote'];
+
+const QUESTIONNAIRES = [
+  { id:'accounts', name:'Accounts', office:'London', items:[
+    { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"Are you based in, or willing to relocate to, the United Kingdom?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"What is your current notice period?", type:"Multiple Choice", options:["Immediate","1 week","2 weeks","1 month","3 months","More than 3 months"] },
+    { q:"What is your current employment status?", type:"Multiple Choice", options:["Employed full-time","Employed part-time","Freelance / Contract","Unemployed","Other"] },
+    { q:"What is your earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
+  ]},
+  { id:'driver', name:'Driver', office:'Manchester', items:[
+    { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"How many years of driving experience do you have?", type:"Number", expected:"≥ 2" },
+    { q:"Do you have any current driving offences or points on your licence?", type:"Yes / No", expected:"No" },
+    { q:"Which licence categories do you hold?", type:"Multiple Choice", options:["B","C1","C","D1","D"] },
+    { q:"Are you willing to work shift patterns including weekends?", type:"Yes / No", expected:"Yes" },
+  ]},
+  { id:'warehouse', name:'Warehouse', office:'Mumbai (India)', items:[
+    { q:"Are you comfortable lifting up to 25kg repeatedly during a shift?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"Do you have a current forklift licence?", type:"Yes / No", expected:"Yes" },
+    { q:"Which shift patterns are you available for?", type:"Multiple Choice", options:["Days","Nights","Earlies","Lates","Weekends"] },
+    { q:"How many years of warehouse experience do you have?", type:"Number", expected:"≥ 1" },
+  ]},
+  { id:'customer', name:'Customer Service', office:'Remote', items:[
+    { q:"Are you eligible to work in the UK?", type:"Yes / No", expected:"Yes", knockout:true },
+    { q:"How many years of customer service experience do you have?", type:"Number", expected:"≥ 1" },
+    { q:"Which channels have you supported customers on?", type:"Multiple Choice", options:["Phone","Email","Live chat","Social media"] },
+    { q:"Briefly describe a difficult customer interaction you resolved.", type:"Open Text" },
+    { q:"What is your typing speed (words per minute)?", type:"Number" },
+  ]},
+];
+
+const LIBRARY = [
+  { q:"Are you legally authorised to work without employer sponsorship?", type:"Yes / No", options:["Yes","No"], expected:"Yes" },
+  { q:"Which of these have you worked with professionally?", type:"Multiple Choice", options:["React","TypeScript","GraphQL","Node.js"], expected:"React, TypeScript" },
+  { q:"Preferred working arrangement?", type:"Multiple Choice", options:["Remote","Hybrid","On-site"], expected:"Hybrid" },
+  { q:"Earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
+  { q:"Briefly describe a project you're proud of.", type:"Open Text", note:"manual review" },
+  { q:"How many years of Node.js experience do you have?", type:"Number", expected:"≥ 3" },
+  { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes" },
+  { q:"Rate your SQL proficiency.", type:"Multiple Choice", options:["Beginner","Intermediate","Advanced","Expert"] },
+  { q:"Any additional comments?", type:"Open Text" },
+];
+
+const TYPES = ["All","Yes / No","Multiple Choice","Date","Number","Open Text"];
+function matchesType(filter, t){ return filter === 'All' || t === filter; }
+
+/* Question Bank = union of all questionnaire questions + LIBRARY + BANK_ONLY (deduped by question text) */
+function getBankPool(){
+  const map = new Map();
+  QUESTIONNAIRES.forEach(q => q.items.forEach(it => map.set(it.q, it)));
+  LIBRARY.forEach(it => { if(!map.has(it.q)) map.set(it.q, it); });
+  return [...map.values()];
+}
+
+let activeQId = 'accounts';
+let activeBankType = 'All';
+let activeLibraryType = 'All';
+let librarySelected = new Set();
+
+/* =================== UTILS =================== */
+function knockoutCount(items){ return items.filter(i => i.knockout).length; }
+
+function questionRow(item, idx){
+  const expected = item.expected ? `<span class="text-[13px] text-ink-500">Expected: <span class="font-medium text-ink-700">${item.expected}</span></span>` : '';
+  const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
+  const note = item.note ? `<span class="text-[13px] text-ink-500">${item.note}</span>` : '';
+  const meta = [expected, opts, note].filter(Boolean).join('');
+  return `
+    <div class="flex items-start gap-4 py-5 border-b border-ink-100 last:border-0">
+      <div class="qbubble">${idx+1}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start gap-3 flex-wrap">
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}${(item.mandatory || item.knockout) ? ' <span title="Mandatory" style="color:#b91c1c;font-weight:700">*</span>' : ''}</div>
+          ${item.knockout ? '<span class="pill knockout">Knock-out</span>' : ''}
+        </div>
+        <div class="mt-2 flex items-center gap-3 flex-wrap">
+          <span class="type-tag">${item.type}</span>
+          ${meta}
+        </div>
+      </div>
+      <button class="remove-link" onclick="removeQuestion(${idx})">Remove</button>
+    </div>`;
+}
+
+function bankRow(item, idx){
+  const expected = item.expected ? `<span class="text-[13px] text-ink-500">Expected: <span class="font-medium text-ink-700">${item.expected}</span></span>` : '';
+  const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
+  return `
+    <div class="flex items-start gap-4 py-5 px-2">
+      <div class="qbubble">${idx+1}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start gap-3 flex-wrap">
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}${(item.mandatory || item.knockout) ? ' <span title="Mandatory" style="color:#b91c1c;font-weight:700">*</span>' : ''}</div>
+          ${item.knockout ? '<span class="pill knockout">Knock-out</span>' : ''}
+        </div>
+        <div class="mt-2 flex items-center gap-3 flex-wrap">
+          <span class="type-tag">${item.type}</span>
+          ${expected}${opts}
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="icon-btn" aria-label="Edit" onclick="editBankQuestion('${encodeURIComponent(item.q)}')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        </button>
+        <button class="icon-btn danger" aria-label="Delete" onclick="deleteBankQuestion('${encodeURIComponent(item.q)}')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>
+    </div>`;
+}
+
+/* =================== RENDER =================== */
+let officeFilter = new Set();
+
+function renderQList(){
+  const wrap = document.getElementById('qListWrap');
+  const term = (document.getElementById('qListSearch')?.value || '').toLowerCase();
+  let list = term ? QUESTIONNAIRES.filter(q => q.name.toLowerCase().includes(term)) : QUESTIONNAIRES;
+  if(officeFilter.size) list = list.filter(q => q.office && officeFilter.has(q.office));
+  // count badge on the filter button
+  const badge = document.getElementById('officeFilterCount');
+  if(badge){
+    if(officeFilter.size){ badge.textContent = officeFilter.size; badge.classList.remove('hidden'); }
+    else badge.classList.add('hidden');
+  }
+  if(!list.length){
+    wrap.innerHTML = '<div class="text-[13px] text-ink-400 italic text-center py-3">No questionnaires match.</div>';
+    return;
+  }
+  wrap.innerHTML = list.map(q => {
+    const ko = knockoutCount(q.items);
+    const active = q.id === activeQId;
+    return `
+      <div class="qcard group relative border ${active?'border-azure-500 bg-azure-50':'border-ink-100'} rounded-lg" style="${active?'':'background:#f4f5f6'}">
+        <button class="text-left w-full p-4 pr-12" onclick="selectQ('${q.id}')">
+          <div class="font-semibold text-[14px] text-ink-900">${q.name}</div>
+          <div class="mt-1 text-[13px] text-ink-500">
+            ${q.items.length} questions ${ko ? `· <span class="text-danger-600 font-medium">${ko} knock-out</span>` : ''}
+          </div>
+          ${q.office ? `<div class="mt-1.5 inline-flex items-center gap-1 text-[11px] text-ink-600 font-medium px-2 py-0.5 rounded-full bg-white border border-ink-200">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${q.office}
+          </div>` : ''}
+        </button>
+        <button class="qmenu-btn absolute top-2 right-2 w-8 h-8 rounded-md flex items-center justify-center text-ink-500 hover:bg-ink-100 hover:text-ink-800 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" onclick="event.stopPropagation();openQMenu(event,'${q.id}')" aria-label="More options">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+        </button>
+      </div>`;
+  }).join('');
+}
+
+function renderQuestionnairePanel(){
+  const q = QUESTIONNAIRES.find(x => x.id === activeQId);
+  if(!q) return;
+  document.getElementById('qPanelTitle').textContent = q.name;
+  document.getElementById('qPanelCount').textContent = `${q.items.length} questions`;
+  document.getElementById('libraryTarget').textContent = q.name;
+  document.getElementById('newQTarget').textContent = q.name;
+  document.getElementById('qItemsWrap').innerHTML = q.items.map((it,i) => questionRow(it,i)).join('');
+}
+
+function selectQ(id){ activeQId = id; renderQList(); renderQuestionnairePanel(); }
+
+function renderBank(){
+  const filters = document.getElementById('bankFilters');
+  filters.innerHTML = TYPES.map(t => `<button class="chip ${t===activeBankType?'active':''}" onclick="activeBankType='${t}';renderBank()">${t}</button>`).join('');
+  const search = (document.getElementById('bankSearch')?.value || '').toLowerCase();
+  let pool = getBankPool();
+  BANK_ONLY.forEach(it => { if(!pool.find(p => p.q === it.q)) pool.push(it); });
+  if(activeBankType !== 'All') pool = pool.filter(it => matchesType(activeBankType, it.type));
+  if(search) pool = pool.filter(it => it.q.toLowerCase().includes(search));
+  document.getElementById('bankList').innerHTML = pool.length
+    ? pool.map((it,i) => bankRow(it,i)).join('')
+    : '<div class="py-12 text-center text-ink-400">No questions match.</div>';
+}
+
+/* =================== LIBRARY =================== */
+function openLibrary(){
+  librarySelected.clear();
+  document.getElementById('libraryDrawer').classList.remove('hidden');
+  renderLibrary();
+  document.body.style.overflow = 'hidden';
+}
+function closeLibrary(){
+  document.getElementById('libraryDrawer').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+function renderLibrary(){
+  const filters = document.getElementById('libraryFilters');
+  filters.innerHTML = TYPES.map(t => `<button class="chip ${t===activeLibraryType?'active':''}" onclick="activeLibraryType='${t}';renderLibrary()">${t}</button>`).join('');
+  const search = (document.getElementById('librarySearch')?.value || '').toLowerCase();
+  let pool = getBankPool();
+  BANK_ONLY.forEach(it => { if(!pool.find(p => p.q === it.q)) pool.push(it); });
+  if(activeLibraryType !== 'All') pool = pool.filter(it => matchesType(activeLibraryType, it.type));
+  if(search) pool = pool.filter(it => it.q.toLowerCase().includes(search));
+  const list = document.getElementById('libraryList');
+  const activeItems = (QUESTIONNAIRES.find(x => x.id === activeQId)?.items || []).map(i => i.q);
+  list.innerHTML = pool.map((it, i) => {
+    const key = it.q;
+    const already = activeItems.includes(key);
+    const checked = already || librarySelected.has(key);
+    const opts = it.options ? `<div class="text-[13px] text-ink-500 mt-1">Options: ${it.options.join(', ')} ${it.expected?`· Expected: <span class="font-semibold text-ink-800">${it.expected}</span>`:''}</div>` : (it.expected?`<div class="text-[13px] text-ink-500 mt-1">Expected: <span class="font-semibold text-ink-800">${it.expected}</span></div>`:'');
+    const note = it.note ? `<span class="text-[13px] text-ink-500">${it.note}</span>` : '';
+    return `
+      <label class="flex items-start gap-4 py-4 border-b border-ink-100 last:border-0 ${already?'cursor-not-allowed opacity-60':'cursor-pointer'}" ${already?'title="Already in this questionnaire"':''}>
+        <input type="checkbox" class="bb-check mt-1" data-key="${encodeURIComponent(key)}" ${checked?'checked':''} ${already?'disabled':''} onchange="toggleLibrary(this)" />
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="text-[14px] font-semibold text-ink-900 leading-snug">${it.q}</div>
+            ${already?'<span class="pill" style="background:#eceef0;color:#5a6068">Added</span>':''}
+          </div>
+          <div class="mt-2 flex items-center gap-3 flex-wrap">
+            <span class="type-tag">${it.type}</span>
+            ${note}
+          </div>
+          ${opts}
+        </div>
+      </label>`;
+  }).join('') || '<div class="py-12 text-center text-ink-400">No library questions match.</div>';
+  updateLibraryButton();
+}
+function toggleLibrary(el){
+  const key = decodeURIComponent(el.dataset.key);
+  if(el.checked) librarySelected.add(key); else librarySelected.delete(key);
+  updateLibraryButton();
+}
+function updateLibraryButton(){
+  const btn = document.getElementById('libraryAddBtn');
+  const n = librarySelected.size;
+  btn.disabled = n === 0;
+  btn.textContent = n ? `Add ${n} to questionnaire` : 'Add to questionnaire';
+  btn.style.opacity = n ? 1 : .5;
+}
+function addSelectedFromLibrary(){
+  if(!librarySelected.size) return;
+  const q = QUESTIONNAIRES.find(x => x.id === activeQId);
+  const pool = getBankPool();
+  BANK_ONLY.forEach(it => { if(!pool.find(p => p.q === it.q)) pool.push(it); });
+  pool.forEach(it => { if(librarySelected.has(it.q) && !q.items.find(x => x.q === it.q)) q.items.push({...it}); });
+  closeLibrary();
+  renderQList(); renderQuestionnairePanel();
+  toast(`Added ${librarySelected.size} question${librarySelected.size>1?'s':''} to ${q.name}`);
+}
+
+/* =================== NEW QUESTION =================== */
+/* =================== TYPE CATALOG =================== */
+const QTYPES = {
+  'yesno':  { label:'Yes / No', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M20 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>`,
+              example:'e.g. "Do you hold a valid UK driving licence?"',
+              storedType:'Yes / No',
+              suggestions:['Are you eligible to work in the UK?','Do you hold a valid UK driving licence?'] },
+  'choice': { label:'Multiple Choice', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1.5"/><circle cx="3.5" cy="12" r="1.5"/><circle cx="3.5" cy="18" r="1.5"/></svg>`,
+              example:'e.g. "Which shift patterns are you available for?"',
+              storedType:'Single Select',
+              suggestions:['What is your current notice period?','Which shift patterns are you available for?'] },
+  'date':   { label:'Date', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+              example:'e.g. "What is your earliest available start date?"',
+              storedType:'Date',
+              suggestions:['What is your earliest available start date?','Earliest interview availability?'] },
+  'number': { label:'Number', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>`,
+              example:'e.g. "How many years of experience do you have?"',
+              storedType:'Number',
+              suggestions:['How many years of experience do you have?','Expected salary (annual)?'] },
+  'text':   { label:'Open Text', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>`,
+              example:'e.g. "Briefly describe a project you\'re proud of."',
+              storedType:'Free / Open Text',
+              suggestions:['Briefly describe a project you\'re proud of.','Why are you interested in this role?'] },
+};
+
+let newQFromBank = false;
+let newQEditKey = null; // original question text when editing
+let newQTypeKey = 'yesno';
+let newQOptions = ['',''];
+
+const TYPE_TO_KEY = {
+  "Yes / No":"yesno",
+  "Multiple Choice":"choice",
+  "Date":"date",
+  "Number":"number",
+  "Open Text":"text",
+};
+
+function openNewQuestion(fromBank){
+  newQFromBank = !!fromBank;
+  newQEditKey = null;
+  newQTypeKey = 'yesno';
+  newQOptions = ['',''];
+  document.getElementById('newQModal').style.display = 'flex';
+  document.getElementById('newQModal').classList.remove('hidden');
+  document.getElementById('newQTitle').textContent = 'New question';
+  const sub = document.getElementById('newQSub');
+  if(newQFromBank){
+    sub.innerHTML = 'Adding to the <b class="text-ink-800">Question bank</b>. You can add it to a questionnaire later from the <b class="text-ink-800">Add from question bank</b> button.';
+  } else {
+    sub.innerHTML = `Adding to <b class="text-ink-800">${(QUESTIONNAIRES.find(x=>x.id===activeQId)?.name)||'this'}</b> questionnaire and to the <b class="text-ink-800">Question bank</b>.`;
+  }
+  document.getElementById('newQText').value = '';
+  document.getElementById('newQKnockout').checked = false;
+  document.getElementById('newQMandatory').checked = false;
+  document.getElementById('newQMandatory').disabled = false;
+  renderTypeGrid();
+  applyType();
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>document.getElementById('newQText').focus(),50);
+}
+
+function onKnockoutChange(){
+  const ko = document.getElementById('newQKnockout').checked;
+  const m = document.getElementById('newQMandatory');
+  if(ko){ m.checked = true; m.disabled = true; }
+  else { m.disabled = false; }
+}
+
+function editBankQuestion(encKey){
+  const key = decodeURIComponent(encKey);
+  // find the question across pools
+  let item = null;
+  for(const q of QUESTIONNAIRES){ const f = q.items.find(x => x.q === key); if(f){ item = f; break; } }
+  if(!item) item = LIBRARY.find(x => x.q === key);
+  if(!item) item = BANK_ONLY.find(x => x.q === key);
+  if(!item) return;
+
+  newQFromBank = false;
+  newQEditKey = key;
+  newQTypeKey = TYPE_TO_KEY[item.type] || 'text';
+  newQOptions = item.options ? [...item.options] : ['',''];
+  document.getElementById('newQModal').style.display = 'flex';
+  document.getElementById('newQModal').classList.remove('hidden');
+  document.getElementById('newQTitle').textContent = 'Edit question';
+  document.getElementById('newQSub').innerHTML =
+    'Changes apply across <b class="text-ink-800">every questionnaire</b> using this question. ' +
+    '<span class="text-ink-400">Jobs that are already posted keep their original version.</span>';
+  document.getElementById('newQKnockout').checked = !!item.knockout;
+  document.getElementById('newQMandatory').checked = !!item.knockout || !!item.mandatory;
+  document.getElementById('newQMandatory').disabled = !!item.knockout;
+  renderTypeGrid();
+  applyType();
+  // prefill question text after applyType so it isn't cleared
+  document.getElementById('newQText').value = item.q;
+  // prefill expected answer if applicable
+  setTimeout(() => prefillExpected(item), 0);
+  document.body.style.overflow = 'hidden';
+}
+
+function prefillExpected(item){
+  if(!item.expected) return;
+  if(newQTypeKey === 'yesno'){
+    const el = document.getElementById('newQExpected'); if(el) el.value = item.expected;
+  } else if(newQTypeKey === 'choice'){
+    const multi = item.type === 'Multi Select' || /,/.test(item.expected||'');
+    const mu = document.getElementById('newQMulti'); if(mu){ mu.checked = multi; refreshExpected(); }
+    const vals = item.expected.split(',').map(s=>s.trim());
+    document.querySelectorAll('input[name="newQExpected"]').forEach(inp => { if(vals.includes(inp.value)) inp.checked = true; });
+  } else if(newQTypeKey === 'date' || newQTypeKey === 'number'){
+    const parts = item.expected.split(' ');
+    const op = parts.length > 1 ? parts.slice(0,-1).join(' ') : '';
+    const v = parts[parts.length-1];
+    const opEl = document.getElementById('newQExpOp'); const vEl = document.getElementById('newQExpVal');
+    if(opEl) opEl.value = op;
+    if(vEl) vEl.value = v;
+  }
+}
+
+function deleteBankQuestion(encKey){
+  const key = decodeURIComponent(encKey);
+  // count questionnaires using it
+  const usedIn = QUESTIONNAIRES.filter(q => q.items.some(x => x.q === key));
+  document.getElementById('confirmTitle').textContent = 'Delete question?';
+  document.getElementById('confirmText').textContent =
+    usedIn.length
+      ? `This will permanently delete the question from your Question bank and remove it from ${usedIn.length} questionnaire${usedIn.length===1?'':'s'} (${usedIn.map(q=>q.name).join(', ')}).`
+      : `This will permanently delete the question from your Question bank.`;
+  document.getElementById('confirmNote').classList.remove('hidden');
+  document.getElementById('confirmModal').style.display = 'flex';
+  document.getElementById('confirmModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('confirmDeleteBtn').onclick = () => {
+    QUESTIONNAIRES.forEach(q => { q.items = q.items.filter(x => x.q !== key); });
+    const li = LIBRARY.findIndex(x => x.q === key); if(li > -1) LIBRARY.splice(li,1);
+    const bi = BANK_ONLY.findIndex(x => x.q === key); if(bi > -1) BANK_ONLY.splice(bi,1);
+    closeConfirm();
+    renderQList(); renderQuestionnairePanel(); renderBank();
+    toast('Question deleted from the Question bank');
+  };
+}
+function closeNewQuestion(){
+  document.getElementById('newQModal').style.display = 'none';
+  document.getElementById('newQModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function renderTypeGrid(){
+  const grid = document.getElementById('typeGrid');
+  grid.innerHTML = Object.entries(QTYPES).map(([k,t]) => `
+    <button class="type-card ${newQTypeKey===k?'selected':''}" onclick="selectType('${k}')">
+      <div class="ti">${t.icon}</div>
+      <div class="tt">${t.label}</div>
+    </button>`).join('');
+}
+
+function selectType(k){
+  newQTypeKey = k;
+  renderTypeGrid();
+  applyType();
+}
+
+function applyType(){
+  // options builder (only for multiple choice)
+  const optsWrap = document.getElementById('optionsBuilder');
+  if(newQTypeKey === 'choice'){
+    optsWrap.classList.remove('hidden');
+    if(newQOptions.length < 2) newQOptions = ['',''];
+    renderOptionsList();
+  } else {
+    optsWrap.classList.add('hidden');
+  }
+  renderExpectedField();
+
+  // Knock-out can't apply to free-form text answers (no objective expected answer)
+  const koEl = document.getElementById('newQKnockout');
+  const koLabel = koEl.closest('label');
+  if(newQTypeKey === 'text'){
+    koEl.checked = false;
+    koEl.disabled = true;
+    if(koLabel){ koLabel.style.opacity = '.5'; koLabel.style.cursor = 'not-allowed'; }
+  } else {
+    koEl.disabled = false;
+    if(koLabel){ koLabel.style.opacity = ''; koLabel.style.cursor = ''; }
+  }
+  onKnockoutChange();
+}
+
+function renderOptionsList(){
+  const list = document.getElementById('optionsList');
+  list.innerHTML = newQOptions.map((v,i) => `
+    <div class="opt-row">
+      <input class="fld" placeholder="Option ${i+1}" value="${(v||'').replace(/"/g,'&quot;')}" oninput="newQOptions[${i}]=this.value;refreshExpected()" />
+      <button class="pill-remove" ${newQOptions.length<=2?'disabled style=\"opacity:.4;cursor:not-allowed\"':''} onclick="removeOption(${i})" aria-label="Remove">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>`).join('');
+}
+function addOption(){ newQOptions.push(''); renderOptionsList(); refreshExpected(); }
+function removeOption(i){ if(newQOptions.length<=2) return; newQOptions.splice(i,1); renderOptionsList(); refreshExpected(); }
+
+function refreshExpected(){ renderExpectedField(); }
+function renderExpectedField(){
+  const wrap = document.getElementById('expectedField');
+  const expectedSection = document.getElementById('expectedWrap');
+  expectedSection.style.display = '';
+  if(newQTypeKey === 'yesno'){
+    wrap.innerHTML = `
+      <select id="newQExpected" class="fld">
+        <option value="">No expected answer</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>`;
+  } else if(newQTypeKey === 'choice'){
+    const multi = document.getElementById('newQMulti')?.checked;
+    const valid = newQOptions.filter(o => o.trim());
+    wrap.innerHTML = valid.length
+      ? `<div class="space-y-2">${valid.map((o,i)=>`
+          <label class="flex items-center gap-2 text-[14px] text-ink-700 cursor-pointer">
+            <input type="${multi?'checkbox':'radio'}" name="newQExpected" class="${multi?'bb-check':''}" value="${o.replace(/"/g,'&quot;')}" /> ${o}
+          </label>`).join('')}</div>`
+      : `<div class="text-[13px] text-ink-400 italic">Add at least one option to mark a correct answer.</div>`;
+  } else if(newQTypeKey === 'date'){
+    wrap.innerHTML = `
+      <div class="flex gap-2">
+        <select id="newQExpOp" class="fld" style="max-width:170px">
+          <option value="">No expected answer</option>
+          <option value="on or before">On or before</option>
+          <option value="on or after">On or after</option>
+        </select>
+        <input id="newQExpVal" type="date" class="fld" />
+      </div>`;
+  } else if(newQTypeKey === 'number'){
+    wrap.innerHTML = `
+      <div class="flex gap-2">
+        <select id="newQExpOp" class="fld" style="max-width:120px">
+          <option value="">No expected</option>
+          <option value="≥">≥ (at least)</option>
+          <option value="≤">≤ (at most)</option>
+          <option value="=">= (exactly)</option>
+        </select>
+        <input id="newQExpVal" type="number" class="fld" placeholder="e.g. 3" />
+      </div>`;
+  } else if(newQTypeKey === 'text'){
+    expectedSection.style.display = 'none';
+  }
+}
+
+function readExpected(){
+  if(newQTypeKey === 'yesno'){
+    return document.getElementById('newQExpected')?.value || null;
+  }
+  if(newQTypeKey === 'choice'){
+    const multi = document.getElementById('newQMulti')?.checked;
+    if(multi){
+      return Array.from(document.querySelectorAll('input[name="newQExpected"]:checked')).map(x=>x.value).join(', ') || null;
+    } else {
+      return document.querySelector('input[name="newQExpected"]:checked')?.value || null;
+    }
+  }
+  if(newQTypeKey === 'date' || newQTypeKey === 'number'){
+    const op = document.getElementById('newQExpOp')?.value;
+    const v = document.getElementById('newQExpVal')?.value;
+    if(!op || !v) return null;
+    return `${op} ${v}`;
+  }
+  return null;
+}
+const BANK_ONLY = [];
+function submitNewQuestion(){
+  const text = document.getElementById('newQText').value.trim();
+  if(!newQTypeKey){ toast('Please choose a question type.'); return; }
+  if(!text){ toast('Please enter a question.'); return; }
+  const t = QTYPES[newQTypeKey];
+  const knockout = document.getElementById('newQKnockout').checked;
+  const mandatory = knockout || document.getElementById('newQMandatory').checked;
+  let storedType = t.label; // store the simplified label
+  const next = { q:text, type:storedType, knockout, mandatory };
+  if(newQTypeKey === 'choice'){
+    const opts = newQOptions.map(o=>o.trim()).filter(Boolean);
+    if(opts.length < 2){ toast('Please add at least two options.'); return; }
+    next.options = opts;
+  }
+  const expected = readExpected();
+  if(expected) next.expected = expected;
+
+  if(newQEditKey){
+    // update every occurrence across pools
+    let count = 0;
+    QUESTIONNAIRES.forEach(q => q.items.forEach((it,i) => { if(it.q === newQEditKey){ q.items[i] = { ...it, ...next }; count++; } }));
+    const li = LIBRARY.findIndex(x => x.q === newQEditKey); if(li > -1) LIBRARY[li] = { ...LIBRARY[li], ...next };
+    const bi = BANK_ONLY.findIndex(x => x.q === newQEditKey); if(bi > -1) BANK_ONLY[bi] = { ...BANK_ONLY[bi], ...next };
+    renderQList(); renderQuestionnairePanel(); renderBank();
+    toast(count ? `Question updated in ${count} questionnaire${count===1?'':'s'} and the Question bank` : 'Question updated in the Question bank');
+  } else if(newQFromBank){
+    BANK_ONLY.push(next);
+    renderBank();
+    toast('Question added to the Question bank');
+  } else {
+    const q = QUESTIONNAIRES.find(x => x.id === activeQId);
+    q.items.push(next);
+    renderQList(); renderQuestionnairePanel();
+    toast('Question added');
+  }
+  closeNewQuestion();
+}
+
+/* =================== TABS / TOAST =================== */
+function switchTab(name){
+  document.querySelectorAll('.tab-pill').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.getElementById('view-questionnaire').classList.toggle('hidden', name !== 'questionnaire');
+  document.getElementById('view-bank').classList.toggle('hidden', name !== 'bank');
+  if(name === 'bank') renderBank();
+}
+let qNameMode = 'create'; // 'create' | 'edit' | 'duplicate'
+let qMenuTargetId = null;
+
+function populateOfficeSelect(selected){
+  const el = document.getElementById('qOfficeInput');
+  el.innerHTML = OFFICES.map(o => `<option value="${o}" ${o===selected?'selected':''}>${o}</option>`).join('');
+}
+
+function createQuestionnaire(){
+  qNameMode = 'create';
+  document.getElementById('qNameTitle').textContent = 'New questionnaire';
+  document.getElementById('qNameSub').textContent = 'Group questions for a role or department.';
+  document.getElementById('qNameSubmitLabel').textContent = 'Create questionnaire';
+  document.getElementById('qNameInput').value = '';
+  populateOfficeSelect(OFFICES[0]);
+  document.getElementById('qNameModal').style.display = 'flex';
+  document.getElementById('qNameModal').classList.remove('hidden');
+  clearQNameError();
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>document.getElementById('qNameInput').focus(),50);
+}
+function openEditModal(id){
+  const q = QUESTIONNAIRES.find(x=>x.id===id); if(!q) return;
+  qNameMode = 'edit'; qMenuTargetId = id;
+  document.getElementById('qNameTitle').textContent = 'Edit questionnaire';
+  document.getElementById('qNameSub').textContent = `Update the name or office for "${q.name}"`;
+  document.getElementById('qNameSubmitLabel').textContent = 'Save changes';
+  document.getElementById('qNameInput').value = q.name;
+  populateOfficeSelect(q.office || OFFICES[0]);
+  document.getElementById('qNameModal').style.display = 'flex';
+  document.getElementById('qNameModal').classList.remove('hidden');
+  clearQNameError();
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>{ const i=document.getElementById('qNameInput'); i.focus(); i.select(); },50);
+}
+function openDuplicateModal(id){
+  const q = QUESTIONNAIRES.find(x=>x.id===id); if(!q) return;
+  qNameMode = 'duplicate'; qMenuTargetId = id;
+  // Suggest a unique copy name
+  let suggested = `${q.name} (copy)`;
+  let n = 2;
+  while(QUESTIONNAIRES.some(x => x.name.toLowerCase() === suggested.toLowerCase())){
+    suggested = `${q.name} (copy ${n})`; n++;
+  }
+  document.getElementById('qNameTitle').textContent = 'Duplicate questionnaire';
+  document.getElementById('qNameSub').textContent = `Name your copy of "${q.name}"`;
+  document.getElementById('qNameSubmitLabel').textContent = 'Create duplicate';
+  document.getElementById('qNameInput').value = suggested;
+  populateOfficeSelect(q.office || OFFICES[0]);
+  document.getElementById('qNameModal').style.display = 'flex';
+  document.getElementById('qNameModal').classList.remove('hidden');
+  clearQNameError();
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>{ const i=document.getElementById('qNameInput'); i.focus(); i.select(); },50);
+}
+function closeQNameModal(){
+  document.getElementById('qNameModal').style.display = 'none';
+  document.getElementById('qNameModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+function showQNameError(msg){
+  const el = document.getElementById('qNameError');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  const input = document.getElementById('qNameInput');
+  input.classList.add('!border-danger-500');
+}
+function clearQNameError(){
+  document.getElementById('qNameError').classList.add('hidden');
+  document.getElementById('qNameInput').classList.remove('!border-danger-500');
+}
+function submitQName(){
+  const name = document.getElementById('qNameInput').value.trim();
+  const office = document.getElementById('qOfficeInput').value;
+  if(name.length < 3){ showQNameError(name ? 'Name must be at least 3 characters.' : 'Please enter a name.'); return; }
+  const makeId = base => {
+    let id = base.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'q-'+(QUESTIONNAIRES.length+1);
+    let candidate = id, n = 2;
+    while(QUESTIONNAIRES.some(x => x.id === candidate)){ candidate = `${id}-${n}`; n++; }
+    return candidate;
+  };
+  if(qNameMode === 'create'){
+    const id = makeId(name);
+    QUESTIONNAIRES.push({ id, name, office, items:[] });
+    activeQId = id;
+    toast(`Created "${name}"`);
+  } else if(qNameMode === 'edit' && qMenuTargetId){
+    const q = QUESTIONNAIRES.find(x=>x.id===qMenuTargetId);
+    if(q){
+      const changes = [];
+      if(q.name !== name){ changes.push('name'); q.name = name; }
+      if(q.office !== office){ changes.push('office'); q.office = office; }
+      toast(changes.length ? `Updated "${name}"` : 'No changes');
+    }
+  } else if(qNameMode === 'duplicate' && qMenuTargetId){
+    const src = QUESTIONNAIRES.find(x=>x.id===qMenuTargetId);
+    if(src){
+      const id = makeId(name);
+      QUESTIONNAIRES.push({ id, name, office, items: src.items.map(it => ({...it})) });
+      activeQId = id;
+      toast(`Duplicated as "${name}"`);
+    }
+  }
+  closeQNameModal();
+  renderQList(); renderQuestionnairePanel();
+}
+
+/* ----- 3-dot menu ----- */
+function openQMenu(e, id){
+  qMenuTargetId = id;
+  const menu = document.getElementById('qMenu');
+  const r = e.currentTarget.getBoundingClientRect();
+  menu.style.top = (r.bottom + 6) + 'px';
+  menu.style.left = (r.right - 176) + 'px';
+  menu.classList.remove('hidden');
+}
+function closeQMenu(){ document.getElementById('qMenu').classList.add('hidden'); }
+function menuEdit(){ const id = qMenuTargetId; closeQMenu(); openEditModal(id); }
+
+/* ----- Office filter popover ----- */
+function toggleOfficeFilter(e){
+  e.stopPropagation();
+  const menu = document.getElementById('officeFilterMenu');
+  if(!menu.classList.contains('hidden')){ menu.classList.add('hidden'); return; }
+  const btn = document.getElementById('officeFilterBtn');
+  const r = btn.getBoundingClientRect();
+  menu.style.top = (r.bottom + 6) + 'px';
+  menu.style.left = Math.max(8, r.right - 224) + 'px';
+  renderOfficeFilterList();
+  menu.classList.remove('hidden');
+}
+function closeOfficeFilter(){ document.getElementById('officeFilterMenu').classList.add('hidden'); }
+function renderOfficeFilterList(){
+  const list = document.getElementById('officeFilterList');
+  // build a set of offices in use, fall back to OFFICES
+  const used = new Set(QUESTIONNAIRES.map(q => q.office).filter(Boolean));
+  const offices = OFFICES.filter(o => used.has(o));
+  list.innerHTML = offices.map(o => {
+    const count = QUESTIONNAIRES.filter(q => q.office === o).length;
+    const checked = officeFilter.has(o);
+    return `
+      <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] text-ink-800 hover:bg-ink-50 cursor-pointer">
+        <input type="checkbox" class="bb-check" ${checked?'checked':''} onchange="toggleOfficeOption('${o.replace(/'/g,"\\'")}', this.checked)" />
+        <span class="flex-1">${o}</span>
+        <span class="text-[11px] text-ink-500">${count}</span>
+      </label>`;
+  }).join('') || '<div class="px-3 py-3 text-[12px] text-ink-400 italic">No offices yet.</div>';
+}
+function toggleOfficeOption(office, checked){
+  if(checked) officeFilter.add(office); else officeFilter.delete(office);
+  renderOfficeFilterList();
+  renderQList();
+}
+function clearOfficeFilter(){
+  officeFilter.clear();
+  renderOfficeFilterList();
+  renderQList();
+}
+function menuDuplicate(){ const id = qMenuTargetId; closeQMenu(); openDuplicateModal(id); }
+function menuDelete(){
+  const id = qMenuTargetId; closeQMenu();
+  const q = QUESTIONNAIRES.find(x=>x.id===id); if(!q) return;
+  document.getElementById('confirmTitle').textContent = 'Delete questionnaire?';
+  document.getElementById('confirmText').textContent = `This removes the "${q.name}" questionnaire. The ${q.items.length} question${q.items.length===1?'':'s'} stay in your question bank and can be reused in other questionnaires.`;
+  document.getElementById('confirmNote').classList.add('hidden');
+  document.getElementById('confirmModal').style.display = 'flex';
+  document.getElementById('confirmModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('confirmDeleteBtn').onclick = () => {
+    const i = QUESTIONNAIRES.findIndex(x=>x.id===id);
+    if(i>-1){ const removed = QUESTIONNAIRES.splice(i,1)[0];
+      if(activeQId === id) activeQId = QUESTIONNAIRES[0]?.id || null;
+      toast(`Deleted "${removed.name}"`);
+    }
+    closeConfirm(); renderQList(); renderQuestionnairePanel();
+  };
+}
+function closeConfirm(){
+  document.getElementById('confirmModal').style.display = 'none';
+  document.getElementById('confirmModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('qMenu');
+  if(!menu.classList.contains('hidden') && !menu.contains(e.target) && !e.target.closest('[aria-label="More options"]')) closeQMenu();
+  const off = document.getElementById('officeFilterMenu');
+  if(off && !off.classList.contains('hidden') && !off.contains(e.target) && !e.target.closest('#officeFilterBtn')) closeOfficeFilter();
+});
+let toastTimer;
+function toast(msg, action){
+  const t = document.getElementById('toast');
+  t.innerHTML = '';
+  const span = document.createElement('span');
+  span.textContent = msg;
+  span.style.flex = '1';
+  t.appendChild(span);
+  if(action){
+    const btn = document.createElement('button');
+    btn.textContent = action.label;
+    btn.className = 'font-semibold underline-offset-2 hover:underline whitespace-nowrap';
+    btn.style.color = '#7cdb74';
+    btn.onclick = () => { action.onClick(); t.style.opacity = 0; t.style.pointerEvents = 'none'; clearTimeout(toastTimer); };
+    t.appendChild(btn);
+  }
+  t.style.opacity = 1;
+  t.style.pointerEvents = action ? 'auto' : 'none';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> { t.style.opacity = 0; t.style.pointerEvents='none'; }, action ? 6000 : 2400);
+}
+
+function removeQuestion(idx){
+  const q = QUESTIONNAIRES.find(x => x.id === activeQId);
+  if(!q) return;
+  const [removed] = q.items.splice(idx, 1);
+
+  // Make sure the question stays in the Question Bank even if no other questionnaire uses it
+  const stillElsewhere = QUESTIONNAIRES.some(qq => qq.items.some(x => x.q === removed.q))
+    || LIBRARY.some(x => x.q === removed.q)
+    || BANK_ONLY.some(x => x.q === removed.q);
+  let addedToBankOnly = false;
+  if(!stillElsewhere){ BANK_ONLY.push({...removed}); addedToBankOnly = true; }
+
+  renderQList(); renderQuestionnairePanel(); renderBank();
+  toast(`Removed from "${q.name}". The question is still available in the question bank.`, {
+    label: 'Undo',
+    onClick: () => {
+      q.items.splice(idx, 0, removed);
+      if(addedToBankOnly){
+        const bi = BANK_ONLY.findIndex(x => x.q === removed.q);
+        if(bi > -1) BANK_ONLY.splice(bi, 1);
+      }
+      renderQList(); renderQuestionnairePanel(); renderBank();
+      toast('Question restored.');
+    }
+  });
+}
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ closeLibrary(); closeNewQuestion(); closeQNameModal(); closeConfirm(); closeQMenu(); closeOfficeFilter(); }
+});
+
+renderQList();
+renderQuestionnairePanel();
+</script>
+</body>
+</html>
