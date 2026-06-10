@@ -112,6 +112,14 @@
     <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
     <a href="#" class="px-3">Settings</a><span class="sep">|</span>
     <a href="#" class="px-3 text-azure-600">Account Setup</a>
+    <div class="ml-auto pr-2 relative">
+      <button id="profileBtn" class="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-ink-50 transition" onclick="toggleProfileMenu(event)">
+        <div class="w-7 h-7 rounded-full bg-azure-600 text-white flex items-center justify-center font-bold text-[13px]" id="profileAvatar">S</div>
+        <div class="text-[13px] font-semibold text-ink-900" id="profileName">SuperAdmin</div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-500"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div id="profileMenu" class="hidden absolute right-2 top-full mt-1 bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-64 z-[55]"></div>
+    </div>
   </nav>
 </header>
 
@@ -183,7 +191,7 @@
           <h2 id="qPanelTitle" class="text-[22px] font-bold text-ink-900">Accounts</h2>
           <span id="qPanelCount" class="qcount">5 questions</span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3" id="qPanelActions">
           <button class="btn-secondary" onclick="openLibrary()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
             Add from question bank
@@ -192,6 +200,10 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             New question
           </button>
+        </div>
+        <div class="flex items-center gap-2 text-[12px] text-ink-500" id="qReadOnlyNote" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Read-only · created by SuperAdmin
         </div>
       </div>
 
@@ -342,7 +354,13 @@
       </div>
       <div>
         <label class="block text-[14px] font-semibold text-ink-800 mb-2">Office</label>
-        <select id="qOfficeInput" class="fld"></select>
+        <div class="relative">
+          <button type="button" id="qOfficeBtn" class="fld text-left flex items-center gap-2 cursor-pointer" onclick="toggleQOfficeDropdown(event)">
+            <span id="qOfficeBtnLabel" class="flex-1 text-ink-400 italic">Select offices...</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-500"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="qOfficeDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-ink-100 rounded-lg shadow-xl z-[60] max-h-64 overflow-y-auto py-1"></div>
+        </div>
       </div>
     </div>
     <div class="px-6 py-5 border-t border-ink-100 flex items-center justify-end gap-3">
@@ -404,28 +422,78 @@
 /* =================== DATA =================== */
 const OFFICES = ['London','Manchester','Edinburgh (Scotland)','Dublin','Mumbai (India)','Bengaluru (India)','New York','Sydney','Remote'];
 
+/* ===== Profile / role state ===== */
+let currentProfile = 'superadmin';  // 'superadmin' or 'admin-<office>'
+function profileLabel(p){
+  if(p === 'superadmin') return 'SuperAdmin';
+  return 'Admin — ' + p.replace(/^admin-/,'');
+}
+function profileInitial(p){
+  return p === 'superadmin' ? 'S' : 'A';
+}
+function isSuperAdmin(){ return currentProfile === 'superadmin'; }
+function adminOffice(){ return currentProfile.startsWith('admin-') ? currentProfile.slice(6) : null; }
+function canEditQ(q){ return isSuperAdmin() || q.createdBy === currentProfile; }
+function canDeleteQ(q){ return canEditQ(q); }
+function canModifyItems(q){ return canEditQ(q); }
+function canEditBankQuestion(item){
+  // SuperAdmin: yes. Admins: only items they own (bank-only created by them).
+  return isSuperAdmin() || item.createdBy === currentProfile;
+}
+
+function refreshProfileUI(){
+  document.getElementById('profileName').textContent = profileLabel(currentProfile);
+  document.getElementById('profileAvatar').textContent = profileInitial(currentProfile);
+}
+
+function toggleProfileMenu(e){
+  e.stopPropagation();
+  const menu = document.getElementById('profileMenu');
+  if(!menu.classList.contains('hidden')){ menu.classList.add('hidden'); return; }
+  const profiles = [
+    { id:'superadmin', label:'SuperAdmin' },
+    ...OFFICES.map(o => ({ id:'admin-'+o, label:'Admin — '+o })),
+  ];
+  menu.innerHTML = `
+    <div class="max-h-72 overflow-y-auto py-1">
+      ${profiles.map(p => `
+        <button class="w-full text-left px-3 py-2 text-[13px] ${currentProfile===p.id?'bg-azure-50 text-azure-700 font-semibold':'text-ink-800 hover:bg-ink-50'} transition" onclick="switchProfile('${p.id}')">
+          ${p.label}
+        </button>`).join('')}
+    </div>`;
+  menu.classList.remove('hidden');
+}
+function closeProfileMenu(){ document.getElementById('profileMenu')?.classList.add('hidden'); }
+function switchProfile(id){
+  currentProfile = id;
+  closeProfileMenu();
+  refreshProfileUI();
+  renderQList(); renderQuestionnairePanel(); renderBank();
+  toast('Switched to '+profileLabel(id));
+}
+
 const QUESTIONNAIRES = [
-  { id:'accounts', name:'Accounts', office:'London', items:[
+  { id:'accounts', name:'Accounts', offices:['London'], createdBy:'superadmin', items:[
     { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"Are you based in, or willing to relocate to, the United Kingdom?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"What is your current notice period?", type:"Multiple Choice", options:["Immediate","1 week","2 weeks","1 month","3 months","More than 3 months"] },
     { q:"What is your current employment status?", type:"Multiple Choice", options:["Employed full-time","Employed part-time","Freelance / Contract","Unemployed","Other"] },
     { q:"What is your earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
   ]},
-  { id:'driver', name:'Driver', office:'Manchester', items:[
+  { id:'driver', name:'Driver', offices:['Manchester','London'], createdBy:'superadmin', items:[
     { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"How many years of driving experience do you have?", type:"Number", expected:"≥ 2" },
     { q:"Do you have any current driving offences or points on your licence?", type:"Yes / No", expected:"No" },
     { q:"Which licence categories do you hold?", type:"Multiple Choice", options:["B","C1","C","D1","D"] },
     { q:"Are you willing to work shift patterns including weekends?", type:"Yes / No", expected:"Yes" },
   ]},
-  { id:'warehouse', name:'Warehouse', office:'Mumbai (India)', items:[
+  { id:'warehouse', name:'Warehouse', offices:['Mumbai (India)','Bengaluru (India)'], createdBy:'superadmin', items:[
     { q:"Are you comfortable lifting up to 25kg repeatedly during a shift?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"Do you have a current forklift licence?", type:"Yes / No", expected:"Yes" },
     { q:"Which shift patterns are you available for?", type:"Multiple Choice", options:["Days","Nights","Earlies","Lates","Weekends"] },
     { q:"How many years of warehouse experience do you have?", type:"Number", expected:"≥ 1" },
   ]},
-  { id:'customer', name:'Customer Service', office:'Remote', items:[
+  { id:'customer', name:'Customer Service', offices:['Remote'], createdBy:'superadmin', items:[
     { q:"Are you eligible to work in the UK?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"How many years of customer service experience do you have?", type:"Number", expected:"≥ 1" },
     { q:"Which channels have you supported customers on?", type:"Multiple Choice", options:["Phone","Email","Live chat","Social media"] },
@@ -465,7 +533,8 @@ let librarySelected = new Set();
 /* =================== UTILS =================== */
 function knockoutCount(items){ return items.filter(i => i.knockout).length; }
 
-function questionRow(item, idx){
+function questionRow(item, idx, editable){
+  if(editable === undefined) editable = true;
   const expected = item.expected ? `<span class="text-[13px] text-ink-500">Expected: <span class="font-medium text-ink-700">${item.expected}</span></span>` : '';
   const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
   const note = item.note ? `<span class="text-[13px] text-ink-500">${item.note}</span>` : '';
@@ -483,7 +552,7 @@ function questionRow(item, idx){
           ${meta}
         </div>
       </div>
-      <button class="remove-link" onclick="removeQuestion(${idx})">Remove</button>
+      ${editable ? `<button class="remove-link" onclick="removeQuestion(${idx})">Remove</button>` : ''}
     </div>`;
 }
 
@@ -504,12 +573,14 @@ function bankRow(item, idx){
         </div>
       </div>
       <div class="flex gap-2">
+        ${canEditBankQuestion(item) ? `
         <button class="icon-btn" aria-label="Edit" onclick="editBankQuestion('${encodeURIComponent(item.q)}')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
         </button>
         <button class="icon-btn danger" aria-label="Delete" onclick="deleteBankQuestion('${encodeURIComponent(item.q)}')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
-        </button>
+        </button>` : `
+        <span class="text-[11px] text-ink-400 italic px-1.5 py-1">SuperAdmin</span>`}
       </div>
     </div>`;
 }
@@ -521,7 +592,10 @@ function renderQList(){
   const wrap = document.getElementById('qListWrap');
   const term = (document.getElementById('qListSearch')?.value || '').toLowerCase();
   let list = term ? QUESTIONNAIRES.filter(q => q.name.toLowerCase().includes(term)) : QUESTIONNAIRES;
-  if(officeFilter.size) list = list.filter(q => q.office && officeFilter.has(q.office));
+  if(officeFilter.size) list = list.filter(q => {
+    const offices = q.offices || (q.office ? [q.office] : []);
+    return offices.some(o => officeFilter.has(o));
+  });
   // count badge on the filter button
   const badge = document.getElementById('officeFilterCount');
   if(badge){
@@ -542,10 +616,20 @@ function renderQList(){
           <div class="mt-1 text-[13px] text-ink-500">
             ${q.items.length} questions ${ko ? `· <span class="text-danger-600 font-medium">${ko} knock-out</span>` : ''}
           </div>
-          ${q.office ? `<div class="mt-1.5 inline-flex items-center gap-1 text-[11px] text-ink-600 font-medium px-2 py-0.5 rounded-full bg-white border border-ink-200">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            ${q.office}
-          </div>` : ''}
+          ${(() => {
+            const offices = q.offices || (q.office ? [q.office] : []);
+            if(!offices.length) return '';
+            const MAX = 2;
+            const shown = offices.slice(0, MAX);
+            const extra = offices.length - shown.length;
+            const chips = shown.map(o => `
+              <div class="inline-flex items-center gap-1 text-[11px] leading-none text-ink-600 font-medium px-2 h-[20px] rounded-full bg-white border border-ink-200 min-w-0">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span class="truncate">${o}</span>
+              </div>`).join('');
+            const more = extra > 0 ? `<div class="inline-flex items-center justify-center text-[11px] leading-none text-ink-600 font-semibold px-2 h-[20px] rounded-full bg-white border border-ink-200 flex-shrink-0">+${extra}</div>` : '';
+            return `<div class="mt-1.5 flex items-center gap-1 flex-nowrap overflow-hidden">${chips}${more}</div>`;
+          })()}
         </button>
         <button class="qmenu-btn absolute top-2 right-2 w-8 h-8 rounded-md flex items-center justify-center text-ink-500 hover:bg-ink-100 hover:text-ink-800 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" onclick="event.stopPropagation();openQMenu(event,'${q.id}')" aria-label="More options">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
@@ -561,7 +645,10 @@ function renderQuestionnairePanel(){
   document.getElementById('qPanelCount').textContent = `${q.items.length} questions`;
   document.getElementById('libraryTarget').textContent = q.name;
   document.getElementById('newQTarget').textContent = q.name;
-  document.getElementById('qItemsWrap').innerHTML = q.items.map((it,i) => questionRow(it,i)).join('');
+  const editable = canModifyItems(q);
+  document.getElementById('qPanelActions').style.display = editable ? 'flex' : 'none';
+  document.getElementById('qReadOnlyNote').style.display = editable ? 'none' : 'flex';
+  document.getElementById('qItemsWrap').innerHTML = q.items.map((it,i) => questionRow(it,i,editable)).join('');
 }
 
 function selectQ(id){ activeQId = id; renderQList(); renderQuestionnairePanel(); }
@@ -639,6 +726,7 @@ function updateLibraryButton(){
 function addSelectedFromLibrary(){
   if(!librarySelected.size) return;
   const q = QUESTIONNAIRES.find(x => x.id === activeQId);
+  if(!canModifyItems(q)){ toast('This questionnaire is read-only.'); closeLibrary(); return; }
   const pool = getBankPool();
   BANK_ONLY.forEach(it => { if(!pool.find(p => p.q === it.q)) pool.push(it); });
   pool.forEach(it => { if(librarySelected.has(it.q) && !q.items.find(x => x.q === it.q)) q.items.push({...it}); });
@@ -942,12 +1030,13 @@ function submitNewQuestion(){
     renderQList(); renderQuestionnairePanel(); renderBank();
     toast(count ? `Question updated in ${count} questionnaire${count===1?'':'s'} and the Question bank` : 'Question updated in the Question bank');
   } else if(newQFromBank){
-    BANK_ONLY.push(next);
+    BANK_ONLY.push({ ...next, createdBy: currentProfile });
     renderBank();
     toast('Question added to the Question bank');
   } else {
     const q = QUESTIONNAIRES.find(x => x.id === activeQId);
-    q.items.push(next);
+    if(!canModifyItems(q)){ toast('This questionnaire is read-only.'); closeNewQuestion(); return; }
+    q.items.push({ ...next, createdBy: currentProfile });
     renderQList(); renderQuestionnairePanel();
     toast('Question added');
   }
@@ -964,10 +1053,99 @@ function switchTab(name){
 let qNameMode = 'create'; // 'create' | 'edit' | 'duplicate'
 let qMenuTargetId = null;
 
-function populateOfficeSelect(selected){
-  const el = document.getElementById('qOfficeInput');
-  el.innerHTML = OFFICES.map(o => `<option value="${o}" ${o===selected?'selected':''}>${o}</option>`).join('');
+let qSelectedOffices = new Set();
+
+function setQOfficesSelection(arr){
+  qSelectedOffices = new Set(arr || []);
+  updateQOfficeBtnLabel();
 }
+function updateQOfficeBtnLabel(){
+  const label = document.getElementById('qOfficeBtnLabel');
+  if(qSelectedOffices.size === 0){
+    label.textContent = 'Select offices...';
+    label.classList.add('text-ink-400','italic');
+    label.classList.remove('text-ink-900');
+  } else {
+    label.textContent = [...qSelectedOffices].join(', ');
+    label.classList.remove('text-ink-400','italic');
+    label.classList.add('text-ink-900');
+  }
+}
+function renderQOfficeDropdown(){
+  const wrap = document.getElementById('qOfficeDropdown');
+  const allSelected = OFFICES.every(o => qSelectedOffices.has(o));
+  const someSelected = !allSelected && OFFICES.some(o => qSelectedOffices.has(o));
+  const selectAllRow = `
+    <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] font-semibold text-ink-800 hover:bg-ink-50 cursor-pointer border-b border-ink-100">
+      <input type="checkbox" class="bb-check" id="qOfficeSelectAll" ${allSelected?'checked':''} ${someSelected?'data-indeterminate="1"':''} onchange="toggleQOfficeSelectAll(this.checked)" />
+      <span>${allSelected ? 'Deselect all' : 'Select all'}</span>
+      <span class="ml-auto text-[11px] text-ink-500 font-medium">${qSelectedOffices.size}/${OFFICES.length}</span>
+    </label>`;
+  const rows = OFFICES.map(o => {
+    const checked = qSelectedOffices.has(o);
+    return `
+      <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] text-ink-800 hover:bg-ink-50 cursor-pointer">
+        <input type="checkbox" class="bb-check" ${checked?'checked':''} onchange="toggleQOfficeOption('${o.replace(/'/g,"\\'")}', this.checked)" />
+        <span>${o}</span>
+      </label>`;
+  }).join('');
+  wrap.innerHTML = selectAllRow + rows;
+  const sa = document.getElementById('qOfficeSelectAll');
+  if(sa && someSelected) sa.indeterminate = true;
+}
+
+function toggleQOfficeSelectAll(checked){
+  if(checked) OFFICES.forEach(o => qSelectedOffices.add(o));
+  else qSelectedOffices.clear();
+  renderQOfficeDropdown();
+  updateQOfficeBtnLabel();
+}
+let qOfficeLocked = false;
+
+function lockQOffice(office){
+  qOfficeLocked = true;
+  setQOfficesSelection(office ? [office] : []);
+  const btn = document.getElementById('qOfficeBtn');
+  btn.setAttribute('disabled','');
+  btn.classList.add('opacity-60','cursor-not-allowed');
+  btn.classList.remove('cursor-pointer');
+  btn.setAttribute('title','Office is locked to your admin office');
+  // ensure dropdown is closed
+  closeQOfficeDropdown();
+}
+function unlockQOffice(){
+  qOfficeLocked = false;
+  const btn = document.getElementById('qOfficeBtn');
+  btn.removeAttribute('disabled');
+  btn.classList.remove('opacity-60','cursor-not-allowed');
+  btn.classList.add('cursor-pointer');
+  btn.removeAttribute('title');
+  const hint = btn.parentElement.querySelector('.qOfficeLockHint');
+  if(hint) hint.remove();
+}
+
+function toggleQOfficeDropdown(e){
+  if(e) e.stopPropagation();
+  if(qOfficeLocked) return;
+  const dd = document.getElementById('qOfficeDropdown');
+  if(dd.classList.contains('hidden')){
+    renderQOfficeDropdown();
+    dd.classList.remove('hidden');
+  } else {
+    dd.classList.add('hidden');
+  }
+}
+function closeQOfficeDropdown(){ document.getElementById('qOfficeDropdown').classList.add('hidden'); }
+function toggleQOfficeOption(office, checked){
+  if(checked) qSelectedOffices.add(office); else qSelectedOffices.delete(office);
+  updateQOfficeBtnLabel();
+  renderQOfficeDropdown();
+}
+/* Outside-click for office dropdown */
+document.addEventListener('click', e => {
+  const dd = document.getElementById('qOfficeDropdown');
+  if(dd && !dd.classList.contains('hidden') && !dd.contains(e.target) && !e.target.closest('#qOfficeBtn')) dd.classList.add('hidden');
+});
 
 function createQuestionnaire(){
   qNameMode = 'create';
@@ -975,7 +1153,9 @@ function createQuestionnaire(){
   document.getElementById('qNameSub').textContent = 'Group questions for a role or department.';
   document.getElementById('qNameSubmitLabel').textContent = 'Create questionnaire';
   document.getElementById('qNameInput').value = '';
-  populateOfficeSelect(OFFICES[0]);
+  if(adminOffice()){ lockQOffice(adminOffice()); }
+  else { unlockQOffice(); setQOfficesSelection([]); }
+  closeQOfficeDropdown();
   document.getElementById('qNameModal').style.display = 'flex';
   document.getElementById('qNameModal').classList.remove('hidden');
   clearQNameError();
@@ -989,7 +1169,9 @@ function openEditModal(id){
   document.getElementById('qNameSub').textContent = `Update the name or office for "${q.name}"`;
   document.getElementById('qNameSubmitLabel').textContent = 'Save changes';
   document.getElementById('qNameInput').value = q.name;
-  populateOfficeSelect(q.office || OFFICES[0]);
+  if(adminOffice()){ lockQOffice(adminOffice()); }
+  else { unlockQOffice(); setQOfficesSelection(q.offices || (q.office ? [q.office] : [])); }
+  closeQOfficeDropdown();
   document.getElementById('qNameModal').style.display = 'flex';
   document.getElementById('qNameModal').classList.remove('hidden');
   clearQNameError();
@@ -1009,7 +1191,9 @@ function openDuplicateModal(id){
   document.getElementById('qNameSub').textContent = `Name your copy of "${q.name}"`;
   document.getElementById('qNameSubmitLabel').textContent = 'Create duplicate';
   document.getElementById('qNameInput').value = suggested;
-  populateOfficeSelect(q.office || OFFICES[0]);
+  if(adminOffice()){ lockQOffice(adminOffice()); }
+  else { unlockQOffice(); setQOfficesSelection(q.offices || (q.office ? [q.office] : [])); }
+  closeQOfficeDropdown();
   document.getElementById('qNameModal').style.display = 'flex';
   document.getElementById('qNameModal').classList.remove('hidden');
   clearQNameError();
@@ -1034,8 +1218,9 @@ function clearQNameError(){
 }
 function submitQName(){
   const name = document.getElementById('qNameInput').value.trim();
-  const office = document.getElementById('qOfficeInput').value;
+  const offices = [...qSelectedOffices];
   if(name.length < 3){ showQNameError(name ? 'Name must be at least 3 characters.' : 'Please enter a name.'); return; }
+  const sameOffices = (a, b) => { a=a||[]; b=b||[]; return a.length===b.length && a.every(x=>b.includes(x)); };
   const makeId = base => {
     let id = base.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'q-'+(QUESTIONNAIRES.length+1);
     let candidate = id, n = 2;
@@ -1044,7 +1229,7 @@ function submitQName(){
   };
   if(qNameMode === 'create'){
     const id = makeId(name);
-    QUESTIONNAIRES.push({ id, name, office, items:[] });
+    QUESTIONNAIRES.unshift({ id, name, offices, createdBy: currentProfile, items:[] });
     activeQId = id;
     toast(`Created "${name}"`);
   } else if(qNameMode === 'edit' && qMenuTargetId){
@@ -1052,14 +1237,16 @@ function submitQName(){
     if(q){
       const changes = [];
       if(q.name !== name){ changes.push('name'); q.name = name; }
-      if(q.office !== office){ changes.push('office'); q.office = office; }
+      if(!sameOffices(q.offices, offices)){ changes.push('offices'); q.offices = offices; }
+      // clear legacy field if present
+      if('office' in q) delete q.office;
       toast(changes.length ? `Updated "${name}"` : 'No changes');
     }
   } else if(qNameMode === 'duplicate' && qMenuTargetId){
     const src = QUESTIONNAIRES.find(x=>x.id===qMenuTargetId);
     if(src){
       const id = makeId(name);
-      QUESTIONNAIRES.push({ id, name, office, items: src.items.map(it => ({...it})) });
+      QUESTIONNAIRES.unshift({ id, name, offices, createdBy: currentProfile, items: src.items.map(it => ({...it})) });
       activeQId = id;
       toast(`Duplicated as "${name}"`);
     }
@@ -1071,7 +1258,25 @@ function submitQName(){
 /* ----- 3-dot menu ----- */
 function openQMenu(e, id){
   qMenuTargetId = id;
+  const q = QUESTIONNAIRES.find(x => x.id === id);
   const menu = document.getElementById('qMenu');
+  const editable = q ? canEditQ(q) : true;
+  menu.innerHTML = `
+    ${editable ? `
+    <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="menuEdit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+      Edit
+    </button>` : ''}
+    <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="menuDuplicate()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Duplicate
+    </button>
+    ${editable ? `
+    <button class="w-full text-left px-3 py-2 text-[14px] text-danger-600 hover:bg-danger-50 flex items-center gap-3" onclick="menuDelete()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+      Delete
+    </button>` : ''}
+  `;
   const r = e.currentTarget.getBoundingClientRect();
   menu.style.top = (r.bottom + 6) + 'px';
   menu.style.left = (r.right - 176) + 'px';
@@ -1095,11 +1300,18 @@ function toggleOfficeFilter(e){
 function closeOfficeFilter(){ document.getElementById('officeFilterMenu').classList.add('hidden'); }
 function renderOfficeFilterList(){
   const list = document.getElementById('officeFilterList');
-  // build a set of offices in use, fall back to OFFICES
-  const used = new Set(QUESTIONNAIRES.map(q => q.office).filter(Boolean));
+  // build a set of offices in use across all questionnaires
+  const used = new Set();
+  QUESTIONNAIRES.forEach(q => {
+    const offs = q.offices || (q.office ? [q.office] : []);
+    offs.forEach(o => used.add(o));
+  });
   const offices = OFFICES.filter(o => used.has(o));
   list.innerHTML = offices.map(o => {
-    const count = QUESTIONNAIRES.filter(q => q.office === o).length;
+    const count = QUESTIONNAIRES.filter(q => {
+      const offs = q.offices || (q.office ? [q.office] : []);
+      return offs.includes(o);
+    }).length;
     const checked = officeFilter.has(o);
     return `
       <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] text-ink-800 hover:bg-ink-50 cursor-pointer">
@@ -1148,6 +1360,8 @@ document.addEventListener('click', e => {
   if(!menu.classList.contains('hidden') && !menu.contains(e.target) && !e.target.closest('[aria-label="More options"]')) closeQMenu();
   const off = document.getElementById('officeFilterMenu');
   if(off && !off.classList.contains('hidden') && !off.contains(e.target) && !e.target.closest('#officeFilterBtn')) closeOfficeFilter();
+  const pm = document.getElementById('profileMenu');
+  if(pm && !pm.classList.contains('hidden') && !pm.contains(e.target) && !e.target.closest('#profileBtn')) closeProfileMenu();
 });
 let toastTimer;
 function toast(msg, action){
@@ -1174,6 +1388,7 @@ function toast(msg, action){
 function removeQuestion(idx){
   const q = QUESTIONNAIRES.find(x => x.id === activeQId);
   if(!q) return;
+  if(!canModifyItems(q)){ toast('This questionnaire is read-only. Duplicate it to make changes.'); return; }
   const [removed] = q.items.splice(idx, 1);
 
   // Make sure the question stays in the Question Bank even if no other questionnaire uses it
@@ -1198,9 +1413,10 @@ function removeQuestion(idx){
   });
 }
 document.addEventListener('keydown', e => {
-  if(e.key === 'Escape'){ closeLibrary(); closeNewQuestion(); closeQNameModal(); closeConfirm(); closeQMenu(); closeOfficeFilter(); }
+  if(e.key === 'Escape'){ closeLibrary(); closeNewQuestion(); closeQNameModal(); closeConfirm(); closeQMenu(); closeOfficeFilter(); closeProfileMenu(); }
 });
 
+refreshProfileUI();
 renderQList();
 renderQuestionnairePanel();
 </script>

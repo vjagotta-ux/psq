@@ -355,7 +355,7 @@ function applyConceptView(){
     renderPsqPreview();
   } else {
     toggleBtn.textContent = 'Back to Concept 1';
-    title.textContent = 'Pick a questionnaire or customize your own';
+    title.textContent = 'Add a pre-screening questionnaire';
     sub.innerHTML = 'Choose a saved questionnaire to preview it, or open <span class="font-medium">Customize Questionnaire</span> to build a custom set.';
     if(!c2SourceId) c2SourceId = QUESTIONNAIRES[0]?.id || 'bank';
     renderC2Sources();
