@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Select Channel · Broadbean</title>
+<link rel="icon" href="b-design-system/assets/broadbean-mark.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Geist','Mundial','ui-sans-serif','system-ui','sans-serif'] },
+        colors: {
+          brand: { 50:'#ecfbeb',100:'#d4f5d1',300:'#7cdb74',400:'#4ecc44',500:'#28bb21',600:'#1f9619',700:'#166e12' },
+          ink:   { 50:'#f6f7f8',100:'#eceef0',200:'#d6dade',300:'#b3bac1',400:'#858d96',500:'#5a6068',600:'#3f444a',700:'#2d3035',800:'#212121',900:'#0e0e0e' },
+          azure: { 50:'#eaf3fa',100:'#dbe6ff',500:'#3568f5',600:'#1B75BB',700:'#155F95' },
+          danger:{ 50:'#fdecec',100:'#fbd5d5',500:'#dc2626',600:'#b91c1c' },
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f4f4; }
+  .topnav a { color:#1f9619; }
+  .topnav a:hover { color:#166e12; }
+  .topnav a.text-azure-600 { color:#1B75BB; }
+  .topnav a.text-azure-600:hover { color:#155F95; }
+  .topnav .sep { color:#d6dade; }
+  .step { position:relative; height:60px; display:flex; align-items:center; gap:14px; padding:0 28px; color:#fff; font-weight:600; font-size:18px; }
+  .step .num { width:30px; height:30px; border-radius:999px; background:rgba(255,255,255,.95); color:#28bb21; display:inline-flex; align-items:center; justify-content:center; font-weight:700; }
+  .step.active { background:#28bb21; }
+  .step.upcoming { background:#7cdb74; }
+  .step.done { background:#4ecc44; }
+  .step .chev { position:absolute; right:-18px; top:0; width:36px; height:60px; z-index:2; }
+  .step .chev svg { display:block; height:100%; width:100%; }
+  .breadcrumb a { color:#1B75BB; text-decoration:underline; text-underline-offset:2px; }
+  .breadcrumb a:hover { color:#155F95; }
+  .board-card { position:relative; background:#fff; border:1px solid #e4e4e4; border-radius:6px; overflow:hidden; cursor:pointer; transition:all .15s ease; }
+  .board-card .head { background:#dbe6ff; color:#1B75BB; text-align:center; font-size:12px; font-weight:500; padding:6px 8px; }
+  .board-card .body { padding:28px 24px 20px; text-align:center; }
+  .board-card .logo { display:flex; align-items:center; justify-content:center; height:96px; filter:grayscale(1); opacity:.55; transition:all .2s ease; }
+  .board-card.selected .logo { filter:none; opacity:1; }
+  .board-card .meta { color:#3f444a; font-size:13px; line-height:1.6; }
+  .board-card .title { color:#1B75BB; font-size:15px; font-weight:600; margin-bottom:8px; }
+  .board-card.selected { box-shadow:0 0 0 1px #28bb21 inset; }
+  .board-card .tick { position:absolute; top:10px; left:10px; width:26px; height:26px; border-radius:999px; background:#28bb21; color:#fff; display:none; align-items:center; justify-content:center; }
+  .board-card.selected .tick { display:flex; }
+  .board-card:hover { border-color:#b3bac1; }
+  .ts-template { display:inline-flex; align-items:center; gap:8px; padding:8px 14px 8px 14px; border:1px solid #c6cbd1; border-radius:4px; background:#fff; font-size:14px; color:#5a6068; font-style:italic; min-width:340px; cursor:pointer; }
+  .ts-template:hover { border-color:#b3bac1; }
+  .check { width:16px; height:16px; border:1.5px solid #b3bac1; border-radius:3px; cursor:pointer; appearance:none; background:#fff; display:inline-grid; place-content:center; }
+  .check:checked { background:#1B75BB; border-color:#1B75BB; }
+  .check:checked::after { content:""; width:9px; height:9px; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'><path d='M3 8.5l3.2 3L13 4.5' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat; }
+  .btn-primary { background:#1B75BB; color:#fff; padding:11px 22px; border-radius:6px; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-primary:hover { background:#155F95; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-primary:disabled:hover { background:#1B75BB; }
+  .btn-secondary { background:#fff; color:#3f444a; padding:11px 22px; border-radius:6px; font-weight:600; font-size:14px; border:1px solid #d6dade; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
+  .btn-secondary:hover { border-color:#b3bac1; background:#f6f7f8; }
+  @keyframes modal-in { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .modal-in { animation: modal-in .22s cubic-bezier(0.2,0,0,1); }
+</style>
+</head>
+<body class="text-ink-800">
+
+<!-- Top primary nav -->
+<header class="bg-white border-b-2 border-brand-500">
+  <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
+    <a href="#" class="px-3">Home</a><span class="sep">|</span>
+    <a href="Jobs.html" class="px-3 text-azure-600">Jobs</a><span class="sep">|</span>
+    <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
+    <a href="#" class="px-3">Search</a><span class="sep">|</span>
+    <a href="#" class="px-3">Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
+    <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
+  </nav>
+</header>
+
+<main class="py-6" style="padding-left:5%;padding-right:5%">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb text-[14px] text-ink-500 mb-4 flex items-center gap-2">
+    <a href="Jobs.html">Job Listings</a>
+    <span>/</span>
+    <a href="#">Senior Director Manufacturing</a>
+    <span>/</span>
+    <span class="text-ink-700">Job Posting</span>
+  </nav>
+
+  <div class="bg-white border border-ink-100 rounded shadow-sm">
+
+    <!-- Step indicator -->
+    <div class="grid grid-cols-3 rounded-t overflow-hidden">
+      <div class="step active">
+        <span class="num">1</span><span>Choose Job Boards</span>
+        <div class="chev"><svg viewBox="0 0 36 60" preserveAspectRatio="none"><polygon points="0,0 36,30 0,60" fill="#28bb21"/></svg></div>
+      </div>
+      <div class="step upcoming pl-12">
+        <span class="num">2</span><span>Posting Details</span>
+        <div class="chev"><svg viewBox="0 0 36 60" preserveAspectRatio="none"><polygon points="0,0 36,30 0,60" fill="#7cdb74"/></svg></div>
+      </div>
+      <div class="step upcoming pl-12">
+        <span class="num">3</span><span>Preview + Send</span>
+      </div>
+    </div>
+
+    <!-- Page header -->
+    <div class="text-center py-6 px-8 border-b border-ink-100">
+      <div class="text-ink-500 italic">Please click the job board logos to create this posting</div>
+      <div class="mt-1 text-ink-700">This posting will cost <span id="totalCost" class="text-azure-600 font-bold">$0.00</span></div>
+    </div>
+
+    <!-- Posting template + All sites -->
+    <div class="px-8 py-5 flex items-center gap-5 flex-wrap">
+      <div class="flex items-center gap-3">
+        <label class="text-[14px] font-semibold text-ink-700">Posting Template:</label>
+        <select class="ts-template">
+          <option>Select Posting Template / Reset</option>
+          <option>Default Template</option>
+          <option>Quick Post Template</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 text-[14px] text-ink-700 cursor-pointer ml-2">
+        <input type="checkbox" id="allSites" class="check" onchange="toggleAllSites(this.checked)" />
+        <span class="font-semibold">All Sites Below</span>
+      </label>
+    </div>
+
+    <!-- Job board tiles grid -->
+    <div class="px-8 pb-8 grid grid-cols-3 gap-5" id="boardGrid"></div>
+
+    <!-- Footer actions -->
+    <div class="px-8 py-5 border-t border-ink-100 flex items-center justify-between gap-3">
+      <a href="Jobs.html" class="text-[13px] text-ink-500 hover:text-ink-800 flex items-center gap-1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Job Listings
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="Create-Posting.html" class="btn-secondary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          Edit posting form
+        </a>
+        <button id="publishBtn" class="btn-primary" disabled onclick="publish()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          <span id="publishBtnLabel">Publish to 0 Job boards</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Published confirmation modal -->
+<div id="publishedModal" class="hidden fixed inset-0 z-[70] items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/45"></div>
+  <div class="modal-in relative bg-white w-[460px] max-w-[92vw] rounded-2xl shadow-2xl p-6 text-center">
+    <div class="mx-auto w-14 h-14 rounded-full bg-brand-50 flex items-center justify-center mb-4">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#28bb21" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h3 class="text-[20px] font-bold text-ink-900 mb-1">Your job has been posted</h3>
+    <p id="publishedBody" class="text-[14px] text-ink-500 mb-6">Published to 0 job boards. Expect candidates to start applying shortly.</p>
+    <div class="flex items-center justify-center gap-3">
+      <a href="Jobs.html" class="btn-secondary">Back to Job Listings</a>
+      <button class="btn-primary" onclick="closePublishedModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BOARDS = [
+  { id:'campaign', name:'Campaign Jobs Asia', logoText:'<div style="font-family:Georgia,serif;font-weight:900;font-size:36px;color:#0e0e0e;letter-spacing:-1px;line-height:1">campaign<br/><span style="color:#e63946">jobs.asia</span></div>', meta:'(307 slots free)', cost:100 },
+  { id:'ctgoodjobs', name:'Career Times / CT Good Jobs HK', logoText:'<div style="font-family:Arial,sans-serif;font-weight:900;font-size:26px;color:#fcb316">CT<span style="color:#3b82f6;">good</span><span style="color:#fcb316">jobs</span></div>', meta:'(77,000 quota remaining)', cost:0 },
+  { id:'cb-multi', name:'CareerBuilder (Multiplier)', logoText:'<div style="font-family:Arial,sans-serif;font-weight:900;font-size:22px;color:#f57c00"><span style="color:#f57c00">⊕</span> CAREER<span style="color:#0e0e0e">BUILDER</span></div>', meta:'(You do not have a valid subscription to CareerBuilder)', cost:77, disabled:true },
+  { id:'cb-na', name:'CareerBuilder (North America)', logoText:'<div style="font-family:Arial,sans-serif;font-weight:900;font-size:22px;color:#f57c00"><span style="color:#f57c00">⊕</span> CAREER<span style="color:#0e0e0e">BUILDER</span></div>', meta:'', cost:77 },
+  { id:'cpjobs', name:'Classified Post', logoText:'<div style="font-family:Arial,sans-serif;font-weight:900;font-size:26px;color:#888"><span style="color:#888">●</span> <span style="color:#e63946">cp</span><span style="color:#0e0e0e">jobs.com</span></div>', meta:'(4,000 quota remaining)', cost:39 },
+  { id:'dice', name:'Dice', logoText:'<div style="display:inline-block;background:#d61f2c;color:#fff;font-family:Georgia,serif;font-weight:900;font-style:italic;font-size:34px;padding:6px 18px;border-radius:6px">Dice®</div>', meta:'', cost:295 },
+  { id:'indeed', name:'Indeed', logoText:'<div style="font-family:Arial,sans-serif;font-weight:900;font-size:34px;color:#003a9b">indeed</div>', meta:'(Pay per click)', cost:0 },
+  { id:'linkedin', name:'LinkedIn', logoText:'<div style="display:inline-flex;align-items:center;gap:8px;font-family:Arial,sans-serif;font-weight:900;font-size:22px;color:#0a66c2">Linked<span style="background:#0a66c2;color:#fff;padding:2px 6px;border-radius:4px">in</span></div>', meta:'(LinkedIn Standard)', cost:295 },
+  { id:'monster', name:'Monster', logoText:'<div style="font-family:Arial,sans-serif;font-weight:900;font-size:30px;color:#6e2585">monster</div>', meta:'(120 slots free)', cost:199 },
+];
+
+const selectedBoards = new Set();
+
+function renderBoards(){
+  const grid = document.getElementById('boardGrid');
+  grid.innerHTML = BOARDS.map(b => {
+    const selected = selectedBoards.has(b.id);
+    return `
+      <div class="board-card ${selected?'selected':''}" onclick="toggleBoard('${b.id}')">
+        <div class="head">edit subscription | set posting limits</div>
+        <div class="tick">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </div>
+        <div class="body">
+          <div class="title">${b.name}</div>
+          <div class="logo">${b.logoText}</div>
+          <div class="meta mt-3">
+            ${b.meta ? `<div>${b.meta}</div>` : ''}
+            <div class="mt-1">Cost per post: <b>$${b.cost.toFixed(2)}</b></div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleBoard(id){
+  const b = BOARDS.find(x => x.id === id);
+  if(!b || b.disabled) return;
+  if(selectedBoards.has(id)) selectedBoards.delete(id);
+  else selectedBoards.add(id);
+  renderBoards();
+  refreshFooter();
+}
+
+function toggleAllSites(checked){
+  selectedBoards.clear();
+  if(checked){ BOARDS.forEach(b => { if(!b.disabled) selectedBoards.add(b.id); }); }
+  renderBoards();
+  refreshFooter();
+}
+
+function refreshFooter(){
+  const n = selectedBoards.size;
+  const cost = [...selectedBoards].reduce((s,id) => s + (BOARDS.find(b => b.id===id)?.cost || 0), 0);
+  document.getElementById('totalCost').textContent = '$' + cost.toFixed(2);
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = n === 0;
+  document.getElementById('publishBtnLabel').textContent = `Publish to ${n} Job board${n===1?'':'s'}`;
+}
+
+function publish(){
+  if(!selectedBoards.size) return;
+  const n = selectedBoards.size;
+  document.getElementById('publishedBody').textContent = `Published to ${n} job board${n===1?'':'s'}. Expect candidates to start applying shortly.`;
+  const m = document.getElementById('publishedModal');
+  m.style.display = 'flex';
+  m.classList.remove('hidden');
+}
+function closePublishedModal(){
+  const m = document.getElementById('publishedModal');
+  m.style.display = 'none';
+  m.classList.add('hidden');
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closePublishedModal(); });
+
+renderBoards();
+refreshFooter();
+</script>
+</body>
+</html>

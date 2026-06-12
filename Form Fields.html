@@ -28,8 +28,6 @@
   body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f5f6; }
   .topnav a { color:#1f9619; }
   .topnav a:hover { color:#166e12; }
-  .topnav a.text-azure-600 { color:#1B75BB; }
-  .topnav a.text-azure-600:hover { color:#155F95; }
   .topnav .sep { color:#d6dade; }
   .subnav a { color:#1f9619; font-weight:500; }
   .subnav a.active { color:#1B75BB; }
@@ -70,28 +68,6 @@
   .fade-in { animation: fade-in .18s ease; }
   @keyframes modal-in { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
   .modal-in { animation: modal-in .2s cubic-bezier(0.2,0,0,1); }
-
-  /* Toggle switch */
-  .tgl { position:relative; display:inline-block; width:36px; height:20px; flex-shrink:0; }
-  .tgl input { opacity:0; width:0; height:0; }
-  .tgl .slider { position:absolute; cursor:pointer; inset:0; background:#d6dade; border-radius:999px; transition:.2s; }
-  .tgl .slider::before { content:""; position:absolute; height:16px; width:16px; left:2px; top:2px; background:#fff; border-radius:999px; transition:.2s; box-shadow:0 1px 2px rgba(0,0,0,.15); }
-  .tgl input:checked + .slider { background:#1B75BB; }
-  .tgl input:checked + .slider::before { transform:translateX(16px); }
-  .tgl.purple input:checked + .slider { background:#7c3aed; }
-
-  /* Auto-pop state on inputs */
-  .autopop { background:#f5f0ff !important; color:#0e0e0e !important; font-style:normal !important; border-color:#e4d6ff !important; }
-  @keyframes shimmer { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
-  .shimmering { background:linear-gradient(90deg, #f5f0ff 25%, #e4d6ff 50%, #f5f0ff 75%) !important; background-size:200% 100% !important; animation:shimmer 1.1s linear infinite; color:transparent !important; border-color:#e4d6ff !important; pointer-events:none !important; }
-  .shimmering::placeholder { color:transparent; }
-  .autopop-wrap { position:relative; }
-  .ai-tag { position:absolute; right:-14px; top:50%; transform:translateY(-50%); width:8px; height:8px; border-radius:999px; background:#7c3aed; pointer-events:auto; cursor:help; }
-  .ai-tag::after { content:'AI Generated'; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#0e0e0e; color:#fff; font-size:11px; font-weight:500; padding:5px 8px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s ease; box-shadow:0 4px 12px rgba(0,0,0,.18); }
-  .ai-tag::before { content:''; position:absolute; bottom:calc(100% + 1px); left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#0e0e0e; opacity:0; transition:opacity .15s ease; }
-  .ai-tag:hover::after, .ai-tag:hover::before { opacity:1; }
-  .field-row.optional-hide { display:none; }
-  body.hide-optional .optional-field { display:none; }
 </style>
 </head>
 <body class="text-ink-800">
@@ -100,10 +76,14 @@
 <header class="bg-white border-b-2 border-brand-500">
   <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
     <a href="#" class="px-3">Home</a><span class="sep">|</span>
-    <a href="Jobs.html" class="px-3 text-azure-600">Jobs</a><span class="sep">|</span>
+    <a href="Jobs.html" class="px-3">Jobs</a><span class="sep">|</span>
+    <a href="#" class="px-3 text-azure-600">Create a Posting</a><span class="sep">|</span>
+    <a href="#" class="px-3">Manage Postings</a><span class="sep">|</span>
     <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
     <a href="#" class="px-3">Search</a><span class="sep">|</span>
     <a href="#" class="px-3">Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Legacy Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
     <a href="#" class="px-3">Settings</a><span class="sep">|</span>
     <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
   </nav>
@@ -128,22 +108,11 @@
 
   <div class="bg-white border border-ink-100 rounded shadow-sm">
 
-    <div class="text-center py-6 px-8 border-b border-ink-100 relative">
+    <div class="text-center py-6 px-8 border-b border-ink-100">
       <div class="text-ink-500 italic">Please enter the details for this posting</div>
       <div class="mt-2 font-bold italic text-ink-500">
         (Please provide values for the mandatory fields marked with a red asterisk <span class="req text-[18px]">*</span> )
       </div>
-    </div>
-
-    <!-- Field toggles -->
-    <div class="px-8 py-4 border-b border-ink-100 flex items-center justify-end gap-6 bg-ink-50/40">
-      <label class="flex items-center gap-2 text-[14px] text-ink-700 font-semibold cursor-pointer select-none">
-        <span>Auto-pop fields:</span>
-        <span class="tgl purple">
-          <input type="checkbox" id="tglAutoPop" checked onchange="toggleAutoPop(this.checked)" />
-          <span class="slider"></span>
-        </span>
-      </label>
     </div>
 
     <div class="p-8 space-y-10">
@@ -165,19 +134,19 @@
           <input class="fld" placeholder="" />
 
           <label class="field-label pt-2">Job Title <span class="req">*</span></label>
-          <input class="fld" placeholder="" data-autopop="Senior Director, Manufacturing" />
+          <input class="fld" placeholder="" />
 
-          <label class="field-label pt-2 optional-field">eFinancialCareers Display Company<br/>Name and Brand</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:90px" data-autopop="Yes"><option>Yes</option><option>No</option></select>
+          <label class="field-label pt-2">eFinancialCareers Display Company<br/>Name and Brand</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:90px"><option>Yes</option><option>No</option></select>
 
-          <label class="field-label pt-2 optional-field">eFinancialCareers Anonymous<br/>Posting</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:90px" data-autopop="No"><option>No</option><option>Yes</option></select>
+          <label class="field-label pt-2">eFinancialCareers Anonymous<br/>Posting</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:90px"><option>No</option><option>Yes</option></select>
 
-          <label class="field-label pt-2 optional-field">Logo URL</label>
-          <input class="fld optional-field" placeholder="Type image url here..." />
+          <label class="field-label pt-2">Logo URL</label>
+          <input class="fld" placeholder="Type image url here..." />
 
-          <label class="field-label pt-2 optional-field">Linkedin Social Image URL</label>
-          <div class="optional-field">
+          <label class="field-label pt-2">Linkedin Social Image URL</label>
+          <div>
             <input class="fld" />
             <div class="help">Enter an image URL to use a different picture than whats stored in your subscription settings</div>
           </div>
@@ -188,11 +157,11 @@
       <section>
         <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Job Type and Specifics</h2>
         <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
-          <label class="field-label pt-2 optional-field">Job Type</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Employee"><option>Employee</option><option>Contractor</option></select>
+          <label class="field-label pt-2">Job Type</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Employee</option><option>Contractor</option></select>
 
-          <label class="field-label pt-2 optional-field">CareerBuilder Employee Type</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Full-Time"><option>Full-Time</option><option>Part-Time</option></select>
+          <label class="field-label pt-2">CareerBuilder Employee Type</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Full-Time</option><option>Part-Time</option></select>
 
           <label class="field-label pt-2">Dice Tax Term <span class="req">*</span></label>
           <select class="fld has-value" size="5" style="font-style:normal;color:#0e0e0e;width:320px">
@@ -204,66 +173,14 @@
             <option>Contract to Hire - Corp-to-Corp</option>
           </select>
 
-          <label class="field-label pt-2 optional-field">Full/Part Time</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Full-Time"><option>Full-Time</option><option>Part-Time</option></select>
+          <label class="field-label pt-2">Full/Part Time</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Full-Time</option><option>Part-Time</option></select>
 
-          <label class="field-label pt-2 optional-field">Location</label>
-          <input class="fld optional-field" placeholder="City, State / Country" data-autopop="London, UK" />
+          <label class="field-label pt-2">Location</label>
+          <input class="fld" placeholder="City, State / Country" />
 
-          <label class="field-label pt-2 optional-field">Salary</label>
-          <input class="fld optional-field" placeholder="e.g. £45,000 - £55,000" data-autopop="£45,000 - £55,000" />
-        </div>
-      </section>
-
-      <!-- Schedule and Vacancies -->
-      <section>
-        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Schedule and Vacancies</h2>
-        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
-
-          <label class="field-label pt-2">BA Earliest Possible Start <span class="req">*</span></label>
-          <div class="autopop-wrap">
-            <input class="fld" data-autopop="ASAP" placeholder="" />
-            <div class="help text-ink-500 mt-1" style="color:#5a6068">dd/mm/yyyy or dd.mm.yyyy or ASAP / Ab Sofort</div>
-          </div>
-
-          <label class="field-label pt-2 optional-field">NHS Jobs Work Pattern Types <span class="req">*</span></label>
-          <select class="fld optional-field" data-autopop="Full-time"><option>--Please Select--</option><option>Full-time</option><option>Part-time</option><option>Flexible</option></select>
-
-          <label class="field-label pt-2 optional-field">Pracuj.PL Immediate Employment</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:90px" data-autopop="No"><option>No</option><option>Yes</option></select>
-
-          <label class="field-label pt-2 optional-field">Employment Start Date</label>
-          <div class="autopop-wrap optional-field">
-            <input class="fld" placeholder="" data-autopop="ASAP" />
-            <div class="help text-ink-500 mt-1" style="color:#5a6068">e.g. 25/12/2012 or ASAP</div>
-          </div>
-
-          <label class="field-label pt-2">BA Number of Vacancies <span class="req">*</span></label>
-          <div class="autopop-wrap">
-            <input type="number" class="fld" style="width:120px" data-autopop="1" />
-            <div class="help mt-1" style="color:#1B75BB">Minimum 1 vacancy, each location must have one vacancy.</div>
-          </div>
-
-          <label class="field-label pt-2">Date Applications Close <span class="req">*</span></label>
-          <div class="autopop-wrap">
-            <input class="fld" placeholder="" data-autopop="22/06/2026" />
-            <div class="help text-ink-500 mt-1" style="color:#5a6068">e.g. 22/06/2026</div>
-          </div>
-
-          <label class="field-label pt-2 optional-field">NHS Jobs Work Pattern Units <span class="req">*</span></label>
-          <select class="fld optional-field" data-autopop="Hours per week"><option>--Please Select--</option><option>Hours per week</option><option>Sessions per week</option><option>Hours per month</option></select>
-
-          <label class="field-label pt-2 optional-field">BA Further information about work<br/>time</label>
-          <div class="autopop-wrap optional-field">
-            <textarea class="fld" rows="6" data-autopop="Standard 9-5 working hours, Monday to Friday. Some flexibility available depending on team needs."></textarea>
-          </div>
-
-          <label class="field-label pt-2 optional-field">BA Travel Required ?</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Not Required"><option>Not Required</option><option>Required</option></select>
-
-          <label class="field-label pt-2">BA Fixed-term/Permanent <span class="req">*</span></label>
-          <select class="fld" data-autopop="Permanent"><option>--Please Select--</option><option>Permanent</option><option>Fixed-term</option><option>Temporary</option></select>
-
+          <label class="field-label pt-2">Salary</label>
+          <input class="fld" placeholder="e.g. £45,000 - £55,000" />
         </div>
       </section>
 
@@ -341,104 +258,6 @@
 </div>
 
 <script>
-/* =============== Optional fields + Auto-pop toggles =============== */
-function toggleOptional(on){
-  document.body.classList.toggle('hide-optional', !on);
-}
-
-function getAutoPopFields(){
-  return [...document.querySelectorAll('[data-autopop]')];
-}
-
-function applyAutoPop(el){
-  const val = el.dataset.autopop || '';
-  if(el.tagName === 'SELECT'){
-    // pick option matching value if present
-    const opt = [...el.options].find(o => o.value === val || o.textContent.trim() === val);
-    if(opt) el.value = opt.value;
-  } else {
-    el.value = val;
-  }
-  el.classList.add('autopop');
-  // make sure wrapper is positioned so the tag can anchor to it
-  const host = el.parentElement && el.parentElement.classList.contains('autopop-wrap') ? el.parentElement : null;
-  let target = host;
-  if(!target){
-    // wrap inline-block to host the tag inside the grid cell
-    const wrap = document.createElement('span');
-    wrap.className = 'autopop-wrap';
-    wrap.style.display = 'inline-block';
-    wrap.style.position = 'relative';
-    wrap.style.width = (el.style.width || '') ? el.style.width : '100%';
-    el.parentNode.insertBefore(wrap, el);
-    wrap.appendChild(el);
-    target = wrap;
-  }
-  // remove existing tag
-  target.querySelectorAll('.ai-tag').forEach(t => t.remove());
-  const tag = document.createElement('span');
-  tag.className = 'ai-tag';
-  tag.title = 'Generated by AI';
-  target.appendChild(tag);
-}
-
-function clearAutoPop(el, opts){
-  el.classList.remove('autopop');
-  const host = el.parentElement && el.parentElement.classList.contains('autopop-wrap') ? el.parentElement : null;
-  if(host) host.querySelectorAll('.ai-tag').forEach(t => t.remove());
-  if(opts && opts.resetValue){
-    if(el.tagName === 'SELECT'){
-      // reset to first option (typically placeholder)
-      if(el.options.length) el.selectedIndex = 0;
-    } else {
-      el.value = '';
-    }
-  }
-}
-
-function startShimmer(el){
-  // Strip previous autopop state so the shimmer reads cleanly
-  el.classList.remove('autopop');
-  const host = el.parentElement && el.parentElement.classList.contains('autopop-wrap') ? el.parentElement : null;
-  if(host) host.querySelectorAll('.ai-tag').forEach(t => t.remove());
-  if(el.tagName === 'SELECT'){
-    if(el.options.length) el.selectedIndex = 0;
-  } else { el.value = ''; }
-  el.classList.add('shimmering');
-  el.disabled = true;
-}
-function endShimmer(el){
-  el.classList.remove('shimmering');
-  el.disabled = false;
-  applyAutoPop(el);
-}
-
-function toggleAutoPop(on){
-  const fields = getAutoPopFields();
-  fields.forEach((el, i) => {
-    if(on){
-      startShimmer(el);
-      setTimeout(() => endShimmer(el), 2000);
-    } else {
-      clearAutoPop(el, { resetValue:true });
-    }
-  });
-}
-
-// Edit detection: typing in / changing an auto-pop field clears the AI styling
-document.addEventListener('input', e => {
-  const el = e.target;
-  if(el.classList && el.classList.contains('autopop') && el.dataset.autopop !== undefined){
-    clearAutoPop(el);
-  }
-});
-document.addEventListener('change', e => {
-  const el = e.target;
-  if(el.classList && el.classList.contains('autopop') && el.tagName === 'SELECT'){
-    clearAutoPop(el);
-  }
-});
-
 /* Same data shape as PSQ-Creation.html (read-only here) */
 const QUESTIONNAIRES = [
   { id:'accounts', name:'Accounts', items:[
@@ -942,9 +761,6 @@ function updateC2Count(){
 
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closePsqPicker(); });
 renderAttached();
-
-// Apply Auto-pop on initial load (toggle is ON by default)
-toggleAutoPop(true);
 </script>
 </body>
 </html>

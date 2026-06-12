@@ -30,6 +30,8 @@
   body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f5f6; }
   .topnav a { color:#1f9619; }
   .topnav a:hover { color:#166e12; }
+  .topnav a.text-azure-600 { color:#1B75BB; }
+  .topnav a.text-azure-600:hover { color:#155F95; }
   .topnav .sep { color:#d6dade; }
   .subnav a { color:#1f9619; font-weight:500; }
   .subnav a.active { color:#1B75BB; }
@@ -103,19 +105,16 @@
 <header class="bg-white border-b-2 border-brand-500">
   <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
     <a href="#" class="px-3">Home</a><span class="sep">|</span>
-    <a href="Create-Posting.html" class="px-3">Create a Posting</a><span class="sep">|</span>
-    <a href="#" class="px-3">Manage Postings</a><span class="sep">|</span>
+    <a href="Jobs.html" class="px-3">Jobs</a><span class="sep">|</span>
     <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
     <a href="#" class="px-3">Search</a><span class="sep">|</span>
     <a href="#" class="px-3">Reports</a><span class="sep">|</span>
-    <a href="#" class="px-3">Legacy Reports</a><span class="sep">|</span>
-    <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
     <a href="#" class="px-3">Settings</a><span class="sep">|</span>
     <a href="#" class="px-3 text-azure-600">Account Setup</a>
     <div class="ml-auto pr-2 relative">
       <button id="profileBtn" class="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-ink-50 transition" onclick="toggleProfileMenu(event)">
         <div class="w-7 h-7 rounded-full bg-azure-600 text-white flex items-center justify-center font-bold text-[13px]" id="profileAvatar">S</div>
-        <div class="text-[13px] font-semibold text-ink-900" id="profileName">SuperAdmin</div>
+        <div class="text-[14px] font-semibold text-ink-900" id="profileName">SuperAdmin</div>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-500"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div id="profileMenu" class="hidden absolute right-2 top-full mt-1 bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-64 z-[55]"></div>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Job Listings · Broadbean</title>
+<link rel="icon" href="b-design-system/assets/broadbean-mark.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Geist','Mundial','ui-sans-serif','system-ui','sans-serif'] },
+        colors: {
+          brand: { 50:'#ecfbeb',100:'#d4f5d1',300:'#7cdb74',400:'#4ecc44',500:'#28bb21',600:'#1f9619',700:'#166e12' },
+          ink:   { 50:'#f6f7f8',100:'#eceef0',200:'#d6dade',300:'#b3bac1',400:'#858d96',500:'#5a6068',600:'#3f444a',700:'#2d3035',800:'#212121',900:'#0e0e0e' },
+          azure: { 50:'#eaf3fa',100:'#dbe6ff',500:'#3568f5',600:'#1B75BB',700:'#155F95' },
+          danger:{ 50:'#fdecec',100:'#fbd5d5',500:'#dc2626',600:'#b91c1c' },
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family:'Geist',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#f4f4f4; }
+  .topnav a { color:#1f9619; }
+  .topnav a:hover { color:#166e12; }
+  .topnav a.text-azure-600 { color:#1B75BB; }
+  .topnav a.text-azure-600:hover { color:#155F95; }
+  .topnav .sep { color:#d6dade; }
+  .tab { padding:10px 4px; font-size:14px; font-weight:600; color:#5a6068; border-bottom:2px solid transparent; cursor:pointer; transition:all .15s ease; }
+  .tab:hover { color:#0e0e0e; }
+  .tab.active { color:#1B75BB; border-bottom-color:#1B75BB; }
+  input.fld, select.fld { padding:8px 12px; border:1px solid #d6dade; border-radius:6px; font-size:14px; background:#fff; color:#0e0e0e; }
+  input.fld::placeholder { color:#858d96; }
+  input.fld:focus, select.fld:focus { outline:none; border-color:#1B75BB; }
+  .filter-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border:1px solid #d6dade; border-radius:6px; background:#fff; font-size:14px; font-weight:500; color:#3f444a; cursor:pointer; transition:all .15s ease; }
+  .filter-btn:hover { border-color:#b3bac1; }
+  .ac-btn { background:#fff; border:1px solid #d6dade; padding:9px 16px; border-radius:6px; font-size:14px; font-weight:600; color:#3f444a; }
+  .ac-btn:hover { border-color:#b3bac1; background:#f6f7f8; }
+  table.jobs { width:100%; border-collapse:separate; border-spacing:0; }
+  table.jobs th { text-align:left; font-size:13px; font-weight:600; color:#3f444a; padding:14px 16px; background:#ececec; border-bottom:1px solid #d6dade; white-space:nowrap; }
+  table.jobs th .sort { display:inline-flex; align-items:center; gap:4px; cursor:pointer; }
+  table.jobs td { padding:16px; border-bottom:1px solid #eceef0; font-size:14px; color:#0e0e0e; vertical-align:middle; }
+  table.jobs tbody tr:hover { background:#fafbfc; }
+  .job-title { color:#1B75BB; font-weight:500; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
+  .job-title:hover { color:#155F95; }
+  .status-dot { width:11px; height:11px; border-radius:999px; display:inline-block; }
+  .status-active { background:#28bb21; box-shadow:inset 0 0 0 2px #28bb21; }
+  .status-inactive { background:#fff; box-shadow:inset 0 0 0 2px #b3bac1; }
+  .ch-pill { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:999px; color:#fff; font-size:10px; font-weight:700; font-family:Arial,sans-serif; }
+  .ch-pill-standard { background:#b3bac1; }
+  .ch-pill-premium { background:#0a66c2; }
+  .send-btn { display:inline-flex; align-items:center; gap:2px; color:#1B75BB; padding:6px; border-radius:6px; transition:all .15s ease; }
+  .send-btn:hover { background:#eaf3fa; color:#155F95; }
+  .more-dots-btn { width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; color:#5a6068; transition:all .15s ease; }
+  .more-dots-btn:hover { background:#eceef0; color:#0e0e0e; }
+  .check { width:16px; height:16px; border:1.5px solid #b3bac1; border-radius:3px; cursor:pointer; appearance:none; background:#fff; display:inline-grid; place-content:center; }
+  .check:checked { background:#1B75BB; border-color:#1B75BB; }
+  .check:checked::after { content:""; width:9px; height:9px; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'><path d='M3 8.5l3.2 3L13 4.5' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat; }
+  @keyframes selbar-in {
+    0%   { opacity:0; transform:translateY(140%); }
+    70%  { opacity:1; transform:translateY(-10%); }
+    100% { opacity:1; transform:translateY(0); }
+  }
+  .selbar-card { animation: selbar-in .42s cubic-bezier(0.34, 1.56, 0.64, 1); }
+</style>
+</head>
+<body class="text-ink-800">
+
+<!-- Top primary nav -->
+<header class="bg-white border-b-2 border-brand-500">
+  <nav class="topnav px-10 h-14 flex items-center gap-0 text-[14px] font-medium">
+    <a href="#" class="px-3">Home</a><span class="sep">|</span>
+    <a href="Jobs.html" class="px-3 text-azure-600">Jobs</a><span class="sep">|</span>
+    <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
+    <a href="#" class="px-3">Search</a><span class="sep">|</span>
+    <a href="#" class="px-3">Reports</a><span class="sep">|</span>
+    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
+    <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
+  </nav>
+</header>
+
+<main class="py-8" style="padding-left:5%;padding-right:5%">
+
+  <!-- Title row -->
+  <div class="mb-2">
+    <h1 class="text-[24px] font-semibold leading-none text-ink-900">Job Listings</h1>
+  </div>
+
+  <!-- Tabs -->
+  <div class="mb-5 flex items-center gap-6" style="border-bottom:1px solid #cccccc">
+    <button class="tab active" data-tab="open" onclick="switchJobsTab('open')">Open <span class="text-ink-500 font-normal">(2,346)</span></button>
+    <button class="tab" data-tab="archived" onclick="switchJobsTab('archived')">Archived <span class="text-ink-500 font-normal">(1,457)</span></button>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex items-center gap-3 mb-2">
+    <div class="relative">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input class="fld" style="padding-left:36px;width:380px" placeholder="Search by Job 'title', 'ID', 'location'" />
+    </div>
+    <button class="filter-btn">Created by <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+    <button class="filter-btn">Status <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+    <button class="filter-btn">Channels <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></button>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white border border-ink-100 rounded-lg overflow-hidden">
+    <table class="jobs">
+      <thead>
+        <tr>
+          <th style="width:42px"><input type="checkbox" class="check" id="jobsSelectAll" onchange="toggleSelectAllJobs(this.checked)" /></th>
+          <th><span class="sort">Synced Job ID <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></span></th>
+          <th><span class="sort">Job Title <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span></th>
+          <th><span class="sort">Location <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></span></th>
+          <th><span class="sort">Created by <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></span></th>
+          <th>Posting Status</th>
+          <th>Active Channels</th>
+          <th><span class="sort">Applications <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></span></th>
+          <th>Posting Actions</th>
+        </tr>
+      </thead>
+      <tbody id="jobsTbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Send (post) action menu -->
+<div id="sendMenu" class="hidden fixed z-[65] bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-52">
+  <button class="w-full text-left px-3 py-2.5 text-[14px] text-azure-600 hover:bg-azure-50 flex items-center gap-3 font-semibold" onclick="onSendOption('channel')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7 19 2-8 8-2-17-9z"/></svg>
+    Select Channel
+  </button>
+  <button class="w-full text-left px-3 py-2.5 text-[14px] text-azure-600 hover:bg-azure-50 flex items-center gap-3 font-semibold" onclick="onSendOption('ai')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+    AI Post
+  </button>
+</div>
+
+<!-- LinkedIn confirm modal -->
+<div id="liConfirmModal" class="hidden fixed inset-0 z-[70] items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/40" onclick="closeLinkedInConfirm()"></div>
+  <div class="relative bg-white w-[440px] max-w-[92vw] rounded-xl shadow-2xl p-6">
+    <button class="absolute top-3 right-3 text-ink-400 hover:text-ink-800" onclick="closeLinkedInConfirm()" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="flex items-center gap-2 mb-3">
+      <span id="liConfirmIcon"></span>
+      <h3 id="liConfirmTitle" class="text-[18px] font-bold text-ink-900">Upgrade to Premium</h3>
+    </div>
+    <p id="liConfirmBody" class="text-[14px] text-ink-600 leading-relaxed mb-6">This will upgrade this job post to Premium and will consume one of the remaining premium credit.</p>
+    <div class="flex items-center justify-end gap-3">
+      <button class="px-5 py-2 rounded-md border border-ink-200 text-ink-700 hover:bg-ink-50 font-semibold text-[14px]" onclick="closeLinkedInConfirm()">Cancel</button>
+      <button id="liConfirmBtn" class="px-5 py-2 rounded-md bg-azure-600 hover:bg-azure-700 text-white font-semibold text-[14px]" onclick="confirmLinkedInAction()">Confirm &amp; Upgrade</button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating selection bar -->
+<div id="selectionBar" class="hidden fixed left-1/2 bottom-6 z-50" style="transform:translateX(-50%)">
+  <div id="selectionBarCard" class="selbar-card bg-white rounded-xl shadow-2xl border border-ink-100 flex items-center gap-3 px-5 py-3" style="box-shadow:0 12px 32px rgba(0,0,0,.15), 0 4px 10px rgba(0,0,0,.06)">
+    <div class="text-[14px] text-ink-800"><span id="selCount" class="font-bold">0</span> Jobs Selected</div>
+    <div class="w-px h-6 bg-ink-100"></div>
+    <button class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-danger-500 text-danger-600 hover:bg-danger-50 transition text-[14px] font-semibold">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+      Unpost All
+    </button>
+    <button class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-azure-600 hover:bg-azure-700 text-white transition text-[14px] font-semibold">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+      Resend Posts
+    </button>
+    <div class="relative">
+      <button id="selMoreBtn" class="w-9 h-9 rounded-md text-ink-500 hover:bg-ink-50 hover:text-ink-900 inline-flex items-center justify-center transition" onclick="toggleSelMore(event)" aria-label="More actions">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+      </button>
+      <div id="selMoreMenu" class="hidden absolute right-0 bottom-full mb-2 bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-52 z-[60]">
+        <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="openLinkedInConfirm('upgrade')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-[#0a66c2]"><path d="M20.45 20.45h-3.55V14.9c0-1.32-.03-3.03-1.85-3.03-1.85 0-2.13 1.44-2.13 2.93v5.65H9.37V9h3.4v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57z"/></svg>
+          LinkedIn Upgrade
+        </button>
+        <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="openLinkedInConfirm('downgrade')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-ink-500"><path d="M20.45 20.45h-3.55V14.9c0-1.32-.03-3.03-1.85-3.03-1.85 0-2.13 1.44-2.13 2.93v5.65H9.37V9h3.4v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57z"/></svg>
+          LinkedIn Downgrade
+        </button>
+      </div>
+    </div>
+    <div class="w-px h-6 bg-ink-100"></div>
+    <button class="text-ink-400 hover:text-ink-800 transition" onclick="clearSelection()" aria-label="Clear selection">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const JOBS = [
+  { id:'234954', title:'Senior Director, Manufacturing', location:'San Francisco, USA', createdBy:'John Smith', status:'active', apps:1286, li:'standard' },
+  { id:'234023', title:'Sr Software Developer', location:'Glasgow, UK', createdBy:'John Smith', status:'inactive', apps:null, li:'standard' },
+  { id:'234100', title:'Plant Associate Controls', location:'Liverpool, UK', createdBy:'John Smith', status:'active', apps:335, li:'standard' },
+  { id:'249889', title:'Engineer Maintenance', location:'Blackpool, UK', createdBy:'Amy Ross', status:'active', apps:526, li:'standard' },
+  { id:'234100', title:'Sr Administrative Assistant - Charlotte', location:'Atlanta, TX, US', createdBy:'Amy Ross', status:'active', apps:155, li:'standard' },
+  { id:'798787', title:'Senior Director, Manufacturing', location:'New York, NY, US', createdBy:'Amy Ross', status:'active', apps:936, li:'standard' },
+  { id:'243409', title:'Plant Associate Controls', location:'Chicago, IL, IL, US', createdBy:'Chris D', status:'inactive', apps:null, li:'standard' },
+  { id:'223498', title:'Engineer Maintenance', location:'WFH, US', createdBy:'Chris D', status:'active', apps:1425, li:'standard' },
+  { id:'234234', title:'Sr Administrative Assistant', location:'WFH, US', createdBy:'Chris D', status:'active', apps:235, li:'standard' },
+  { id:'129949', title:'Senior Director, Manufacturing', location:'New York, NY, US', createdBy:'Amy Ross', status:'active', apps:1034, li:'standard' },
+];
+
+function jobRow(j, idx){
+  const liPill = j.li === 'premium'
+    ? '<span class="ch-pill ch-pill-premium" title="LinkedIn Premium">in</span>'
+    : '<span class="ch-pill ch-pill-standard" title="LinkedIn Standard">in</span>';
+  return `
+    <tr>
+      <td><input type="checkbox" class="check jobCheck" data-idx="${idx}" onchange="updateSelectionBar()" /></td>
+      <td class="text-ink-700">${j.id}...</td>
+      <td><a class="job-title">${j.title}</a></td>
+      <td class="text-ink-700">${j.location}</td>
+      <td class="text-ink-700">${j.createdBy}</td>
+      <td>
+        <span class="inline-flex items-center gap-2">
+          <span class="status-dot ${j.status==='active'?'status-active':'status-inactive'}"></span>
+          <span class="${j.status==='active'?'text-ink-800':'text-ink-500'}">${j.status==='active'?'Active':'Inactive'}</span>
+        </span>
+      </td>
+      <td>
+        ${j.status==='active' ? liPill : '<span class="text-ink-400">-</span>'}
+      </td>
+      <td class="text-ink-700">${j.apps !== null ? j.apps.toLocaleString() : '-'}</td>
+      <td>
+        <div class="flex items-center gap-1">
+          <button class="send-btn" title="Post" onclick="openSendMenu(event)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <button class="more-dots-btn" title="More">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+}
+
+function renderJobs(){
+  document.getElementById('jobsTbody').innerHTML = JOBS.map((j,i) => jobRow(j,i)).join('');
+}
+renderJobs();
+
+function switchJobsTab(name){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+}
+
+function updateSelectionBar(){
+  const checks = document.querySelectorAll('.jobCheck');
+  const checked = [...checks].filter(c => c.checked);
+  const bar = document.getElementById('selectionBar');
+  const card = document.getElementById('selectionBarCard');
+  document.getElementById('selCount').textContent = checked.length;
+  const wasHidden = bar.classList.contains('hidden');
+  if(checked.length > 0){
+    bar.classList.remove('hidden');
+    if(wasHidden && card){ card.classList.remove('selbar-card'); void card.offsetWidth; card.classList.add('selbar-card'); }
+  } else {
+    bar.classList.add('hidden');
+  }
+  const sa = document.getElementById('jobsSelectAll');
+  if(sa){
+    sa.checked = checks.length > 0 && checked.length === checks.length;
+    sa.indeterminate = checked.length > 0 && checked.length < checks.length;
+  }
+}
+
+function toggleSelectAllJobs(checked){
+  document.querySelectorAll('.jobCheck').forEach(c => { c.checked = checked; });
+  updateSelectionBar();
+}
+
+function clearSelection(){
+  document.querySelectorAll('.jobCheck').forEach(c => { c.checked = false; });
+  const sa = document.getElementById('jobsSelectAll'); if(sa){ sa.checked = false; sa.indeterminate = false; }
+  document.getElementById('selectionBar').classList.add('hidden');
+}
+
+/* Send (post) action menu */
+function openSendMenu(e){
+  e.stopPropagation();
+  const menu = document.getElementById('sendMenu');
+  const btn = e.currentTarget;
+  const r = btn.getBoundingClientRect();
+  // ensure visible to measure, then position
+  menu.classList.remove('hidden');
+  const mr = menu.getBoundingClientRect();
+  let top = r.bottom + 6;
+  if(top + mr.height > window.innerHeight - 8) top = r.top - mr.height - 6;
+  let left = r.left;
+  if(left + mr.width > window.innerWidth - 8) left = window.innerWidth - mr.width - 8;
+  menu.style.top = top + 'px';
+  menu.style.left = Math.max(8, left) + 'px';
+}
+function closeSendMenu(){ document.getElementById('sendMenu').classList.add('hidden'); }
+function onSendOption(opt){
+  closeSendMenu();
+  if(opt === 'channel') window.location.href = 'Select-Channel.html';
+}
+document.addEventListener('click', e => {
+  const m = document.getElementById('sendMenu');
+  if(m && !m.classList.contains('hidden') && !m.contains(e.target) && !e.target.closest('.send-btn')) closeSendMenu();
+});
+
+/* 3-dot menu on selection bar */
+function toggleSelMore(e){
+  e.stopPropagation();
+  document.getElementById('selMoreMenu').classList.toggle('hidden');
+}
+function closeSelMore(){ document.getElementById('selMoreMenu').classList.add('hidden'); }
+document.addEventListener('click', e => {
+  const m = document.getElementById('selMoreMenu');
+  if(m && !m.classList.contains('hidden') && !m.contains(e.target) && !e.target.closest('#selMoreBtn')) closeSelMore();
+});
+
+/* LinkedIn confirm modal */
+let liAction = 'upgrade';
+const LI_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55V14.9c0-1.32-.03-3.03-1.85-3.03-1.85 0-2.13 1.44-2.13 2.93v5.65H9.37V9h3.4v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57z"/></svg>';
+
+function openLinkedInConfirm(action){
+  liAction = action;
+  closeSelMore();
+  const titleEl = document.getElementById('liConfirmTitle');
+  const bodyEl = document.getElementById('liConfirmBody');
+  const btnEl = document.getElementById('liConfirmBtn');
+  const iconEl = document.getElementById('liConfirmIcon');
+  const n = document.querySelectorAll('.jobCheck:checked').length || 1;
+  const plural = n > 1 ? 's' : '';
+  if(action === 'upgrade'){
+    iconEl.innerHTML = `<span class="text-[#0a66c2]">${LI_ICON}</span>`;
+    titleEl.textContent = 'Upgrade to Premium';
+    bodyEl.textContent = `This will upgrade ${n} job post${plural} to Premium and will consume ${n} of the remaining premium credit${plural}.`;
+    btnEl.textContent = 'Confirm & Upgrade';
+    btnEl.className = 'px-5 py-2 rounded-md bg-azure-600 hover:bg-azure-700 text-white font-semibold text-[14px]';
+  } else {
+    iconEl.innerHTML = `<span class="text-ink-500">${LI_ICON}</span>`;
+    titleEl.textContent = 'Downgrade to Standard';
+    bodyEl.textContent = `This will downgrade ${n} job post${plural} from Premium to Standard. The premium credit will not be refunded.`;
+    btnEl.textContent = 'Confirm & Downgrade';
+    btnEl.className = 'px-5 py-2 rounded-md bg-azure-600 hover:bg-azure-700 text-white font-semibold text-[14px]';
+  }
+  const modal = document.getElementById('liConfirmModal');
+  modal.style.display = 'flex';
+  modal.classList.remove('hidden');
+}
+function closeLinkedInConfirm(){
+  const modal = document.getElementById('liConfirmModal');
+  modal.style.display = 'none';
+  modal.classList.add('hidden');
+}
+function confirmLinkedInAction(){
+  const target = liAction === 'upgrade' ? 'premium' : 'standard';
+  document.querySelectorAll('.jobCheck:checked').forEach(c => {
+    const idx = +c.dataset.idx;
+    if(!isNaN(idx) && JOBS[idx]) JOBS[idx].li = target;
+  });
+  closeLinkedInConfirm();
+  clearSelection();
+  renderJobs();
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ closeSelMore(); closeLinkedInConfirm(); closeSendMenu(); }
+});
+</script>
+</body>
+</html>
