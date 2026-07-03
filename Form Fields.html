@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -51,7 +51,7 @@
   .pill { font-size:11px; font-weight:700; letter-spacing:.04em; padding:3px 8px; border-radius:999px; text-transform:uppercase; }
   .knockout { color:#b91c1c; background:#fdecec; }
   .type-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600; color:#1B75BB; background:#eaf3fa; }
-  .qbubble { width:32px;height:32px;border-radius:999px;background:#858d96;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+  .qbubble { color:#333333;display:inline-flex;align-items:center;justify-content:center;font-weight:400;font-size:14px;flex-shrink:0;}
   .qcount { background:#eceef0; color:#5a6068; font-size:12px; font-weight:500; padding:2px 10px; border-radius:999px; }
   .btn-primary { background:#1B75BB; color:#fff; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
   .btn-primary:hover { background:#155F95; }
@@ -84,8 +84,8 @@
     <a href="#" class="px-3">Reports</a><span class="sep">|</span>
     <a href="#" class="px-3">Legacy Reports</a><span class="sep">|</span>
     <a href="#" class="px-3">Job Boards</a><span class="sep">|</span>
-    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
-    <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
+    <a href="PSQ-Creation.html" class="px-3 text-azure-600">Settings</a><span class="sep">|</span>
+    <a href="#" class="px-3">Account Setup</a>
   </nav>
 </header>
 
@@ -431,7 +431,7 @@ function questionRow(item, idx){
   const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
   return `
     <div class="flex items-start gap-3 px-4 py-3 border-b border-ink-100 last:border-0">
-      <div class="qbubble" style="width:26px;height:26px;font-size:12px">${idx+1}</div>
+      <span class="qbubble">${idx+1}.</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-2 flex-wrap">
           <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
@@ -660,7 +660,7 @@ function c2PreviewRow(item, idx){
   const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
   return `
     <div class="flex items-start gap-3 py-3 border-b border-ink-100 last:border-0">
-      <div class="qbubble" style="width:26px;height:26px;font-size:12px">${idx+1}</div>
+      <span class="qbubble">${idx+1}.</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-2 flex-wrap">
           <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
@@ -764,3 +764,5 @@ renderAttached();
 </script>
 </body>
 </html>
+
+

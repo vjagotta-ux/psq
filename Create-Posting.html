@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -53,7 +53,7 @@
   .pill { font-size:11px; font-weight:700; letter-spacing:.04em; padding:3px 8px; border-radius:999px; text-transform:uppercase; }
   .knockout { color:#b91c1c; background:#fdecec; }
   .type-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600; color:#1B75BB; background:#eaf3fa; }
-  .qbubble { width:32px;height:32px;border-radius:999px;background:#858d96;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+  .qbubble { color:#333333;display:inline-flex;align-items:center;justify-content:center;font-weight:400;font-size:14px;flex-shrink:0;}
   .qcount { background:#eceef0; color:#5a6068; font-size:12px; font-weight:500; padding:2px 10px; border-radius:999px; }
   .btn-primary { background:#1B75BB; color:#fff; padding:10px 18px; border-radius:8px; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:8px; transition:all .15s ease; }
   .btn-primary:hover { background:#155F95; }
@@ -104,8 +104,8 @@
     <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
     <a href="#" class="px-3">Search</a><span class="sep">|</span>
     <a href="#" class="px-3">Reports</a><span class="sep">|</span>
-    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
-    <a href="PSQ-Creation.html" class="px-3">Account Setup</a>
+    <a href="PSQ-Creation.html" class="px-3">Settings</a><span class="sep">|</span>
+    <a href="#" class="px-3">Account Setup</a>
   </nav>
 </header>
 
@@ -148,122 +148,149 @@
 
     <div class="p-8 space-y-10">
 
-      <!-- Broadcast As -->
-      <div class="grid grid-cols-[200px_1fr] items-center gap-x-6 gap-y-4 max-w-[820px]">
-        <label class="field-label">Broadcast As: <span class="req">*</span></label>
-        <select class="fld has-value" style="font-style:italic">
-          <option>Broadbean Demo</option>
-          <option>Acme Recruitment</option>
-        </select>
-      </div>
-
-      <!-- Main Posting Information -->
+      <!-- Main Advert Information -->
       <section>
-        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Main Posting Information</h2>
-        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Main Advert Information</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
           <label class="field-label pt-2">Reference No. <span class="req">*</span></label>
-          <input class="fld" placeholder="" />
+          <input class="fld" value="CRF10429" />
 
           <label class="field-label pt-2">Job Title <span class="req">*</span></label>
-          <input class="fld" placeholder="" data-autopop="Senior Director, Manufacturing" />
-
-          <label class="field-label pt-2 optional-field">eFinancialCareers Display Company<br/>Name and Brand</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:90px" data-autopop="Yes"><option>Yes</option><option>No</option></select>
-
-          <label class="field-label pt-2 optional-field">eFinancialCareers Anonymous<br/>Posting</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:90px" data-autopop="No"><option>No</option><option>Yes</option></select>
-
-          <label class="field-label pt-2 optional-field">Logo URL</label>
-          <input class="fld optional-field" placeholder="Type image url here..." />
-
-          <label class="field-label pt-2 optional-field">Linkedin Social Image URL</label>
-          <div class="optional-field">
-            <input class="fld" />
-            <div class="help">Enter an image URL to use a different picture than whats stored in your subscription settings</div>
-          </div>
+          <input class="fld" value="Senior software engineer" />
         </div>
       </section>
 
       <!-- Job Type and Specifics -->
       <section>
         <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Job Type and Specifics</h2>
-        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
-          <label class="field-label pt-2 optional-field">Job Type</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Employee"><option>Employee</option><option>Contractor</option></select>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
+          <label class="field-label pt-2">Job Type</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Permanent</option><option>Contract</option><option>Temporary</option></select>
 
-          <label class="field-label pt-2 optional-field">CareerBuilder Employee Type</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Full-Time"><option>Full-Time</option><option>Part-Time</option></select>
+          <label class="field-label pt-2">Full/Part Time</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Full-Time</option><option>Part-Time</option></select>
 
-          <label class="field-label pt-2">Dice Tax Term <span class="req">*</span></label>
-          <select class="fld has-value" size="5" style="font-style:normal;color:#0e0e0e;width:320px">
-            <option>Full-time</option>
-            <option>Contract - W2</option>
-            <option>Contract to Hire - W2</option>
-            <option>Contract - Corp-to-Corp</option>
-            <option>Contract to Hire - Independent</option>
-            <option>Contract to Hire - Corp-to-Corp</option>
-          </select>
-
-          <label class="field-label pt-2 optional-field">Full/Part Time</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Full-Time"><option>Full-Time</option><option>Part-Time</option></select>
-
-          <label class="field-label pt-2 optional-field">Location</label>
-          <input class="fld optional-field" placeholder="City, State / Country" data-autopop="London, UK" />
-
-          <label class="field-label pt-2 optional-field">Salary</label>
-          <input class="fld optional-field" placeholder="e.g. £45,000 - £55,000" data-autopop="£45,000 - £55,000" />
+          <label class="field-label pt-2">LinkedIn Employment Status</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:240px"><option>Not Specified</option><option>Full-Time</option><option>Part-Time</option><option>Contract</option><option>Internship</option></select>
         </div>
       </section>
 
-      <!-- Schedule and Vacancies -->
+      <!-- Industry and Sector Information -->
       <section>
-        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Schedule and Vacancies</h2>
-        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-4 max-w-[820px]">
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Industry and Sector Information</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
+          <label class="field-label pt-2">Industry Sector <span class="req">*</span></label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:300px"><option>IT</option><option>Finance</option><option>Healthcare</option><option>Education</option><option>Retail</option></select>
 
-          <label class="field-label pt-2">BA Earliest Possible Start <span class="req">*</span></label>
-          <div class="autopop-wrap">
-            <input class="fld" data-autopop="ASAP" placeholder="" />
-            <div class="help text-ink-500 mt-1" style="color:#5a6068">dd/mm/yyyy or dd.mm.yyyy or ASAP / Ab Sofort</div>
+          <label class="field-label pt-2">LinkedIn Industry <span class="req">*</span></label>
+          <div>
+            <div class="flex items-start gap-10">
+              <select class="fld" data-autopop="Technology, Information and Media" style="max-width:340px"><option>Technology, Information and Media</option><option>Financial Services</option><option>Manufacturing</option></select>
+              <select class="fld" size="5" data-autopop="Software Development" style="max-width:320px">
+                <option>Radio and Television Broadcasting</option>
+                <option>Satellite Telecommunications</option>
+                <option>Sheet Music Publishing</option>
+                <option>Social Networking Platforms</option>
+                <option>Software Development</option>
+                <option>Sound Recording</option>
+              </select>
+            </div>
+            <div class="help text-ink-500 mt-1" style="color:#5a6068">Choose up to 3 industries</div>
           </div>
 
-          <label class="field-label pt-2 optional-field">NHS Jobs Work Pattern Types <span class="req">*</span></label>
-          <select class="fld optional-field" data-autopop="Full-time"><option>--Please Select--</option><option>Full-time</option><option>Part-time</option><option>Flexible</option></select>
+          <label class="field-label pt-2">LinkedIn Function <span class="req">*</span></label>
+          <div>
+            <select class="fld" size="6" data-autopop="Engineering" style="max-width:280px">
+              <option>Distribution</option>
+              <option>Design</option>
+              <option>Education</option>
+              <option>Engineering</option>
+              <option>Finance</option>
+              <option>General Business</option>
+            </select>
+            <div class="help text-ink-500 mt-1" style="color:#5a6068">Choose up to 3 job functions</div>
+          </div>
+        </div>
+      </section>
 
-          <label class="field-label pt-2 optional-field">Pracuj.PL Immediate Employment</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:90px" data-autopop="No"><option>No</option><option>Yes</option></select>
-
-          <label class="field-label pt-2 optional-field">Employment Start Date</label>
-          <div class="autopop-wrap optional-field">
-            <input class="fld" placeholder="" data-autopop="ASAP" />
-            <div class="help text-ink-500 mt-1" style="color:#5a6068">e.g. 25/12/2012 or ASAP</div>
+      <!-- Salary and Benefit Information -->
+      <section>
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Salary and Benefit Information</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
+          <div>
+            <div class="field-label">Salary + Benefits</div>
+            <div class="help text-ink-500 mt-1 leading-snug" style="color:#5a6068">Salary description that will be displayed on your advert.</div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:70px"><option>£</option><option>$</option><option>€</option></select>
+              <input class="fld" style="width:110px" value="80000" />
+              <input class="fld" style="width:110px" value="85000" />
+              <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:120px"><option>annum</option><option>month</option><option>day</option><option>hour</option></select>
+              <input class="fld flex-1" placeholder="Additional benefits" style="min-width:200px" />
+            </div>
+            <div class="help text-ink-500 mt-1" style="color:#5a6068">e.g. car, pension, negotiable</div>
           </div>
 
-          <label class="field-label pt-2">BA Number of Vacancies <span class="req">*</span></label>
-          <div class="autopop-wrap">
-            <input type="number" class="fld" style="width:120px" data-autopop="1" />
-            <div class="help mt-1" style="color:#1B75BB">Minimum 1 vacancy, each location must have one vacancy.</div>
+          <label class="field-label pt-2">Hide Numeric Salary on Job Boards?</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:140px"><option>No</option><option>Yes</option></select>
+        </div>
+      </section>
+
+      <!-- Skills and Experience -->
+      <section>
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Skills and Experience</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
+          <label class="field-label pt-2">LinkedIn Experience Level</label>
+          <select class="fld" data-autopop="Mid-Senior Level" style="max-width:280px"><option>Internship</option><option>Entry Level</option><option>Associate</option><option>Mid-Senior Level</option><option>Director</option><option>Executive</option></select>
+
+          <label class="field-label pt-2">LinkedIn Skills &amp; Experience</label>
+          <textarea class="fld" rows="3">React.js, Redux, Node.js, AWS, MySQL, REST APIs, full-stack development, 6+ years of experience building user-facing products.</textarea>
+        </div>
+      </section>
+
+      <!-- Location Information -->
+      <section>
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Location Information</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
+          <label class="field-label pt-2">Location <span class="req">*</span></label>
+          <input class="fld" value="Europe > England > London" />
+
+          <label class="field-label pt-2">Postcode/Zipcode of Job Location<br/>(optional)</label>
+          <input class="fld" style="max-width:240px" />
+
+          <label class="field-label pt-2">LinkedIn Work Place Type</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:200px"><option>Not Applicable</option><option>On-site</option><option>Hybrid</option><option>Remote</option></select>
+
+          <label class="field-label pt-2">Stepstone Group - Hide Postcode</label>
+          <select class="fld has-value" style="font-style:normal;color:#0e0e0e;width:120px"><option>No</option><option>Yes</option></select>
+        </div>
+      </section>
+
+      <!-- Main Description Details -->
+      <section>
+        <h2 class="section-title border-b border-ink-100 pb-2 mb-5">Main Description Details</h2>
+        <div class="grid grid-cols-[260px_1fr] items-start gap-x-6 gap-y-5 max-w-[820px]">
+          <label class="field-label pt-2">Detailed Job Description <span class="req">*</span></label>
+          <textarea class="fld" rows="14">• Evolve our architecture and engineering practices to support the ever-growing scale of users, features, and data.
+• Work alongside experienced and highly skilled developers with cutting-edge technologies.
+• Collaborate closely with Product and Design teams, taking full ownership and responsibility from conception to post-deployment in a fast-paced, dynamic environment.
+• Tech stack: React.js, Redux, Node.js, Ruby on Rails, AWS, Elasticsearch, Redis, MySQL.
+
+Note: Prior experience with our tech stack is not required; we welcome people willing to learn.
+
+Requirements:
+• 6+ years of experience as a Software Engineer.
+• Strong technical expertise with a proven track record of building products that people love and use daily.
+• Full-stack development experience, with a primary focus on backend.
+• Experience developing large-scale, user-facing web products.
+• Deep product understanding and a passion for creating software that delivers an exceptional user experience.
+• Strong team player with excellent communication skills and empathy.
+• Commitment to quality and simplicity in engineering and product development.</textarea>
+          <div></div>
+          <div class="help text-ink-500 leading-relaxed" style="color:#5a6068">
+            Please note: you should never include contact details in the description of the advert, these will be sent separately.
           </div>
-
-          <label class="field-label pt-2">Date Applications Close <span class="req">*</span></label>
-          <div class="autopop-wrap">
-            <input class="fld" placeholder="" data-autopop="22/06/2026" />
-            <div class="help text-ink-500 mt-1" style="color:#5a6068">e.g. 22/06/2026</div>
-          </div>
-
-          <label class="field-label pt-2 optional-field">NHS Jobs Work Pattern Units <span class="req">*</span></label>
-          <select class="fld optional-field" data-autopop="Hours per week"><option>--Please Select--</option><option>Hours per week</option><option>Sessions per week</option><option>Hours per month</option></select>
-
-          <label class="field-label pt-2 optional-field">BA Further information about work<br/>time</label>
-          <div class="autopop-wrap optional-field">
-            <textarea class="fld" rows="6" data-autopop="Standard 9-5 working hours, Monday to Friday. Some flexibility available depending on team needs."></textarea>
-          </div>
-
-          <label class="field-label pt-2 optional-field">BA Travel Required ?</label>
-          <select class="fld has-value optional-field" style="font-style:normal;color:#0e0e0e;width:200px" data-autopop="Not Required"><option>Not Required</option><option>Required</option></select>
-
-          <label class="field-label pt-2">BA Fixed-term/Permanent <span class="req">*</span></label>
-          <select class="fld" data-autopop="Permanent"><option>--Please Select--</option><option>Permanent</option><option>Fixed-term</option><option>Temporary</option></select>
-
         </div>
       </section>
 
@@ -290,7 +317,7 @@
         </button>
         <div class="flex gap-3">
           <button class="btn-ghost">Save as draft</button>
-          <button class="btn-primary">
+          <button class="btn-primary" onclick="openPreview()">
             Continue to Preview
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </button>
@@ -299,6 +326,50 @@
 
     </div>
   </div>
+
+  <!-- ====================== STEP 3: PREVIEW ====================== -->
+  <div id="previewSection" class="hidden">
+    <div class="bg-white border border-ink-100 rounded shadow-sm mt-0">
+
+      <!-- Preview header -->
+      <div class="px-8 py-5 border-b border-ink-100 bg-ink-50/40 flex items-center justify-between">
+        <div>
+          <h2 class="text-[18px] font-bold text-ink-900" id="prvJobTitle">Senior software engineer</h2>
+          <div class="text-[13px] text-ink-400 mt-0.5" id="prvRefNo">Ref: CRF10429</div>
+        </div>
+        <span class="pill" style="background:#d4f5d1;color:#166e12;font-size:12px">Ready to send</span>
+      </div>
+
+      <!-- Preview rows -->
+      <div class="p-8">
+        <table class="w-full text-[14px]" style="border-collapse:collapse">
+          <tbody id="prvBody"></tbody>
+        </table>
+
+        <!-- PSQ preview -->
+        <div id="prvPsqSection" class="hidden mt-6 pt-6 border-t border-ink-100">
+          <div class="text-[13px] font-bold uppercase tracking-wide mb-1 border-b border-ink-100 pb-2" style="color:#1B75BB">Pre-screening questions</div>
+          <div class="text-[13px] text-ink-500 mb-3" id="prvPsqName"></div>
+          <table class="w-full text-[14px]" style="border-collapse:collapse">
+            <tbody id="prvPsqBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-8 py-5 border-t border-ink-100 flex items-center justify-between bg-ink-50/40">
+        <button class="btn-secondary" onclick="closePreview()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Go Back
+        </button>
+        <button class="btn-primary" style="background:#1f9619" onclick="alert('Posting sent!')">
+          Send Posting
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- ====================== PSQ PICKER MODAL ====================== -->
@@ -309,9 +380,8 @@
       <div class="flex-1">
         <div class="flex items-center gap-3 mb-1">
           <h3 id="pickerTitle" class="text-[22px] font-bold text-ink-900">Add a pre-screening questionnaire</h3>
-          <button id="conceptToggle" class="text-[12px] font-semibold px-2.5 py-1 rounded-full border border-ink-200 text-ink-600 hover:bg-ink-50 transition" onclick="toggleConcept()">Try Concept 2</button>
         </div>
-        <div id="pickerSub" class="text-[14px] text-ink-500">Pick one of the saved questionnaires. Questions can be managed by Admin from <span class="font-medium">Account Setup → PSQ</span>.</div>
+        <div id="pickerSub" class="text-[14px] text-ink-500">Pick one of the saved questionnaires.</div>
       </div>
       <button class="icon-btn" style="width:36px;height:36px;border-radius:8px" onclick="closePsqPicker()" aria-label="Close">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -364,12 +434,14 @@ function applyAutoPop(el){
   const host = el.parentElement && el.parentElement.classList.contains('autopop-wrap') ? el.parentElement : null;
   let target = host;
   if(!target){
-    // wrap inline-block to host the tag inside the grid cell
+    // wrap as inline-block so its width hugs the actual control
     const wrap = document.createElement('span');
     wrap.className = 'autopop-wrap';
     wrap.style.display = 'inline-block';
     wrap.style.position = 'relative';
-    wrap.style.width = (el.style.width || '') ? el.style.width : '100%';
+    wrap.style.verticalAlign = 'top';
+    if(el.style.width) wrap.style.width = el.style.width;
+    else if(el.style.maxWidth) wrap.style.maxWidth = el.style.maxWidth;
     el.parentNode.insertBefore(wrap, el);
     wrap.appendChild(el);
     target = wrap;
@@ -446,7 +518,7 @@ const QUESTIONNAIRES = [
     { q:"Are you based in, or willing to relocate to, the United Kingdom?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"What is your current notice period?", type:"Multiple Choice", options:["Immediate","1 week","2 weeks","1 month","3 months","More than 3 months"] },
     { q:"What is your current employment status?", type:"Multiple Choice", options:["Employed full-time","Employed part-time","Freelance / Contract","Unemployed","Other"] },
-    { q:"What is your earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
+    { q:"Can you start on or before 1 Aug 2026?", type:"Yes / No", expected:"Yes" },
   ]},
   { id:'driver', name:'Driver', items:[
     { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes", knockout:true },
@@ -528,15 +600,16 @@ function applyConceptView(){
   c2.style.display = pickerConcept===2 ? 'grid' : 'none';
 
   if(pickerConcept === 1){
-    toggleBtn.textContent = 'Try Concept 2';
+    if(toggleBtn) toggleBtn.textContent = 'Try Concept 2';
     title.textContent = 'Add a pre-screening questionnaire';
-    sub.innerHTML = 'Pick one of the saved questionnaires. Questions can be managed by Admin from <span class="font-medium">Account Setup → PSQ</span>.';
+    sub.innerHTML = 'Pick one of the saved questionnaires.';
     attachBtn.textContent = 'Attach questionnaire';
+    if(!selectedPsqId && QUESTIONNAIRES.length) selectedPsqId = QUESTIONNAIRES[0].id;
     attachBtn.disabled = !selectedPsqId;
     renderPsqList();
     renderPsqPreview();
   } else {
-    toggleBtn.textContent = 'Back to Concept 1';
+    if(toggleBtn) toggleBtn.textContent = 'Back to Concept 1';
     title.textContent = 'Add a pre-screening questionnaire';
     sub.innerHTML = 'Choose a saved questionnaire to preview it, or open <span class="font-medium">Customize Questionnaire</span> to build a custom set.';
     if(!c2SourceId) c2SourceId = QUESTIONNAIRES[0]?.id || 'bank';
@@ -571,7 +644,7 @@ function renderPsqList(){
           <button class="text-left w-full border ${active?'border-azure-500 bg-azure-50':'border-ink-100 bg-white'} rounded-lg px-3 py-2 transition" onclick="selectPsq('${q.id}')">
             <div class="font-semibold text-[14px] text-ink-900">${q.name}</div>
             <div class="mt-0.5 text-[12px] text-ink-500">
-              ${q.items.length} questions${ko?` · <span class="text-danger-600 font-medium">${ko} knock-out</span>`:''}
+              ${q.items.length} questions
             </div>
           </button>`;
       }).join('') : '<div class="text-[13px] text-ink-400 italic text-center py-4">No questionnaires match.</div>'}
@@ -612,11 +685,10 @@ function questionRow(item, idx){
   const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
   return `
     <div class="flex items-start gap-3 px-4 py-3 border-b border-ink-100 last:border-0">
-      <div class="qbubble" style="width:26px;height:26px;font-size:12px">${idx+1}</div>
+      <span class="qbubble">${idx+1}.</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-2 flex-wrap">
           <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
-          ${item.knockout ? '<span class="pill knockout" title="Knock-out">KO</span>' : ''}
         </div>
         <div class="mt-1 flex items-center gap-3 flex-wrap">
           <span class="type-tag">${item.type}</span>
@@ -662,8 +734,8 @@ function renderAttached(){
   empty.classList.add('hidden'); wrap.classList.remove('hidden');
   btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg> Change questionnaire`;
   const sublabel = isCustom
-    ? `${q.items.length} questions${knockoutCount(q.items)?` · <span class="text-danger-600 font-medium">${knockoutCount(q.items)} knock-out</span>`:''} · Hand-picked from your saved questionnaires`
-    : `${q.items.length} questions${knockoutCount(q.items)?` · <span class="text-danger-600 font-medium">${knockoutCount(q.items)} knock-out</span>`:''} · Manage in Account Setup → PSQ`;
+    ? `${q.items.length} questions · Hand-picked from your saved questionnaires`
+    : `${q.items.length} questions · Manage in Settings → PSQ`;
   wrap.innerHTML = `
     <div class="border border-ink-100 rounded-lg">
       <div class="flex items-center justify-between p-4 border-b border-ink-100 bg-ink-50/60 rounded-t-lg">
@@ -841,11 +913,10 @@ function c2PreviewRow(item, idx){
   const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
   return `
     <div class="flex items-start gap-3 py-3 border-b border-ink-100 last:border-0">
-      <div class="qbubble" style="width:26px;height:26px;font-size:12px">${idx+1}</div>
+      <span class="qbubble">${idx+1}.</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-2 flex-wrap">
           <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
-          ${item.knockout ? '<span class="pill knockout" title="Knock-out">KO</span>' : ''}
         </div>
         <div class="mt-1 flex items-center gap-3 flex-wrap">
           <span class="type-tag">${item.type}</span>
@@ -892,7 +963,6 @@ function renderC2QuestionsList(){
         <div class="flex-1 min-w-0">
           <div class="flex items-start gap-2 flex-wrap">
             <div class="text-[14px] font-semibold text-ink-900 leading-snug">${it.q}</div>
-            ${it.knockout ? '<span class="pill knockout" title="Knock-out">KO</span>' : ''}
           </div>
           <div class="mt-1 flex items-center gap-2 flex-wrap">
             <span class="type-tag">${it.type}</span>
@@ -945,6 +1015,125 @@ renderAttached();
 
 // Apply Auto-pop on initial load (toggle is ON by default)
 toggleAutoPop(true);
+
+/* =================== PREVIEW (STEP 3) =================== */
+function openPreview(){
+  // Collect values from form fields (label → value pairs)
+  const fields = document.querySelectorAll('.p-8 section');
+  const rows = [];
+
+  // Helper to get the text of a label element (strip asterisk/req span)
+  function labelText(el){ return el.textContent.replace(/\s*\*\s*/g,'').trim(); }
+
+  fields.forEach(section => {
+    const title = section.querySelector('.section-title')?.textContent?.trim();
+    if(!title || title === 'Pre-screening questions') return;
+
+    const labels = section.querySelectorAll('.field-label, label.field-label');
+    labels.forEach(lbl => {
+      const text = labelText(lbl);
+      // find sibling input / select / textarea
+      let val = '';
+      const parent = lbl.closest('.grid, .field-row') || lbl.parentElement;
+      // walk siblings after lbl
+      let sib = lbl.nextElementSibling;
+      while(sib){
+        const inp = sib.tagName === 'INPUT' || sib.tagName === 'SELECT' || sib.tagName === 'TEXTAREA'
+          ? sib
+          : sib.querySelector('input,select,textarea');
+        if(inp){
+          if(inp.tagName === 'SELECT'){
+            val = inp.options[inp.selectedIndex]?.text || '';
+          } else {
+            val = inp.value || '';
+          }
+          break;
+        }
+        sib = sib.nextElementSibling;
+      }
+      if(text && val) rows.push({ section: title, label: text, value: val });
+    });
+  });
+
+  // Build preview table grouped by section
+  let lastSection = '';
+  const tbody = document.getElementById('prvBody');
+  tbody.innerHTML = rows.map(r => {
+    let html = '';
+    if(r.section !== lastSection){
+      lastSection = r.section;
+      html += `<tr><td colspan="2" class="pt-6 pb-2 text-[13px] font-bold text-azure-600 uppercase tracking-wide border-b border-ink-100" style="color:#1B75BB">${r.section}</td></tr>`;
+    }
+    html += `<tr class="border-b border-ink-50">
+      <td class="py-2.5 pr-8 text-ink-500 font-medium align-top" style="width:260px;white-space:nowrap">${r.label}</td>
+      <td class="py-2.5 text-ink-800">${r.value}</td>
+    </tr>`;
+    return html;
+  }).join('');
+
+  // PSQ section — read directly from JS state
+  const psqSection = document.getElementById('prvPsqSection');
+  const psqNameEl = document.getElementById('prvPsqName');
+  const psqBodyEl = document.getElementById('prvPsqBody');
+  let psqQ = null;
+  if(attachedPsqId && attachedPsqId !== 'custom'){
+    psqQ = QUESTIONNAIRES.find(x => x.id === attachedPsqId);
+  } else if(attachedPsqId === 'custom' && typeof attachedCustom !== 'undefined' && attachedCustom){
+    psqQ = { name: 'Custom questionnaire', items: attachedCustom };
+  }
+  if(psqQ && psqQ.items.length){
+    psqNameEl.textContent = psqQ.name;
+    const filteredItems = psqQ.items.filter(it => it.type !== 'Date');
+    psqBodyEl.innerHTML = filteredItems.map((it, i) => {
+      const expected = it.expected ? `<span class="text-[13px] text-ink-500 ml-2">Expected: <span class="font-medium text-ink-700">${it.expected}</span></span>` : '';
+      return `
+      <tr class="border-b border-ink-50">
+        <td class="py-3 pr-4 text-ink-400 font-semibold text-[13px] align-top" style="width:36px">${i+1}</td>
+        <td class="py-3 align-top">
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${it.q}</div>
+          <div class="mt-1 flex items-center flex-wrap gap-1">
+            <span class="type-tag">${it.type}</span>${expected}
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+    psqSection.classList.remove('hidden');
+  } else {
+    psqSection.classList.add('hidden');
+  }
+
+  // Update job title / ref in preview header from collected rows
+  const refRow = rows.find(r => r.label.includes('Reference'));
+  const titleRow = rows.find(r => r.label.includes('Job Title'));
+  if(titleRow) document.getElementById('prvJobTitle').textContent = titleRow.value || 'Untitled';
+  if(refRow) document.getElementById('prvRefNo').textContent = 'Ref: ' + (refRow.value || '—');
+
+  // Swap steps: step 2 → done, step 3 → active
+  const steps = document.querySelectorAll('.step');
+  steps[1].classList.remove('active'); steps[1].classList.add('done');
+  steps[2].classList.remove('upcoming'); steps[2].classList.add('active');
+  steps[2].classList.remove('pl-12');
+
+  // Show/hide panels
+  document.querySelector('.bg-white.border.border-ink-100.rounded.shadow-sm').classList.add('hidden');
+  document.getElementById('previewSection').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closePreview(){
+  document.querySelector('.bg-white.border.border-ink-100.rounded.shadow-sm').classList.remove('hidden');
+  document.getElementById('previewSection').classList.add('hidden');
+
+  // Revert steps
+  const steps = document.querySelectorAll('.step');
+  steps[1].classList.remove('done'); steps[1].classList.add('active');
+  steps[2].classList.remove('active'); steps[2].classList.add('upcoming');
+  steps[2].classList.add('pl-12');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
+
+

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -40,7 +40,7 @@
   .type-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600; color:#1B75BB; background:#eaf3fa; }
   .knockout { color:#b91c1c; background:#fdecec; }
   .qcount { background:#eceef0; color:#5a6068; font-size:12px; font-weight:500; padding:2px 10px; border-radius:999px; }
-  .qbubble { width:32px;height:32px;border-radius:999px;background:#858d96;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+  .qbubble { color:#333333;display:inline-flex;align-items:center;justify-content:center;font-weight:400;font-size:14px;flex-shrink:0;}
   .icon-btn { width:36px;height:36px;border:1px solid #d6dade;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#5a6068;}
   .icon-btn:hover { background:#f6f7f8;color:#212121; }
   .icon-btn.danger:hover { color:#b91c1c; border-color:#fbd5d5; background:#fdecec; }
@@ -75,13 +75,13 @@
   .modal-in { animation: modal-in .2s cubic-bezier(0.2,0,0,1); }
 
   /* Type cards (row) */
-  .type-row { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
-  .type-card { border:1.5px solid #d6dade; border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all .15s ease; background:#fff; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .type-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .type-card { border:1.5px solid #d6dade; border-radius:12px; padding:20px 12px; text-align:center; cursor:pointer; transition:all .15s ease; background:#fff; display:flex; flex-direction:column; align-items:center; gap:10px; }
   .type-card:hover { border-color:#1B75BB; background:#f0f7fd; }
   .type-card.selected { border-color:#1B75BB; background:#f0f7fd; }
-  .type-card .ti { width:32px; height:32px; border-radius:8px; background:#eceef0; color:#5a6068; display:inline-flex; align-items:center; justify-content:center; }
+  .type-card .ti { width:40px; height:40px; border-radius:10px; background:#eceef0; color:#5a6068; display:inline-flex; align-items:center; justify-content:center; }
   .type-card.selected .ti { background:#1B75BB; color:#fff; }
-  .type-card .tt { font-size:12px; font-weight:600; color:#0e0e0e; line-height:1.2; }
+  .type-card .tt { font-size:13px; font-weight:600; color:#0e0e0e; line-height:1.2; }
 
   /* Info tooltip */
   .info-tip { position:relative; display:inline-flex; align-items:center; color:#858d96; cursor:help; }
@@ -97,6 +97,11 @@
   .opt-add:hover { color:#155F95; }
   .pill-remove { width:32px;height:32px;border:1px solid #d6dade;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#5a6068; cursor:pointer; transition:all .15s ease; flex-shrink:0; }
   .pill-remove:hover { color:#b91c1c; border-color:#fbd5d5; background:#fdecec; }
+
+  @media (max-width: 900px) {
+    .btn-label { display: none; }
+    .btn-primary, .btn-secondary { padding: 10px; min-width: 36px; justify-content: center; }
+  }
 </style>
 </head>
 <body class="text-ink-800">
@@ -109,8 +114,8 @@
     <a href="Responses.html" class="px-3">Responses</a><span class="sep">|</span>
     <a href="#" class="px-3">Search</a><span class="sep">|</span>
     <a href="#" class="px-3">Reports</a><span class="sep">|</span>
-    <a href="#" class="px-3">Settings</a><span class="sep">|</span>
-    <a href="#" class="px-3 text-azure-600">Account Setup</a>
+    <a href="#" class="px-3 text-azure-600">Settings</a><span class="sep">|</span>
+    <a href="#" class="px-3">Account Setup</a>
     <div class="ml-auto pr-2 relative">
       <button id="profileBtn" class="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-ink-50 transition" onclick="toggleProfileMenu(event)">
         <div class="w-7 h-7 rounded-full bg-azure-600 text-white flex items-center justify-center font-bold text-[13px]" id="profileAvatar">S</div>
@@ -125,11 +130,10 @@
 <!-- Sub nav -->
 <div class="bg-[#f4f5f6] border-b border-ink-100">
   <nav class="subnav px-10 h-12 flex items-center text-[14px]">
-    <a href="#" class="px-3">Company Information</a><span class="sep">|</span>
-    <a href="#" class="px-3">Company Permissions</a><span class="sep">|</span>
-    <a href="#" class="px-3">Job Board Subscriptions</a><span class="sep">|</span>
-    <a href="#" class="px-3">Accounts</a><span class="sep">|</span>
-    <a href="#" class="px-3">Templates</a><span class="sep">|</span>
+    <a href="#" class="px-3">Account Details</a><span class="sep">|</span>
+    <a href="#" class="px-3">Manage Users</a><span class="sep">|</span>
+    <a href="#" class="px-3">Migrate Users</a><span class="sep">|</span>
+    <a href="#" class="px-3">Privacy Panel</a><span class="sep">|</span>
     <a href="#" class="px-3 active">PSQ</a>
   </nav>
 </div>
@@ -140,7 +144,7 @@
   <div class="flex items-start justify-between mb-8">
     <div>
       <h1 class="text-[28px] font-bold text-ink-900 leading-tight">Pre-screening questions</h1>
-      <p class="text-[14px] text-ink-500 mt-1">Questions candidates answer while applying for a role.</p>
+      <p class="text-[14px] text-ink-500 mt-1">Questions candidates answer while applying for a role. To see the limit of questions allowed per board, <a href="#" onclick="openBoardLimitsModal(event)" class="text-azure-600 underline font-medium hover:text-azure-700">click here</a>.</p>
     </div>
     <div class="flex items-center gap-1 bg-ink-200 p-1 rounded-lg">
       <button class="tab-pill active" data-tab="questionnaire" onclick="switchTab('questionnaire')">Questionnaire</button>
@@ -164,24 +168,9 @@
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
           <input class="fld !pl-9" id="qListSearch" oninput="renderQList()" placeholder="Search questionnaires..." />
         </div>
-        <div class="relative">
-          <button id="officeFilterBtn" class="h-full px-3 rounded-lg border border-ink-200 bg-white text-ink-600 hover:bg-ink-50 hover:text-ink-900 transition flex items-center gap-1.5" onclick="toggleOfficeFilter(event)" aria-label="Filter by office" title="Filter by office">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
-            <span id="officeFilterCount" class="hidden text-[11px] font-bold text-azure-600 bg-azure-50 border border-azure-100 rounded-full px-1.5">0</span>
-          </button>
-        </div>
       </div>
       <div id="qListWrap" class="flex flex-col gap-2"></div>
     </aside>
-
-    <!-- Office filter popover -->
-    <div id="officeFilterMenu" class="hidden fixed z-[55] bg-white border border-ink-100 rounded-lg shadow-xl py-1 w-56">
-      <div class="flex items-center justify-between px-3 py-2 border-b border-ink-100">
-        <div class="text-[11px] font-bold tracking-[.08em] text-ink-400">FILTER BY OFFICE</div>
-        <button class="text-[11px] font-semibold text-ink-500 hover:text-danger-600" onclick="clearOfficeFilter()">Clear</button>
-      </div>
-      <div id="officeFilterList" class="max-h-64 overflow-y-auto py-1"></div>
-    </div>
 
     <!-- Right: questions panel -->
     <div class="bg-white rounded-xl p-6" style="border:1px solid #e4e4e4">
@@ -191,13 +180,13 @@
           <span id="qPanelCount" class="qcount">5 questions</span>
         </div>
         <div class="flex items-center gap-3" id="qPanelActions">
-          <button class="btn-secondary" onclick="openLibrary()">
+          <button class="btn-secondary" onclick="openLibrary()" title="Add from question bank">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-            Add from question bank
+            <span class="btn-label">Add from bank</span>
           </button>
-          <button class="btn-primary" onclick="openNewQuestion()">
+          <button class="btn-primary" onclick="openNewQuestion()" title="New question">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            New question
+            <span class="btn-label">New question</span>
           </button>
         </div>
         <div class="flex items-center gap-2 text-[12px] text-ink-500" id="qReadOnlyNote" style="display:none">
@@ -207,6 +196,11 @@
       </div>
 
       <div id="qItemsWrap"></div>
+
+      <div class="mt-5 pt-4 border-t border-ink-100 flex items-start gap-2 text-[12px] text-ink-400">
+        <svg class="flex-shrink-0 mt-0.5" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
+        Unsupported question types will be converted to free-text when posting to certain job boards.
+      </div>
     </div>
   </section>
 
@@ -302,27 +296,6 @@
         <div id="expectedField"></div>
       </div>
 
-      <div class="space-y-3">
-        <label class="flex items-center gap-3 cursor-pointer select-none">
-          <input type="checkbox" id="newQMandatory" class="bb-check" />
-          <span class="text-[14px] font-semibold text-ink-800">Mandatory</span>
-          <span class="info-tip" tabindex="0" onclick="event.preventDefault()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
-            <span class="tip-body">Candidates must answer to submit their application.</span>
-          </span>
-        </label>
-        <label class="flex items-center gap-3 cursor-pointer select-none">
-          <input type="checkbox" id="newQKnockout" class="bb-check" onchange="onKnockoutChange()" />
-          <span class="flex items-center gap-2 text-[14px] font-semibold text-ink-800">
-            <svg width="14" height="16" viewBox="0 0 14 16" fill="none"><path d="M2 1v14" stroke="#0e0e0e" stroke-width="1.4" stroke-linecap="round"/><path d="M2 1.6h10l-2.5 3 2.5 3H2" fill="#dc2626"/></svg>
-            Knock-out question
-          </span>
-          <span class="info-tip" tabindex="0" onclick="event.preventDefault()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg>
-            <span class="tip-body">Candidates who answer incorrectly are flagged. Auto-marks the question as mandatory.</span>
-          </span>
-        </label>
-      </div>
     </div>
 
     <div class="px-6 py-5 border-t border-ink-100 flex items-center justify-end gap-3">
@@ -350,16 +323,6 @@
         <label class="block text-[14px] font-semibold text-ink-800 mb-2">Name</label>
         <input id="qNameInput" class="fld" placeholder="e.g. Engineering" oninput="clearQNameError()" onkeydown="if(event.key==='Enter') submitQName()" />
         <div id="qNameError" class="hidden text-[12px] text-danger-600 mt-1.5 font-medium"></div>
-      </div>
-      <div>
-        <label class="block text-[14px] font-semibold text-ink-800 mb-2">Office</label>
-        <div class="relative">
-          <button type="button" id="qOfficeBtn" class="fld text-left flex items-center gap-2 cursor-pointer" onclick="toggleQOfficeDropdown(event)">
-            <span id="qOfficeBtnLabel" class="flex-1 text-ink-400 italic">Select offices...</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-500"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
-          <div id="qOfficeDropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-ink-100 rounded-lg shadow-xl z-[60] max-h-64 overflow-y-auto py-1"></div>
-        </div>
       </div>
     </div>
     <div class="px-6 py-5 border-t border-ink-100 flex items-center justify-end gap-3">
@@ -412,6 +375,50 @@
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
     Delete
   </button>
+</div>
+
+<!-- ====================== BOARD LIMITS MODAL ====================== -->
+<div id="boardLimitsModal" class="hidden fixed inset-0 z-50 items-center justify-center" style="display:none">
+  <div class="absolute inset-0 bg-black/45 fade-in" onclick="closeBoardLimitsModal()"></div>
+  <div class="modal-in relative bg-white w-[560px] max-w-[95vw] rounded-2xl shadow-2xl max-h-[90vh] flex flex-col">
+    <div class="p-6 pb-4 flex items-start justify-between border-b border-ink-100">
+      <div>
+        <h3 class="text-[20px] font-bold text-ink-900">Question limits per job board</h3>
+        <p class="text-[13px] text-ink-500 mt-1">Maximum number of pre-screening questions each board supports. If your questionnaire exceeds a board's limit, only the top questions will be used — keep your most important questions first.</p>
+      </div>
+      <button class="icon-btn !w-9 !h-9" onclick="closeBoardLimitsModal()" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <!-- Board list -->
+    <div class="overflow-y-auto px-6 pb-6 mt-4">
+      <table class="w-full text-[14px]">
+        <thead>
+          <tr class="border-b border-ink-100">
+            <th class="text-left font-semibold text-ink-500 pb-2 text-[12px] uppercase tracking-wide">Job board</th>
+            <th class="text-right font-semibold text-ink-500 pb-2 text-[12px] uppercase tracking-wide">Max questions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ink-100">
+          <tr><td class="py-3 text-ink-800 font-medium">Indeed</td><td class="py-3 text-right"><span class="qcount">7</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">LinkedIn</td><td class="py-3 text-right"><span class="qcount">9</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Reed</td><td class="py-3 text-right"><span class="qcount">5</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Totaljobs</td><td class="py-3 text-right"><span class="qcount">8</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">CV-Library</td><td class="py-3 text-right"><span class="qcount">5</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Jobsite</td><td class="py-3 text-right"><span class="qcount">4</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Monster</td><td class="py-3 text-right"><span class="qcount">6</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Guardian Jobs</td><td class="py-3 text-right"><span class="qcount">3</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Glassdoor</td><td class="py-3 text-right"><span class="qcount">8</span></td></tr>
+          <tr><td class="py-3 text-ink-800 font-medium">Adzuna</td><td class="py-3 text-right"><span class="qcount">9</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-6 py-4 border-t border-ink-100 flex justify-end">
+      <button class="btn-secondary" onclick="closeBoardLimitsModal()">Close</button>
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -472,27 +479,27 @@ function switchProfile(id){
 }
 
 const QUESTIONNAIRES = [
-  { id:'accounts', name:'Accounts', offices:['London'], createdBy:'superadmin', items:[
+  { id:'accounts', name:'Accounts', createdBy:'superadmin', items:[
     { q:"Are you legally authorised to work in the United Kingdom without employer sponsorship?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"Are you based in, or willing to relocate to, the United Kingdom?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"What is your current notice period?", type:"Multiple Choice", options:["Immediate","1 week","2 weeks","1 month","3 months","More than 3 months"] },
     { q:"What is your current employment status?", type:"Multiple Choice", options:["Employed full-time","Employed part-time","Freelance / Contract","Unemployed","Other"] },
-    { q:"What is your earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
+    { q:"Can you start on or before 1 Aug 2026?", type:"Yes / No", expected:"Yes" },
   ]},
-  { id:'driver', name:'Driver', offices:['Manchester','London'], createdBy:'superadmin', items:[
+  { id:'driver', name:'Driver', createdBy:'superadmin', items:[
     { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"How many years of driving experience do you have?", type:"Number", expected:"≥ 2" },
     { q:"Do you have any current driving offences or points on your licence?", type:"Yes / No", expected:"No" },
     { q:"Which licence categories do you hold?", type:"Multiple Choice", options:["B","C1","C","D1","D"] },
     { q:"Are you willing to work shift patterns including weekends?", type:"Yes / No", expected:"Yes" },
   ]},
-  { id:'warehouse', name:'Warehouse', offices:['Mumbai (India)','Bengaluru (India)'], createdBy:'superadmin', items:[
+  { id:'warehouse', name:'Warehouse', createdBy:'superadmin', items:[
     { q:"Are you comfortable lifting up to 25kg repeatedly during a shift?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"Do you have a current forklift licence?", type:"Yes / No", expected:"Yes" },
     { q:"Which shift patterns are you available for?", type:"Multiple Choice", options:["Days","Nights","Earlies","Lates","Weekends"] },
     { q:"How many years of warehouse experience do you have?", type:"Number", expected:"≥ 1" },
   ]},
-  { id:'customer', name:'Customer Service', offices:['Remote'], createdBy:'superadmin', items:[
+  { id:'customer', name:'Customer Service', createdBy:'superadmin', items:[
     { q:"Are you eligible to work in the UK?", type:"Yes / No", expected:"Yes", knockout:true },
     { q:"How many years of customer service experience do you have?", type:"Number", expected:"≥ 1" },
     { q:"Which channels have you supported customers on?", type:"Multiple Choice", options:["Phone","Email","Live chat","Social media"] },
@@ -505,7 +512,6 @@ const LIBRARY = [
   { q:"Are you legally authorised to work without employer sponsorship?", type:"Yes / No", options:["Yes","No"], expected:"Yes" },
   { q:"Which of these have you worked with professionally?", type:"Multiple Choice", options:["React","TypeScript","GraphQL","Node.js"], expected:"React, TypeScript" },
   { q:"Preferred working arrangement?", type:"Multiple Choice", options:["Remote","Hybrid","On-site"], expected:"Hybrid" },
-  { q:"Earliest available start date?", type:"Date", expected:"on or before 1 Aug 2026" },
   { q:"Briefly describe a project you're proud of.", type:"Open Text", note:"manual review" },
   { q:"How many years of Node.js experience do you have?", type:"Number", expected:"≥ 3" },
   { q:"Do you hold a valid UK driving licence?", type:"Yes / No", expected:"Yes" },
@@ -513,7 +519,8 @@ const LIBRARY = [
   { q:"Any additional comments?", type:"Open Text" },
 ];
 
-const TYPES = ["All","Yes / No","Multiple Choice","Date","Number","Open Text"];
+const TYPES = ["All","Yes / No","Multiple Choice","Number","Open Text"];
+// Note: Date type is excluded from the bank and filters
 function matchesType(filter, t){ return filter === 'All' || t === filter; }
 
 /* Question Bank = union of all questionnaire questions + LIBRARY + BANK_ONLY (deduped by question text) */
@@ -530,7 +537,6 @@ let activeLibraryType = 'All';
 let librarySelected = new Set();
 
 /* =================== UTILS =================== */
-function knockoutCount(items){ return items.filter(i => i.knockout).length; }
 
 function questionRow(item, idx, editable){
   if(editable === undefined) editable = true;
@@ -540,11 +546,10 @@ function questionRow(item, idx, editable){
   const meta = [expected, opts, note].filter(Boolean).join('');
   return `
     <div class="flex items-start gap-4 py-5 border-b border-ink-100 last:border-0">
-      <div class="qbubble">${idx+1}</div>
+      <span class="qbubble">${idx+1}.</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-3 flex-wrap">
-          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}${(item.mandatory || item.knockout) ? ' <span title="Mandatory" style="color:#b91c1c;font-weight:700">*</span>' : ''}</div>
-          ${item.knockout ? '<span class="pill knockout">Knock-out</span>' : ''}
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
         </div>
         <div class="mt-2 flex items-center gap-3 flex-wrap">
           <span class="type-tag">${item.type}</span>
@@ -560,11 +565,10 @@ function bankRow(item, idx){
   const opts = item.options ? `<span class="text-[13px] text-ink-500">Options: ${item.options.join(', ')}</span>` : '';
   return `
     <div class="flex items-start gap-4 py-5 px-2">
-      <div class="qbubble">${idx+1}</div>
+      <span class="qbubble">${idx+1}.</span>
       <div class="flex-1 min-w-0">
         <div class="flex items-start gap-3 flex-wrap">
-          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}${(item.mandatory || item.knockout) ? ' <span title="Mandatory" style="color:#b91c1c;font-weight:700">*</span>' : ''}</div>
-          ${item.knockout ? '<span class="pill knockout">Knock-out</span>' : ''}
+          <div class="text-[14px] font-semibold text-ink-900 leading-snug">${item.q}</div>
         </div>
         <div class="mt-2 flex items-center gap-3 flex-wrap">
           <span class="type-tag">${item.type}</span>
@@ -585,52 +589,23 @@ function bankRow(item, idx){
 }
 
 /* =================== RENDER =================== */
-let officeFilter = new Set();
-
 function renderQList(){
   const wrap = document.getElementById('qListWrap');
   const term = (document.getElementById('qListSearch')?.value || '').toLowerCase();
   let list = term ? QUESTIONNAIRES.filter(q => q.name.toLowerCase().includes(term)) : QUESTIONNAIRES;
-  if(officeFilter.size) list = list.filter(q => {
-    const offices = q.offices || (q.office ? [q.office] : []);
-    return offices.some(o => officeFilter.has(o));
-  });
-  // count badge on the filter button
-  const badge = document.getElementById('officeFilterCount');
-  if(badge){
-    if(officeFilter.size){ badge.textContent = officeFilter.size; badge.classList.remove('hidden'); }
-    else badge.classList.add('hidden');
-  }
   if(!list.length){
     wrap.innerHTML = '<div class="text-[13px] text-ink-400 italic text-center py-3">No questionnaires match.</div>';
     return;
   }
   wrap.innerHTML = list.map(q => {
-    const ko = knockoutCount(q.items);
     const active = q.id === activeQId;
     return `
       <div class="qcard group relative border ${active?'border-azure-500 bg-azure-50':'border-ink-100'} rounded-lg" style="${active?'':'background:#f4f5f6'}">
         <button class="text-left w-full p-4 pr-12" onclick="selectQ('${q.id}')">
           <div class="font-semibold text-[14px] text-ink-900">${q.name}</div>
-          <div class="mt-1 text-[13px] text-ink-500">
-            ${q.items.length} questions ${ko ? `· <span class="text-danger-600 font-medium">${ko} knock-out</span>` : ''}
-          </div>
-          ${(() => {
-            const offices = q.offices || (q.office ? [q.office] : []);
-            if(!offices.length) return '';
-            const MAX = 2;
-            const shown = offices.slice(0, MAX);
-            const extra = offices.length - shown.length;
-            const chips = shown.map(o => `
-              <div class="inline-flex items-center gap-1 text-[11px] leading-none text-ink-600 font-medium px-2 h-[20px] rounded-full bg-white border border-ink-200 min-w-0">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span class="truncate">${o}</span>
-              </div>`).join('');
-            const more = extra > 0 ? `<div class="inline-flex items-center justify-center text-[11px] leading-none text-ink-600 font-semibold px-2 h-[20px] rounded-full bg-white border border-ink-200 flex-shrink-0">+${extra}</div>` : '';
-            return `<div class="mt-1.5 flex items-center gap-1 flex-nowrap overflow-hidden">${chips}${more}</div>`;
-          })()}
+          <div class="mt-1 text-[13px] text-ink-500">${q.items.length} questions</div>
         </button>
-        <button class="qmenu-btn absolute top-2 right-2 w-8 h-8 rounded-md flex items-center justify-center text-ink-500 hover:bg-ink-100 hover:text-ink-800 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" onclick="event.stopPropagation();openQMenu(event,'${q.id}')" aria-label="More options">
+        <button class="qmenu-btn absolute top-2 right-2 w-8 h-8 rounded-md flex items-center justify-center text-ink-500 hover:bg-ink-100 hover:text-ink-800 transition" onclick="event.stopPropagation();openQMenu(event,'${q.id}')" aria-label="More options">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
         </button>
       </div>`;
@@ -658,6 +633,7 @@ function renderBank(){
   const search = (document.getElementById('bankSearch')?.value || '').toLowerCase();
   let pool = getBankPool();
   BANK_ONLY.forEach(it => { if(!pool.find(p => p.q === it.q)) pool.push(it); });
+  pool = pool.filter(it => it.type !== 'Date');
   if(activeBankType !== 'All') pool = pool.filter(it => matchesType(activeBankType, it.type));
   if(search) pool = pool.filter(it => it.q.toLowerCase().includes(search));
   document.getElementById('bankList').innerHTML = pool.length
@@ -682,6 +658,7 @@ function renderLibrary(){
   const search = (document.getElementById('librarySearch')?.value || '').toLowerCase();
   let pool = getBankPool();
   BANK_ONLY.forEach(it => { if(!pool.find(p => p.q === it.q)) pool.push(it); });
+  pool = pool.filter(it => it.type !== 'Date');
   if(activeLibraryType !== 'All') pool = pool.filter(it => matchesType(activeLibraryType, it.type));
   if(search) pool = pool.filter(it => it.q.toLowerCase().includes(search));
   const list = document.getElementById('libraryList');
@@ -745,10 +722,6 @@ const QTYPES = {
               example:'e.g. "Which shift patterns are you available for?"',
               storedType:'Single Select',
               suggestions:['What is your current notice period?','Which shift patterns are you available for?'] },
-  'date':   { label:'Date', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
-              example:'e.g. "What is your earliest available start date?"',
-              storedType:'Date',
-              suggestions:['What is your earliest available start date?','Earliest interview availability?'] },
   'number': { label:'Number', icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>`,
               example:'e.g. "How many years of experience do you have?"',
               storedType:'Number',
@@ -787,21 +760,12 @@ function openNewQuestion(fromBank){
     sub.innerHTML = `Adding to <b class="text-ink-800">${(QUESTIONNAIRES.find(x=>x.id===activeQId)?.name)||'this'}</b> questionnaire and to the <b class="text-ink-800">Question bank</b>.`;
   }
   document.getElementById('newQText').value = '';
-  document.getElementById('newQKnockout').checked = false;
-  document.getElementById('newQMandatory').checked = false;
-  document.getElementById('newQMandatory').disabled = false;
   renderTypeGrid();
   applyType();
   document.body.style.overflow = 'hidden';
   setTimeout(()=>document.getElementById('newQText').focus(),50);
 }
 
-function onKnockoutChange(){
-  const ko = document.getElementById('newQKnockout').checked;
-  const m = document.getElementById('newQMandatory');
-  if(ko){ m.checked = true; m.disabled = true; }
-  else { m.disabled = false; }
-}
 
 function editBankQuestion(encKey){
   const key = decodeURIComponent(encKey);
@@ -822,9 +786,6 @@ function editBankQuestion(encKey){
   document.getElementById('newQSub').innerHTML =
     'Changes apply across <b class="text-ink-800">every questionnaire</b> using this question. ' +
     '<span class="text-ink-400">Jobs that are already posted keep their original version.</span>';
-  document.getElementById('newQKnockout').checked = !!item.knockout;
-  document.getElementById('newQMandatory').checked = !!item.knockout || !!item.mandatory;
-  document.getElementById('newQMandatory').disabled = !!item.knockout;
   renderTypeGrid();
   applyType();
   // prefill question text after applyType so it isn't cleared
@@ -908,18 +869,6 @@ function applyType(){
   }
   renderExpectedField();
 
-  // Knock-out can't apply to free-form text answers (no objective expected answer)
-  const koEl = document.getElementById('newQKnockout');
-  const koLabel = koEl.closest('label');
-  if(newQTypeKey === 'text'){
-    koEl.checked = false;
-    koEl.disabled = true;
-    if(koLabel){ koLabel.style.opacity = '.5'; koLabel.style.cursor = 'not-allowed'; }
-  } else {
-    koEl.disabled = false;
-    if(koLabel){ koLabel.style.opacity = ''; koLabel.style.cursor = ''; }
-  }
-  onKnockoutChange();
 }
 
 function renderOptionsList(){
@@ -1008,10 +957,8 @@ function submitNewQuestion(){
   if(!newQTypeKey){ toast('Please choose a question type.'); return; }
   if(!text){ toast('Please enter a question.'); return; }
   const t = QTYPES[newQTypeKey];
-  const knockout = document.getElementById('newQKnockout').checked;
-  const mandatory = knockout || document.getElementById('newQMandatory').checked;
-  let storedType = t.label; // store the simplified label
-  const next = { q:text, type:storedType, knockout, mandatory };
+  let storedType = t.label;
+  const next = { q:text, type:storedType };
   if(newQTypeKey === 'choice'){
     const opts = newQOptions.map(o=>o.trim()).filter(Boolean);
     if(opts.length < 2){ toast('Please add at least two options.'); return; }
@@ -1052,99 +999,6 @@ function switchTab(name){
 let qNameMode = 'create'; // 'create' | 'edit' | 'duplicate'
 let qMenuTargetId = null;
 
-let qSelectedOffices = new Set();
-
-function setQOfficesSelection(arr){
-  qSelectedOffices = new Set(arr || []);
-  updateQOfficeBtnLabel();
-}
-function updateQOfficeBtnLabel(){
-  const label = document.getElementById('qOfficeBtnLabel');
-  if(qSelectedOffices.size === 0){
-    label.textContent = 'Select offices...';
-    label.classList.add('text-ink-400','italic');
-    label.classList.remove('text-ink-900');
-  } else {
-    label.textContent = [...qSelectedOffices].join(', ');
-    label.classList.remove('text-ink-400','italic');
-    label.classList.add('text-ink-900');
-  }
-}
-function renderQOfficeDropdown(){
-  const wrap = document.getElementById('qOfficeDropdown');
-  const allSelected = OFFICES.every(o => qSelectedOffices.has(o));
-  const someSelected = !allSelected && OFFICES.some(o => qSelectedOffices.has(o));
-  const selectAllRow = `
-    <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] font-semibold text-ink-800 hover:bg-ink-50 cursor-pointer border-b border-ink-100">
-      <input type="checkbox" class="bb-check" id="qOfficeSelectAll" ${allSelected?'checked':''} ${someSelected?'data-indeterminate="1"':''} onchange="toggleQOfficeSelectAll(this.checked)" />
-      <span>${allSelected ? 'Deselect all' : 'Select all'}</span>
-      <span class="ml-auto text-[11px] text-ink-500 font-medium">${qSelectedOffices.size}/${OFFICES.length}</span>
-    </label>`;
-  const rows = OFFICES.map(o => {
-    const checked = qSelectedOffices.has(o);
-    return `
-      <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] text-ink-800 hover:bg-ink-50 cursor-pointer">
-        <input type="checkbox" class="bb-check" ${checked?'checked':''} onchange="toggleQOfficeOption('${o.replace(/'/g,"\\'")}', this.checked)" />
-        <span>${o}</span>
-      </label>`;
-  }).join('');
-  wrap.innerHTML = selectAllRow + rows;
-  const sa = document.getElementById('qOfficeSelectAll');
-  if(sa && someSelected) sa.indeterminate = true;
-}
-
-function toggleQOfficeSelectAll(checked){
-  if(checked) OFFICES.forEach(o => qSelectedOffices.add(o));
-  else qSelectedOffices.clear();
-  renderQOfficeDropdown();
-  updateQOfficeBtnLabel();
-}
-let qOfficeLocked = false;
-
-function lockQOffice(office){
-  qOfficeLocked = true;
-  setQOfficesSelection(office ? [office] : []);
-  const btn = document.getElementById('qOfficeBtn');
-  btn.setAttribute('disabled','');
-  btn.classList.add('opacity-60','cursor-not-allowed');
-  btn.classList.remove('cursor-pointer');
-  btn.setAttribute('title','Office is locked to your admin office');
-  // ensure dropdown is closed
-  closeQOfficeDropdown();
-}
-function unlockQOffice(){
-  qOfficeLocked = false;
-  const btn = document.getElementById('qOfficeBtn');
-  btn.removeAttribute('disabled');
-  btn.classList.remove('opacity-60','cursor-not-allowed');
-  btn.classList.add('cursor-pointer');
-  btn.removeAttribute('title');
-  const hint = btn.parentElement.querySelector('.qOfficeLockHint');
-  if(hint) hint.remove();
-}
-
-function toggleQOfficeDropdown(e){
-  if(e) e.stopPropagation();
-  if(qOfficeLocked) return;
-  const dd = document.getElementById('qOfficeDropdown');
-  if(dd.classList.contains('hidden')){
-    renderQOfficeDropdown();
-    dd.classList.remove('hidden');
-  } else {
-    dd.classList.add('hidden');
-  }
-}
-function closeQOfficeDropdown(){ document.getElementById('qOfficeDropdown').classList.add('hidden'); }
-function toggleQOfficeOption(office, checked){
-  if(checked) qSelectedOffices.add(office); else qSelectedOffices.delete(office);
-  updateQOfficeBtnLabel();
-  renderQOfficeDropdown();
-}
-/* Outside-click for office dropdown */
-document.addEventListener('click', e => {
-  const dd = document.getElementById('qOfficeDropdown');
-  if(dd && !dd.classList.contains('hidden') && !dd.contains(e.target) && !e.target.closest('#qOfficeBtn')) dd.classList.add('hidden');
-});
 
 function createQuestionnaire(){
   qNameMode = 'create';
@@ -1152,9 +1006,6 @@ function createQuestionnaire(){
   document.getElementById('qNameSub').textContent = 'Group questions for a role or department.';
   document.getElementById('qNameSubmitLabel').textContent = 'Create questionnaire';
   document.getElementById('qNameInput').value = '';
-  if(adminOffice()){ lockQOffice(adminOffice()); }
-  else { unlockQOffice(); setQOfficesSelection([]); }
-  closeQOfficeDropdown();
   document.getElementById('qNameModal').style.display = 'flex';
   document.getElementById('qNameModal').classList.remove('hidden');
   clearQNameError();
@@ -1164,13 +1015,10 @@ function createQuestionnaire(){
 function openEditModal(id){
   const q = QUESTIONNAIRES.find(x=>x.id===id); if(!q) return;
   qNameMode = 'edit'; qMenuTargetId = id;
-  document.getElementById('qNameTitle').textContent = 'Edit questionnaire';
-  document.getElementById('qNameSub').textContent = `Update the name or office for "${q.name}"`;
+  document.getElementById('qNameTitle').textContent = 'Rename questionnaire';
+  document.getElementById('qNameSub').textContent = `Rename "${q.name}"`;
   document.getElementById('qNameSubmitLabel').textContent = 'Save changes';
   document.getElementById('qNameInput').value = q.name;
-  if(adminOffice()){ lockQOffice(adminOffice()); }
-  else { unlockQOffice(); setQOfficesSelection(q.offices || (q.office ? [q.office] : [])); }
-  closeQOfficeDropdown();
   document.getElementById('qNameModal').style.display = 'flex';
   document.getElementById('qNameModal').classList.remove('hidden');
   clearQNameError();
@@ -1180,7 +1028,6 @@ function openEditModal(id){
 function openDuplicateModal(id){
   const q = QUESTIONNAIRES.find(x=>x.id===id); if(!q) return;
   qNameMode = 'duplicate'; qMenuTargetId = id;
-  // Suggest a unique copy name
   let suggested = `${q.name} (copy)`;
   let n = 2;
   while(QUESTIONNAIRES.some(x => x.name.toLowerCase() === suggested.toLowerCase())){
@@ -1190,9 +1037,6 @@ function openDuplicateModal(id){
   document.getElementById('qNameSub').textContent = `Name your copy of "${q.name}"`;
   document.getElementById('qNameSubmitLabel').textContent = 'Create duplicate';
   document.getElementById('qNameInput').value = suggested;
-  if(adminOffice()){ lockQOffice(adminOffice()); }
-  else { unlockQOffice(); setQOfficesSelection(q.offices || (q.office ? [q.office] : [])); }
-  closeQOfficeDropdown();
   document.getElementById('qNameModal').style.display = 'flex';
   document.getElementById('qNameModal').classList.remove('hidden');
   clearQNameError();
@@ -1217,9 +1061,7 @@ function clearQNameError(){
 }
 function submitQName(){
   const name = document.getElementById('qNameInput').value.trim();
-  const offices = [...qSelectedOffices];
   if(name.length < 3){ showQNameError(name ? 'Name must be at least 3 characters.' : 'Please enter a name.'); return; }
-  const sameOffices = (a, b) => { a=a||[]; b=b||[]; return a.length===b.length && a.every(x=>b.includes(x)); };
   const makeId = base => {
     let id = base.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'q-'+(QUESTIONNAIRES.length+1);
     let candidate = id, n = 2;
@@ -1228,24 +1070,21 @@ function submitQName(){
   };
   if(qNameMode === 'create'){
     const id = makeId(name);
-    QUESTIONNAIRES.unshift({ id, name, offices, createdBy: currentProfile, items:[] });
+    QUESTIONNAIRES.unshift({ id, name, createdBy: currentProfile, items:[] });
     activeQId = id;
     toast(`Created "${name}"`);
   } else if(qNameMode === 'edit' && qMenuTargetId){
     const q = QUESTIONNAIRES.find(x=>x.id===qMenuTargetId);
     if(q){
-      const changes = [];
-      if(q.name !== name){ changes.push('name'); q.name = name; }
-      if(!sameOffices(q.offices, offices)){ changes.push('offices'); q.offices = offices; }
-      // clear legacy field if present
-      if('office' in q) delete q.office;
-      toast(changes.length ? `Updated "${name}"` : 'No changes');
+      const changed = q.name !== name;
+      q.name = name;
+      toast(changed ? `Updated "${name}"` : 'No changes');
     }
   } else if(qNameMode === 'duplicate' && qMenuTargetId){
     const src = QUESTIONNAIRES.find(x=>x.id===qMenuTargetId);
     if(src){
       const id = makeId(name);
-      QUESTIONNAIRES.unshift({ id, name, offices, createdBy: currentProfile, items: src.items.map(it => ({...it})) });
+      QUESTIONNAIRES.unshift({ id, name, createdBy: currentProfile, items: src.items.map(it => ({...it})) });
       activeQId = id;
       toast(`Duplicated as "${name}"`);
     }
@@ -1264,7 +1103,7 @@ function openQMenu(e, id){
     ${editable ? `
     <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="menuEdit()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-      Edit
+      Rename
     </button>` : ''}
     <button class="w-full text-left px-3 py-2 text-[14px] text-ink-800 hover:bg-ink-50 flex items-center gap-3" onclick="menuDuplicate()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1284,52 +1123,6 @@ function openQMenu(e, id){
 function closeQMenu(){ document.getElementById('qMenu').classList.add('hidden'); }
 function menuEdit(){ const id = qMenuTargetId; closeQMenu(); openEditModal(id); }
 
-/* ----- Office filter popover ----- */
-function toggleOfficeFilter(e){
-  e.stopPropagation();
-  const menu = document.getElementById('officeFilterMenu');
-  if(!menu.classList.contains('hidden')){ menu.classList.add('hidden'); return; }
-  const btn = document.getElementById('officeFilterBtn');
-  const r = btn.getBoundingClientRect();
-  menu.style.top = (r.bottom + 6) + 'px';
-  menu.style.left = Math.max(8, r.right - 224) + 'px';
-  renderOfficeFilterList();
-  menu.classList.remove('hidden');
-}
-function closeOfficeFilter(){ document.getElementById('officeFilterMenu').classList.add('hidden'); }
-function renderOfficeFilterList(){
-  const list = document.getElementById('officeFilterList');
-  // build a set of offices in use across all questionnaires
-  const used = new Set();
-  QUESTIONNAIRES.forEach(q => {
-    const offs = q.offices || (q.office ? [q.office] : []);
-    offs.forEach(o => used.add(o));
-  });
-  const offices = OFFICES.filter(o => used.has(o));
-  list.innerHTML = offices.map(o => {
-    const count = QUESTIONNAIRES.filter(q => {
-      const offs = q.offices || (q.office ? [q.office] : []);
-      return offs.includes(o);
-    }).length;
-    const checked = officeFilter.has(o);
-    return `
-      <label class="flex items-center gap-2.5 px-3 py-2 text-[13px] text-ink-800 hover:bg-ink-50 cursor-pointer">
-        <input type="checkbox" class="bb-check" ${checked?'checked':''} onchange="toggleOfficeOption('${o.replace(/'/g,"\\'")}', this.checked)" />
-        <span class="flex-1">${o}</span>
-        <span class="text-[11px] text-ink-500">${count}</span>
-      </label>`;
-  }).join('') || '<div class="px-3 py-3 text-[12px] text-ink-400 italic">No offices yet.</div>';
-}
-function toggleOfficeOption(office, checked){
-  if(checked) officeFilter.add(office); else officeFilter.delete(office);
-  renderOfficeFilterList();
-  renderQList();
-}
-function clearOfficeFilter(){
-  officeFilter.clear();
-  renderOfficeFilterList();
-  renderQList();
-}
 function menuDuplicate(){ const id = qMenuTargetId; closeQMenu(); openDuplicateModal(id); }
 function menuDelete(){
   const id = qMenuTargetId; closeQMenu();
@@ -1357,8 +1150,6 @@ function closeConfirm(){
 document.addEventListener('click', e => {
   const menu = document.getElementById('qMenu');
   if(!menu.classList.contains('hidden') && !menu.contains(e.target) && !e.target.closest('[aria-label="More options"]')) closeQMenu();
-  const off = document.getElementById('officeFilterMenu');
-  if(off && !off.classList.contains('hidden') && !off.contains(e.target) && !e.target.closest('#officeFilterBtn')) closeOfficeFilter();
   const pm = document.getElementById('profileMenu');
   if(pm && !pm.classList.contains('hidden') && !pm.contains(e.target) && !e.target.closest('#profileBtn')) closeProfileMenu();
 });
@@ -1412,8 +1203,20 @@ function removeQuestion(idx){
   });
 }
 document.addEventListener('keydown', e => {
-  if(e.key === 'Escape'){ closeLibrary(); closeNewQuestion(); closeQNameModal(); closeConfirm(); closeQMenu(); closeOfficeFilter(); closeProfileMenu(); }
+  if(e.key === 'Escape'){ closeLibrary(); closeNewQuestion(); closeQNameModal(); closeConfirm(); closeQMenu(); closeProfileMenu(); closeBoardLimitsModal(); }
 });
+
+function openBoardLimitsModal(e){
+  e.preventDefault();
+  document.getElementById('boardLimitsModal').style.display = 'flex';
+  document.getElementById('boardLimitsModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeBoardLimitsModal(){
+  document.getElementById('boardLimitsModal').style.display = 'none';
+  document.getElementById('boardLimitsModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
 
 refreshProfileUI();
 renderQList();
@@ -1421,3 +1224,4 @@ renderQuestionnairePanel();
 </script>
 </body>
 </html>
+
